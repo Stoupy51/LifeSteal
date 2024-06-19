@@ -10,7 +10,7 @@ execute if score @s life_steal.hearts matches ..1 run tellraw @s {"text":"You do
 execute if score @s life_steal.hearts matches ..1 run return fail
 
 # Give heart, decrease score, and update health
-loot give @s loot life_steal:i/heart
+loot give @s[gamemode=!creative] loot life_steal:i/heart
 scoreboard players remove @s life_steal.hearts 1
 function life_steal:player/update_health
 

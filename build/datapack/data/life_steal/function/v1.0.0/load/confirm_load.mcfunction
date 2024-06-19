@@ -4,11 +4,13 @@
 # @within	life_steal:v1.0.0/load/secondary
 #
 
-execute unless score MAX_HEARTS life_steal.data matches 1.. run scoreboard players set MAX_HEARTS life_steal.data 20
-scoreboard objectives add life_steal.hearts dummy
-scoreboard objectives add life_steal.withdraw trigger
-scoreboard objectives add life_steal.death deathCount
 scoreboard objectives add life_steal.kill playerKillCount
+scoreboard objectives add life_steal.death deathCount
+scoreboard objectives add life_steal.withdraw trigger
+scoreboard objectives add life_steal.hearts dummy
+execute unless score MAX_HEARTS life_steal.data matches 1.. run scoreboard players set MAX_HEARTS life_steal.data 20
+execute unless score REVIVED_HEARTS life_steal.data matches 1.. run scoreboard players set REVIVED_HEARTS life_steal.data 4
+forceload add 0 0
 
 tellraw @a[tag=convention.debug] {"text":"[Loaded LifeSteal v1.0.0]","color":"green"}
 
