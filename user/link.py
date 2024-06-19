@@ -19,11 +19,13 @@ scoreboard objectives add {namespace}.withdraw trigger
 scoreboard objectives add {namespace}.hearts dummy
 execute unless score MAX_HEARTS {namespace}.data matches 1.. run scoreboard players set MAX_HEARTS {namespace}.data 20
 execute unless score REVIVED_HEARTS {namespace}.data matches 1.. run scoreboard players set REVIVED_HEARTS {namespace}.data 4
-forceload add 0 0
 """, prepend = True)
 
 	# Add tick function
-	write_to_file(f"{functions}/v{version}/tick.mcfunction", f"execute as @a[sort=random] run function {namespace}:player/tick\n")
+	write_to_file(f"{functions}/v{version}/tick.mcfunction", f"""
+execute as @a[sort=random,scores={{{namespace}.death=1..}}] run function {namespace}:player/tick
+execute as @a[sort=random] run function {namespace}:player/tick
+""")
 
 	# Add player function
 	write_to_file(f"{functions}/player/tick.mcfunction", f"""
@@ -49,6 +51,7 @@ execute if score @s {namespace}.kill matches 1.. run scoreboard players set @s {
 execute if score @s {namespace}.death matches 1.. run scoreboard players remove @s {namespace}.hearts 1
 execute if score @s {namespace}.death matches 1.. run tellraw @s [{{"text":"You lost a heart, you now have ","color":"gray"}},{{"score":{{"name":"@s","objective":"{namespace}.hearts"}}, "color":"red"}},{{"text":" hearts!"}}]
 execute if score @s {namespace}.death matches 1.. run function {namespace}:player/update_health
+execute if score @s {namespace}.death matches 1.. unless entity @a[scores={{{namespace}.kill=1..}}] run function {namespace}:player/drop_heart_at_death
 execute if score @s {namespace}.death matches 1.. run scoreboard players set @s {namespace}.death 0
 execute if score @s {namespace}.hearts matches 0 run function {namespace}:player/death
 """)
@@ -110,7 +113,7 @@ tellraw @s [{{"text":"You ate a heart, you now have ","color":"gray"}},{{"score"
 	write_to_file(f"{functions}/player/death.mcfunction", f"""
 # Get player username
 tag @e[type=item] add {namespace}.temp
-loot spawn 0 0 0 loot {namespace}:player_head
+execute at @s run loot spawn ~ ~ ~ loot {namespace}:player_head
 data modify storage {namespace}:main player set from entity @e[type=item,tag=!{namespace}.temp,limit=1] Item.components."minecraft:profile".name
 kill @e[type=item,tag=!{namespace}.temp]
 tag @e[type=item,tag={namespace}.temp] remove {namespace}.temp
@@ -164,6 +167,22 @@ $execute if data storage {namespace}:main banned_players.$(player) run return ru
 # If player is not found, return fail
 $tellraw @s [{{"text":"Player '$(player)' not found in the banned list!","color":"red"}}]
 return fail
+""")
+	
+	# Drop heart at death function
+	write_to_file(f"{functions}/player/drop_heart_at_death.mcfunction", f"""
+# Copy in a storage the arguments for the macro
+data modify storage {namespace}:main death_pos set value {{dimension:"minecraft:overworld",x:0,y:0,z:0}}
+data modify storage {namespace}:main death_pos.dimension set from entity @s LastDeathLocation.dimension
+data modify storage {namespace}:main death_pos.x set from entity @s LastDeathLocation.pos[0]
+data modify storage {namespace}:main death_pos.y set from entity @s LastDeathLocation.pos[1]
+data modify storage {namespace}:main death_pos.z set from entity @s LastDeathLocation.pos[2]
+
+# Drop the heart
+function {namespace}:player/drop_heart_macro with storage {namespace}:main death_pos
+""")
+	write_to_file(f"{functions}/player/drop_heart_macro.mcfunction", f"""
+$execute in $(dimension) run loot spawn $(x) $(y) $(z) loot {namespace}:i/heart
 """)
 	
 	pass

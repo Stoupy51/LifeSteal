@@ -27,6 +27,7 @@ def main(config: dict) -> dict[str, dict]:
 			}],
 			CATEGORY: "food",
 			"food": {"can_always_eat": True, "nutrition": 0, "saturation": 0},
+			"lore": ['{"text":"Rename the item to the username","italic":false,"color":"gray"}', '{"text":"of the player you want to revive.","italic":false,"color":"gray"}'],
 			OVERRIDE_MODEL: {"parent":"block/beacon","textures":{"beacon":f"{namespace}:item/inner_beacon"}},
 		},
 	}

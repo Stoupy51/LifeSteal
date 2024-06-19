@@ -26,11 +26,13 @@
 				"nutrition": 0,
 				"saturation": 0
 			},
-			"minecraft:custom_model_data": 2010101,
-			"minecraft:item_name": "{'text': 'Revive Beacon', 'italic': false, 'color': 'white'}",
 			"minecraft:lore": [
+				"{\"text\":\"Rename the item to the username\",\"italic\":false,\"color\":\"gray\"}",
+				"{\"text\":\"of the player you want to revive.\",\"italic\":false,\"color\":\"gray\"}",
 				"{'text': 'LifeSteal', 'italic': true, 'color': 'blue'}"
 			],
+			"minecraft:custom_model_data": 2010101,
+			"minecraft:item_name": "{'text': 'Revive Beacon', 'italic': false, 'color': 'white'}",
 			"minecraft:custom_data": {
 				"life_steal": {
 					"revive_beacon": true
