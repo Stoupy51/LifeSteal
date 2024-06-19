@@ -1,0 +1,35 @@
+{
+	"pools": [
+		{
+			"rolls": 1,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "minecraft:command_block",
+					"functions": [
+						{
+							"function": "minecraft:set_components",
+							"components": {
+								"minecraft:food": {
+									"can_always_eat": true,
+									"nutrition": 0,
+									"saturation": 0
+								},
+								"minecraft:custom_model_data": 2010100,
+								"minecraft:item_name": "{'text': 'Heart', 'italic': false, 'color': 'white'}",
+								"minecraft:lore": [
+									"{'text': 'LifeSteal', 'italic': true, 'color': 'blue'}"
+								],
+								"minecraft:custom_data": {
+									"life_steal": {"heart": true},
+									"smithed": {"ignore": {"functionality": true,"crafting": true}}
+								}
+							}
+						}
+					]
+				}
+			]
+		}
+	]
+}
+

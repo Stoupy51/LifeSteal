@@ -8,5 +8,16 @@ from python_datapack.utils.io import *
 def main(config: dict) -> None:
 	database: dict[str, dict] = config["database"]
 	namespace: str = config["namespace"]
+	functions: str = f"{config['build_datapack']}/data/{namespace}/function"
+	version: str = config["version"]
+
+	# Add scoreboard objectives
+	confirm_load: str = f"{functions}/v{version}/load/confirm_load.mcfunction"
+	# write_to_file(confirm_load, f"scoreboard objectives add {namespace}.kill playerKill\n", prepend = True)
+	# write_to_file(confirm_load, f"scoreboard objectives add {namespace}.death deathCount\n", prepend = True)
+
+
+
+
 	pass
 

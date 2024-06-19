@@ -1,0 +1,7 @@
+{
+	"parent": "block/beacon",
+	"textures": {
+		"beacon": "life_steal:item/inner_beacon"
+	}
+}
+

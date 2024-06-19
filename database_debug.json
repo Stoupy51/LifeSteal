@@ -1,0 +1,23 @@
+{
+	"heart": {
+		"id": "minecraft:command_block",
+		"result_of_crafting": [{"type": "crafting_shaped","result_count": 1,"category": "misc","shape": ["NDN","DTD","NDN"],"ingredients": {"N": {"item": "minecraft:netherite_ingot"},"D": {"item": "minecraft:diamond_block"},"T": {"item": "minecraft:totem_of_undying"}}}],
+		"category": "food",
+		"food": {"can_always_eat": true,"nutrition": 0,"saturation": 0},
+		"custom_model_data": 2010100,
+		"item_name": "{'text': 'Heart', 'italic': false, 'color': 'white'}",
+		"lore": ["{'text': 'LifeSteal', 'italic': true, 'color': 'blue'}"],
+		"custom_data": {"life_steal": {"heart": true},"smithed": {"ignore": {"functionality": true,"crafting": true}}}
+	},
+	"revive_beacon": {
+		"id": "minecraft:command_block",
+		"result_of_crafting": [{"type": "crafting_shaped","result_count": 1,"category": "misc","shape": ["TNT","NBN","TNT"],"ingredients": {"T": {"item": "minecraft:totem_of_undying"},"N": {"item": "minecraft:netherite_ingot"},"B": {"item": "minecraft:beacon"}}}],
+		"category": "food",
+		"food": {"can_always_eat": true,"nutrition": 0,"saturation": 0},
+		"override_model": {"parent": "block/beacon","textures": {"beacon": "life_steal:item/inner_beacon"}},
+		"custom_model_data": 2010101,
+		"item_name": "{'text': 'Revive Beacon', 'italic': false, 'color': 'white'}",
+		"lore": ["{'text': 'LifeSteal', 'italic': true, 'color': 'blue'}"],
+		"custom_data": {"life_steal": {"revive_beacon": true},"smithed": {"ignore": {"functionality": true,"crafting": true}}}
+	}
+}

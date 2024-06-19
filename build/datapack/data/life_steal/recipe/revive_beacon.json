@@ -1,0 +1,45 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"pattern": [
+		"TNT",
+		"NBN",
+		"TNT"
+	],
+	"key": {
+		"T": {
+			"item": "minecraft:totem_of_undying"
+		},
+		"N": {
+			"item": "minecraft:netherite_ingot"
+		},
+		"B": {
+			"item": "minecraft:beacon"
+		}
+	},
+	"result": {
+		"id": "minecraft:command_block",
+		"count": 1,
+		"components": {
+			"minecraft:food": {
+				"can_always_eat": true,
+				"nutrition": 0,
+				"saturation": 0
+			},
+			"minecraft:custom_model_data": 2010101,
+			"minecraft:item_name": "{'text': 'Revive Beacon', 'italic': false, 'color': 'white'}",
+			"minecraft:lore": [
+				"{'text': 'LifeSteal', 'italic': true, 'color': 'blue'}"
+			],
+			"minecraft:custom_data": {
+				"life_steal": {
+					"revive_beacon": true
+				},
+				"smithed": {
+					"ignore": {"functionality": true,"crafting": true}
+				}
+			}
+		}
+	}
+}
+

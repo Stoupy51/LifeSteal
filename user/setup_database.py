@@ -1,13 +1,41 @@
 
 # Import database helper (from python_datapack, containing database helper functions)
 from python_datapack.utils.database_helper import *
+STARTING_CMD: int = 2010100
 
 # Main function should return a database
 def main(config: dict) -> dict[str, dict]:
-	database: dict[str, dict] = {}
+	namespace: str = config["namespace"]
 
-	# Add your code to set database
-	pass
+	# Define custom items
+	database: dict[str, dict] = {
+		"heart": {
+			"id": CUSTOM_ITEM_VANILLA,
+			RESULT_OF_CRAFTING: [{
+				"type":"crafting_shaped", "result_count":1, "category":"misc", "shape":["NDN","DTD","NDN"],
+	 			"ingredients":{"N":ingr_repr("minecraft:netherite_ingot"), "D":ingr_repr("minecraft:diamond_block"), "T":ingr_repr("minecraft:totem_of_undying")}
+			}],
+			CATEGORY: "food",
+			"food": {"can_always_eat": True, "nutrition": 0, "saturation": 0},
+		},
+
+		"revive_beacon": {
+			"id": CUSTOM_ITEM_VANILLA,
+			RESULT_OF_CRAFTING: [{
+				"type":"crafting_shaped", "result_count":1, "category":"misc", "shape":["TNT","NBN","TNT"],
+	 			"ingredients":{"T":ingr_repr("minecraft:totem_of_undying"), "N":ingr_repr("minecraft:netherite_ingot"), "B":ingr_repr("minecraft:beacon")}
+			}],
+			CATEGORY: "food",
+			"food": {"can_always_eat": True, "nutrition": 0, "saturation": 0},
+			OVERRIDE_MODEL: {"parent":"block/beacon","textures":{"beacon":f"{namespace}:item/inner_beacon"}},
+		},
+	}
+
+	# Final adjustments
+	deterministic_custom_model_data(config, database, STARTING_CMD)
+	add_item_name_and_lore_if_missing(config, database)
+	add_private_custom_data_for_namespace(config, database)
+	add_smithed_ignore_vanilla_behaviours_convention(database)
 
 	# Return database
 	return database
