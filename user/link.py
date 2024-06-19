@@ -29,7 +29,8 @@ execute as @a[sort=random] run function {namespace}:player/tick
 
 	# Add player function
 	write_to_file(f"{functions}/player/tick.mcfunction", f"""
-# Setup hearts objective if not set
+# Setup hearts objective if not set and get all recipes
+execute unless score @s {namespace}.hearts matches 0.. run function {namespace}:utils/get_all_recipes
 execute unless score @s {namespace}.hearts matches 0.. store result score @s {namespace}.hearts run attribute @s minecraft:generic.max_health base get 0.5
 
 # If data = 1, player is revived so update health
