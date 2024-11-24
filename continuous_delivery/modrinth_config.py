@@ -3,12 +3,7 @@
 from config import *
 
 # Constants
-SUMMARY: str = """
-Life Steal FR is a simple datapack aiming to add life steal behaviours from the original Lifesteal SMP:
-https://lifesteal.fandom.com/wiki/Season_1
-
-This datapack adds texture for the revive beacon and use 1.21 food components for interactions with the system (eating a heart, consuming a renamed revive beacon)
-"""
+SUMMARY: str = "Life Steal FR is a simple datapack aiming to add life steal behaviours from the original Lifesteal SMP:\nhttps://lifesteal.fandom.com/wiki/Season_1"
 
 DESCRIPTION_MARKDOWN: str = ""
 if os.path.exists(f"{ROOT}/README.md"):
