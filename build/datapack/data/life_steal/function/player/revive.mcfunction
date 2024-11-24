@@ -1,5 +1,5 @@
 
-#> life_steal:player/revive_player
+#> life_steal:player/revive
 #
 # @within	life_steal:player/consume_beacon with storage life_steal:main
 #

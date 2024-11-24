@@ -11,8 +11,7 @@ def main(config: dict) -> None:
 	version: str = config["version"]
 
 	# Add scoreboard objectives
-	confirm_load: str = f"{functions}/v{version}/load/confirm_load.mcfunction"
-	write_to_file(confirm_load, f"""
+	write_to_load_file(config, f"""
 scoreboard objectives add {namespace}.kill playerKillCount
 scoreboard objectives add {namespace}.death deathCount
 scoreboard objectives add {namespace}.withdraw trigger
@@ -22,7 +21,7 @@ execute unless score REVIVED_HEARTS {namespace}.data matches 1.. run scoreboard 
 """, prepend = True)
 
 	# Add tick function
-	write_to_file(f"{functions}/v{version}/tick.mcfunction", f"""
+	write_to_tick_file(config, f"""
 execute as @a[sort=random,scores={{{namespace}.death=1..}}] run function {namespace}:player/tick
 execute as @a[sort=random] run function {namespace}:player/tick
 """)
@@ -31,7 +30,7 @@ execute as @a[sort=random] run function {namespace}:player/tick
 	write_to_file(f"{functions}/player/tick.mcfunction", f"""
 # Setup hearts objective if not set and get all recipes
 execute unless score @s {namespace}.hearts matches 0.. run function {namespace}:utils/get_all_recipes
-execute unless score @s {namespace}.hearts matches 0.. store result score @s {namespace}.hearts run attribute @s minecraft:generic.max_health base get 0.5
+execute unless score @s {namespace}.hearts matches 0.. store result score @s {namespace}.hearts run attribute @s minecraft:max_health base get 0.5
 
 # If data = 1, player is revived so update health
 execute if score @s {namespace}.data matches 1 run function {namespace}:player/update_health
@@ -63,7 +62,7 @@ execute store result storage {namespace}:main health int 2 run scoreboard player
 function {namespace}:player/update_macro with storage {namespace}:main
 execute at @s run playsound entity.player.levelup ambient @s
 """)
-	write_to_file(f"{functions}/player/update_macro.mcfunction", "$attribute @s minecraft:generic.max_health base set $(health)")
+	write_to_file(f"{functions}/player/update_macro.mcfunction", "$attribute @s max_health base set $(health)")
 
 	# Add withdraw function
 	write_to_file(f"{functions}/player/withdraw.mcfunction", f"""
@@ -149,14 +148,14 @@ advancement revoke @s only {namespace}:consume_beacon
 data remove storage {namespace}:main player
 scoreboard players set #success {namespace}.data 0
 execute if data entity @s SelectedItem.components."minecraft:custom_data".life_steal.revive_beacon run data modify storage {namespace}:main player set string entity @s SelectedItem.components."minecraft:custom_name" 1 -1
-execute if data entity @s Inventory[-1].components."minecraft:custom_data".life_steal.revive_beacon run data modify storage {namespace}:main player set string entity @s Inventory[-1].components."minecraft:custom_name" 1 -1
-function {namespace}:player/revive_player with storage {namespace}:main
+execute unless data storage {namespace}:main player if data entity @s Inventory[-1].components."minecraft:custom_data".life_steal.revive_beacon run data modify storage {namespace}:main player set string entity @s Inventory[-1].components."minecraft:custom_name" 1 -1
+function {namespace}:player/revive with storage {namespace}:main
 
 # If not success, regive the beacon and stop function
 execute if score #success {namespace}.data matches 0 run loot give @s[gamemode=!creative] loot {namespace}:i/revive_beacon
 execute if score #success {namespace}.data matches 0 run return fail
 """)
-	write_to_file(f"{functions}/player/revive_player.mcfunction", f"""
+	write_to_file(f"{functions}/player/revive.mcfunction", f"""
 # If player is banned, pardon him and return success
 $execute if data storage {namespace}:main banned_players.$(player) run pardon $(player)
 $execute if data storage {namespace}:main banned_players.$(player) run tellraw @a [{{"selector":"@s","color":"green"}},{{"text":" used a revive beacon to revive '$(player)'!"}}]

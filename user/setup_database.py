@@ -1,7 +1,6 @@
 
 # Import database helper (from python_datapack, containing database helper functions)
 from python_datapack.utils.database_helper import *
-STARTING_CMD: int = 2010100
 
 # Main function should return a database
 def main(config: dict) -> dict[str, dict]:
@@ -16,7 +15,7 @@ def main(config: dict) -> dict[str, dict]:
 	 			"ingredients":{"N":ingr_repr("minecraft:netherite_ingot"), "D":ingr_repr("minecraft:diamond_block"), "T":ingr_repr("minecraft:totem_of_undying")}
 			}],
 			CATEGORY: "food",
-			"food": {"can_always_eat": True, "nutrition": 0, "saturation": 0},
+			"consumable": {},
 		},
 
 		"revive_beacon": {
@@ -26,14 +25,14 @@ def main(config: dict) -> dict[str, dict]:
 	 			"ingredients":{"T":ingr_repr("minecraft:totem_of_undying"), "N":ingr_repr("minecraft:netherite_ingot"), "B":ingr_repr("minecraft:beacon")}
 			}],
 			CATEGORY: "food",
-			"food": {"can_always_eat": True, "nutrition": 0, "saturation": 0},
+			"consumable": {},
 			"lore": ['{"text":"Rename the item to the username","italic":false,"color":"gray"}', '{"text":"of the player you want to revive.","italic":false,"color":"gray"}'],
 			OVERRIDE_MODEL: {"parent":"block/beacon","textures":{"beacon":f"{namespace}:item/inner_beacon"}},
 		},
 	}
 
 	# Final adjustments
-	deterministic_custom_model_data(config, database, STARTING_CMD)
+	add_item_model_component(config, database)
 	add_item_name_and_lore_if_missing(config, database)
 	add_private_custom_data_for_namespace(config, database)
 	add_smithed_ignore_vanilla_behaviours_convention(database)

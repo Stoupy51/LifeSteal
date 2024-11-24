@@ -6,7 +6,7 @@
 
 # Setup hearts objective if not set and get all recipes
 execute unless score @s life_steal.hearts matches 0.. run function life_steal:utils/get_all_recipes
-execute unless score @s life_steal.hearts matches 0.. store result score @s life_steal.hearts run attribute @s minecraft:generic.max_health base get 0.5
+execute unless score @s life_steal.hearts matches 0.. store result score @s life_steal.hearts run attribute @s minecraft:max_health base get 0.5
 
 # If data = 1, player is revived so update health
 execute if score @s life_steal.data matches 1 run function life_steal:player/update_health
