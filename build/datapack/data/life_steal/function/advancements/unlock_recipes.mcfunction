@@ -30,3 +30,7 @@ scoreboard players set #success life_steal.data 0
 execute store success score #success life_steal.data if items entity @s container.* minecraft:beacon
 execute if score #success life_steal.data matches 1 run recipe give @s life_steal:revive_beacon
 
+## Add result items
+execute if items entity @s container.* *[custom_data~{"life_steal": {"heart":true} }] run recipe give @s life_steal:heart
+execute if items entity @s container.* *[custom_data~{"life_steal": {"revive_beacon":true} }] run recipe give @s life_steal:revive_beacon
+
