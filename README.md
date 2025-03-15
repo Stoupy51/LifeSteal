@@ -26,3 +26,13 @@ As datapack don't have `/ban` permissions by default, you should edit your `serv
 
 ![Life Steal Image](https://cdn.modrinth.com/data/3Gjekf6h/images/e4342487d618915d2a9d913e5774b41ca47b08b4.png)
 
+## ⭐ Star History
+
+<a href="https://star-history.com/#Stoupy51/LifeSteal&Date">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Stoupy51/LifeSteal&type=Date&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Stoupy51/LifeSteal&type=Date" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Stoupy51/LifeSteal&type=Date" />
+ </picture>
+</a>
+

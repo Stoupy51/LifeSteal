@@ -1,7 +1,7 @@
 
 # Imports
+import stouputils as stp
 from python_datapack.constants import *
-from python_datapack.utils.print import *
 from python_datapack.utils.io import *
 
 # Main function is run just before making finalyzing the build process (zip, headers, lang, ...)
@@ -85,7 +85,7 @@ tellraw @s [{{"text":"You withdrew a heart, you now have ","color":"gray"}},{{"s
 	advancement: str = f"{config['build_datapack']}/data/{namespace}/advancement/consume_heart.json"
 	json_content: dict = {"criteria":{"requirement":{"trigger":"minecraft:consume_item","conditions":{"item":{"predicates":{"minecraft:custom_data":f"{{\"{namespace}\":{{\"heart\":true}}}}"}}}}}}
 	json_content["rewards"] = {"function": f"{namespace}:player/consume_heart"}
-	write_to_file(advancement, super_json_dump(json_content, max_level = -1))
+	write_to_file(advancement, stp.super_json_dump(json_content, max_level = -1))
 
 	# Function
 	write_to_file(f"{functions}/player/consume_heart.mcfunction", f"""
@@ -107,7 +107,7 @@ tellraw @s [{{"text":"You ate a heart, you now have ","color":"gray"}},{{"score"
 	
 	# Get player head loot table
 	json_content: dict = {"pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"minecraft:player_head","functions":[{"function":"minecraft:fill_player_head","entity":"this"}]}]}]}
-	write_to_file(f"{config['build_datapack']}/data/{namespace}/loot_table/player_head.json", super_json_dump(json_content, max_level = -1))
+	write_to_file(f"{config['build_datapack']}/data/{namespace}/loot_table/player_head.json", stp.super_json_dump(json_content, max_level = -1))
 
 	# Function death (when reaching 0 heart)
 	write_to_file(f"{functions}/player/death.mcfunction", f"""
@@ -137,7 +137,7 @@ $data modify storage {namespace}:main banned_players.$(player) set value true
 	advancement: str = f"{config['build_datapack']}/data/{namespace}/advancement/consume_beacon.json"
 	json_content: dict = {"criteria":{"requirement":{"trigger":"minecraft:consume_item","conditions":{"item":{"predicates":{"minecraft:custom_data":f"{{\"{namespace}\":{{\"revive_beacon\":true}}}}"}}}}}}
 	json_content["rewards"] = {"function": f"{namespace}:player/consume_beacon"}
-	write_to_file(advancement, super_json_dump(json_content, max_level = -1))
+	write_to_file(advancement, stp.super_json_dump(json_content, max_level = -1))
 
 	# Function
 	write_to_file(f"{functions}/player/consume_beacon.mcfunction", f"""
@@ -147,7 +147,7 @@ advancement revoke @s only {namespace}:consume_beacon
 # Get username from beacon name
 data remove storage {namespace}:main player
 scoreboard players set #success {namespace}.data 0
-execute if data entity @s SelectedItem.components."minecraft:custom_data".life_steal.revive_beacon run data modify storage {namespace}:main player set string entity @s SelectedItem.components."minecraft:custom_name" 1 -1
+execute if data entity @s SelectedItem.components."minecraft:custom_data".life_steal.revive_beacon run data modify storage {namespace}:main player set string entity @s SelectedItem.components."minecraft:custom_name"
 execute unless data storage {namespace}:main player if data entity @s Inventory[-1].components."minecraft:custom_data".life_steal.revive_beacon run data modify storage {namespace}:main player set string entity @s Inventory[-1].components."minecraft:custom_name" 1 -1
 function {namespace}:player/revive with storage {namespace}:main
 

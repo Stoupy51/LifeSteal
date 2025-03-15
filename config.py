@@ -19,8 +19,6 @@ AUTHOR: str = "Stoupy51"				# Author(s) name(s) displayed in pack.mcmeta, also u
 PROJECT_NAME: str = "LifeSteal"			# Name of the datapack, used for messages and items lore
 VERSION: str = "1.1.1"					# Datapack version in the following mandatory format: major.minor.patch, ex: 1.0.0 or 1.21.615
 NAMESPACE: str = "life_steal"			# Used to namespace functions, tags, etc. Should be the same you use in the merge folder.
-DATAPACK_FORMAT: int = 48				# Pack format version, see https://minecraft.wiki/w/Pack_format#List_of_data_pack_formats
-RESOURCE_PACK_FORMAT: int = 34			# Resource pack format version, see https://minecraft.wiki/w/Pack_format#List_of_resource_pack_formats
 DESCRIPTION = f"{PROJECT_NAME} [{VERSION}] by {AUTHOR}"	# Pack description displayed in pack.mcmeta
 
 
@@ -42,8 +40,6 @@ configuration = {
 	"project_name": PROJECT_NAME,
 	"version": VERSION,
 	"namespace": NAMESPACE,
-	"datapack_format": DATAPACK_FORMAT,
-	"resource_pack_format": RESOURCE_PACK_FORMAT,
 	"description": DESCRIPTION,
 	"source_lore": SOURCE_LORE,
 	"merge_libs": MERGE_LIBS,

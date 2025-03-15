@@ -26,7 +26,7 @@ def main(config: dict) -> dict[str, dict]:
 			}],
 			CATEGORY: "food",
 			"consumable": {},
-			"lore": ['{"text":"Rename the item to the username","italic":false,"color":"gray"}', '{"text":"of the player you want to revive.","italic":false,"color":"gray"}'],
+			"lore": [{"text":"Rename the item to the username","italic":False,"color":"gray"}, {"text":"of the player you want to revive.","italic":False,"color":"gray"}],
 			OVERRIDE_MODEL: {"parent":"block/beacon","textures":{"beacon":f"{namespace}:item/inner_beacon"}},
 		},
 	}
