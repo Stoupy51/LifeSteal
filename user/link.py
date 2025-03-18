@@ -162,6 +162,7 @@ $execute if data storage {namespace}:main banned_players.$(player) run tellraw @
 $execute if data storage {namespace}:main banned_players.$(player) as @a at @s run playsound ui.toast.challenge_complete ambient @s
 $execute if data storage {namespace}:main banned_players.$(player) run scoreboard players operation $(player) {namespace}.hearts = REVIVED_HEARTS {namespace}.data
 $execute if data storage {namespace}:main banned_players.$(player) run scoreboard players set $(player) {namespace}.data 1
+$execute if data storage {namespace}:main banned_players.$(player) run scoreboard players set #success {namespace}.data 1
 $execute if data storage {namespace}:main banned_players.$(player) run return run data remove storage {namespace}:main banned_players.$(player)
 
 # If player is not found, return fail
