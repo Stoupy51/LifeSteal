@@ -148,7 +148,7 @@ advancement revoke @s only {namespace}:consume_beacon
 data remove storage {namespace}:main player
 scoreboard players set #success {namespace}.data 0
 execute if data entity @s SelectedItem.components."minecraft:custom_data".life_steal.revive_beacon run data modify storage {namespace}:main player set string entity @s SelectedItem.components."minecraft:custom_name"
-execute unless data storage {namespace}:main player if data entity @s Inventory[-1].components."minecraft:custom_data".life_steal.revive_beacon run data modify storage {namespace}:main player set string entity @s Inventory[-1].components."minecraft:custom_name" 1 -1
+execute unless data storage {namespace}:main player if data entity @s Inventory[-1].components."minecraft:custom_data".life_steal.revive_beacon run data modify storage {namespace}:main player set string entity @s Inventory[-1].components."minecraft:custom_name"
 function {namespace}:player/revive with storage {namespace}:main
 
 # If not success, regive the beacon and stop function
