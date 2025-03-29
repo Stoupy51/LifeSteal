@@ -17,7 +17,7 @@ MERGE_LIBS: bool = False
 # Datapack related constants
 AUTHOR: str = "Stoupy51"				# Author(s) name(s) displayed in pack.mcmeta, also used to add convention.debug tag to the players of the same name(s) <-- showing additionnal displays like datapack loading
 PROJECT_NAME: str = "LifeSteal"			# Name of the datapack, used for messages and items lore
-VERSION: str = "1.2.1"					# Datapack version in the following mandatory format: major.minor.patch, ex: 1.0.0 or 1.21.615
+VERSION: str = "1.2.2"					# Datapack version in the following mandatory format: major.minor.patch, ex: 1.0.0 or 1.21.615
 NAMESPACE: str = "life_steal"			# Used to namespace functions, tags, etc. Should be the same you use in the merge folder.
 DESCRIPTION = f"{PROJECT_NAME} [{VERSION}] by {AUTHOR}"	# Pack description displayed in pack.mcmeta
 
