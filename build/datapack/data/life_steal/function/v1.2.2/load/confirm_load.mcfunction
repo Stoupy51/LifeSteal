@@ -10,6 +10,7 @@ scoreboard objectives add life_steal.withdraw trigger
 scoreboard objectives add life_steal.hearts dummy
 execute unless score MAX_HEARTS life_steal.data matches 1.. run scoreboard players set MAX_HEARTS life_steal.data 20
 execute unless score REVIVED_HEARTS life_steal.data matches 1.. run scoreboard players set REVIVED_HEARTS life_steal.data 4
+execute unless score NATURAL_DEATH_HEART_DROP life_steal.data matches 0..1 run scoreboard players set NATURAL_DEATH_HEART_DROP life_steal.data 1
 
 # Confirm load
 tellraw @a[tag=convention.debug] {"text":"[Loaded LifeSteal v1.2.2]","color":"green"}

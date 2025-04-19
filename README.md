@@ -12,15 +12,22 @@ Life Steal FR is a simple datapack aiming to add life steal behaviours from the 
 
 This datapack adds texture for the revive beacon and use 1.21 food components for interactions with the system (eating a heart, consuming a renamed revive beacon)
 
-## Download links:
+## 📥 Download links:
 - Modrinth: [https://modrinth.com/datapack/lifestealfr/](https://modrinth.com/datapack/lifestealfr/)
 - PlanetMinecraft: [https://www.planetminecraft.com/data-pack/life-steal-fr/](https://www.planetminecraft.com/data-pack/life-steal-fr/)
 
-## Configuration
-By default, revived players restart with 4 hearts and the maximum heart amount is 20.<br>
-You can change that with these two commands when being /op:
-- `scoreboard players set MAX_HEARTS life_steal.data 20`
-- `scoreboard players set REVIVED_HEARTS life_steal.data 4`
+## ⚙️ Configuration
+Players can withdraw hearts by typing `/trigger life_steal.withdraw`.
+
+Default settings:
+- Revived players respawn with 4 hearts
+- Maximum heart limit is set to 20 hearts
+- Players lose a heart upon death (whether killed by another player or from natural causes)
+
+These settings can be customized using the following commands (requires operator permissions):
+- `scoreboard players set MAX_HEARTS life_steal.data 20` (Maximum of 20 hearts)
+- `scoreboard players set REVIVED_HEARTS life_steal.data 4` (Amount of hearts to respawn with when revived)
+- `scoreboard players set NATURAL_DEATH_HEART_DROP life_steal.data 1` (1 = drop a heart when dying to non player, 0 = disable that)
 
 As datapack don't have `/ban` permissions by default, you should edit your `server.properties` file and set the line `function-permission-level` to `3`
 
@@ -28,11 +35,13 @@ As datapack don't have `/ban` permissions by default, you should edit your `serv
 
 ## ⭐ Star History
 
-<a href="https://star-history.com/#Stoupy51/LifeSteal&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Stoupy51/LifeSteal&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Stoupy51/LifeSteal&type=Date" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Stoupy51/LifeSteal&type=Date" />
- </picture>
-</a>
+<html>
+  <a href="https://star-history.com/#Stoupy51/LifeSteal&Date">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Stoupy51/LifeSteal&type=Date&theme=dark" />
+      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Stoupy51/LifeSteal&type=Date" />
+      <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Stoupy51/LifeSteal&type=Date" />
+    </picture>
+  </a>
+</html>
 
