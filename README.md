@@ -7,7 +7,7 @@
 [![Discord](https://img.shields.io/discord/1216400498488377467?label=Discord&logo=discord)](https://discord.gg/anxzu6rA9F)
 [![Python Datapack](https://img.shields.io/github/v/release/Stoupy51/python_datapack?logo=github&label=Python%20Datapack)](https://github.com/Stoupy51/PythonDatapackTemplate)
 
-Life Steal FR is a simple datapack aiming to add life steal behaviours from the original Lifesteal SMP:<br>
+Life Steal FR is a simple datapack configurable aiming to add life steal behaviours from the original Lifesteal SMP:<br>
 [https://lifesteal.fandom.com/wiki/Season_1](https://lifesteal.fandom.com/wiki/Season_1)
 
 This datapack adds texture for the revive beacon and use 1.21 food components for interactions with the system (eating a heart, consuming a renamed revive beacon)

@@ -3,7 +3,7 @@
 from config import *
 
 # Constants
-SUMMARY: str = "Life Steal FR is a simple datapack aiming to add life steal behaviours from the original Lifesteal SMP:\nhttps://lifesteal.fandom.com/wiki/Season_1"
+SUMMARY: str = "Life Steal FR is a simple datapack configurable aiming to add life steal behaviours from the original Lifesteal SMP:\nhttps://lifesteal.fandom.com/wiki/Season_1"
 
 DESCRIPTION_MARKDOWN: str = ""
 if os.path.exists(f"{ROOT}/README.md"):
