@@ -26,8 +26,8 @@ execute if score @s life_steal.kill matches 1.. run scoreboard players set @s li
 # If player died, remove a heart
 execute if score @s life_steal.death matches 1.. run scoreboard players remove @s life_steal.hearts 1
 execute if score @s life_steal.death matches 1.. run tellraw @s [{"text":"You lost a heart, you now have ","color":"gray"},{"score":{"name":"@s","objective":"life_steal.hearts"}, "color":"red"},{"text":" hearts!"}]
-execute if score @s life_steal.death matches 1.. run function life_steal:player/update_health
 execute if score @s life_steal.death matches 1.. unless entity @a[scores={life_steal.kill=1..}] run function life_steal:player/drop_heart_at_death
+execute if score @s life_steal.death matches 1.. run function life_steal:player/update_health
 execute if score @s life_steal.death matches 1.. run scoreboard players set @s life_steal.death 0
 execute if score @s life_steal.hearts matches 0 run function life_steal:player/death
 

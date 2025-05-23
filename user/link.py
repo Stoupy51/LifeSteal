@@ -4,6 +4,7 @@ import stouputils as stp
 from python_datapack.constants import *
 from python_datapack.utils.io import *
 
+
 # Main function is run just before making finalyzing the build process (zip, headers, lang, ...)
 def main(config: dict) -> None:
 	ns: str = config["namespace"]
@@ -49,12 +50,12 @@ execute if score @s {ns}.kill matches 1.. run scoreboard players set @s {ns}.kil
 # If player died, remove a heart
 execute if score @s {ns}.death matches 1.. run scoreboard players remove @s {ns}.hearts 1
 execute if score @s {ns}.death matches 1.. run tellraw @s [{{"text":"You lost a heart, you now have ","color":"gray"}},{{"score":{{"name":"@s","objective":"{ns}.hearts"}}, "color":"red"}},{{"text":" hearts!"}}]
-execute if score @s {ns}.death matches 1.. run function {ns}:player/update_health
 execute if score @s {ns}.death matches 1.. unless entity @a[scores={{{ns}.kill=1..}}] run function {ns}:player/drop_heart_at_death
+execute if score @s {ns}.death matches 1.. run function {ns}:player/update_health
 execute if score @s {ns}.death matches 1.. run scoreboard players set @s {ns}.death 0
 execute if score @s {ns}.hearts matches 0 run function {ns}:player/death
 """)
-	
+
 	# Add update_health function
 	write_function(config, f"{ns}:player/update_health", f"""
 execute store result storage {ns}:main health int 2 run scoreboard players get @s {ns}.hearts
@@ -78,7 +79,7 @@ function {ns}:player/update_health
 # Tellraw message
 tellraw @s [{{"text":"You withdrew a heart, you now have ","color":"gray"}},{{"score":{{"name":"@s","objective":"{ns}.hearts"}}, "color":"red"}},{{"text":" hearts!"}}]
 """)
-	
+
 	## Advancement when eating a heart
 	# JSON advancement
 	advancement: str = f"{config['build_datapack']}/data/{ns}/advancement/consume_heart.json"
@@ -103,7 +104,7 @@ function {ns}:player/update_health
 # Tellraw message
 tellraw @s [{{"text":"You ate a heart, you now have ","color":"gray"}},{{"score":{{"name":"@s","objective":"{ns}.hearts"}}, "color":"red"}},{{"text":" hearts!"}}]
 """)
-	
+
 	# Get player head loot table
 	json_content: dict = {"pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"minecraft:player_head","functions":[{"function":"minecraft:fill_player_head","entity":"this"}]}]}]}
 	write_file(f"{config['build_datapack']}/data/{ns}/loot_table/player_head.json", stp.super_json_dump(json_content, max_level = -1))
@@ -187,6 +188,6 @@ function {ns}:player/drop_heart_macro with storage {ns}:main death_pos
 	write_function(config, f"{ns}:player/drop_heart_macro", f"""
 $execute in $(dimension) run loot spawn $(x) $(y) $(z) loot {ns}:i/heart
 """)
-	
+
 	pass
 
