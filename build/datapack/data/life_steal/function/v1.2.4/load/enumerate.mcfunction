@@ -1,5 +1,5 @@
 
-#> life_steal:v1.2.3/load/enumerate
+#> life_steal:v1.2.4/load/enumerate
 #
 # @within	#life_steal:enumerate
 #
@@ -11,5 +11,5 @@ execute unless score #life_steal.major load.status matches 1.. run scoreboard pl
 execute if score #life_steal.major load.status matches 1 unless score #life_steal.minor load.status matches 2.. run scoreboard players set #life_steal.minor load.status 2
 
 # If current patch is too low, set it to the current patch (only if major and minor are correct)
-execute if score #life_steal.major load.status matches 1 if score #life_steal.minor load.status matches 2 unless score #life_steal.patch load.status matches 3.. run scoreboard players set #life_steal.patch load.status 3
+execute if score #life_steal.major load.status matches 1 if score #life_steal.minor load.status matches 2 unless score #life_steal.patch load.status matches 4.. run scoreboard players set #life_steal.patch load.status 4
 
