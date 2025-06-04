@@ -173,7 +173,7 @@ return fail
 	# Drop heart at death function
 	write_function(config, f"{ns}:player/drop_heart_at_death", f"""
 # If NATURAL_DEATH_HEART_DROP is 0, don't drop a heart, give back the lost heart
-execute if score NATURAL_DEATH_HEART_DROP {ns}.data matches 0 run return scoreboard players add @s {ns}.hearts 1
+execute if score NATURAL_DEATH_HEART_DROP {ns}.data matches 0 run return run scoreboard players add @s {ns}.hearts 1
 
 # Copy in a storage the arguments for the macro
 data modify storage {ns}:main death_pos set value {{dimension:"minecraft:overworld",x:0,y:0,z:0}}
