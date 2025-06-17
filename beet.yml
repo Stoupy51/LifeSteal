@@ -1,0 +1,65 @@
+
+# Project identifier used for namespacing functions and tags. Should align with the namespace in the source folder.
+id: "life_steal"
+# Project name that will be used in messages, item lore, etc.
+name: "LifeSteal"
+# Author(s) name(s) displayed in pack.mcmeta, also used to add 'convention.debug' tag to the players of the same name(s) <-- showing additionnal displays like datapack loading
+author: "Stoupy51"
+# Project version in semantic versioning format: major.minor.patch (e.g., 1.0.0 or 2.84.615).
+version: "1.2.5"
+
+# Defines the directory that beet uses for the base path
+directory: "."
+# Path to a folder for beet to output. If not defined, no files will visibly output
+output: "build"
+
+# Takes a nested pack config, see PackConfig() documentation
+data_pack:
+    name: "datapack"
+
+# Takes a nested pack config, see PackConfig() documentation
+resource_pack:
+    name: resource_pack
+
+# A list of strings or dicts representing "plugins".
+# - These plugins will execute after the pack is loaded
+# - If item = str, should be a path to an importable plugin (ex: "stewbeet.plugins.auto_lang")
+# - If item = dict, should be a nestable project config
+#     - Each sub-pipeline creates a temp context inheriting the parent context
+pipeline:
+    - "stewbeet.plugins.initialize"
+    - "user.setup_database" # User code
+    - "stewbeet.plugins.verify_definitions"
+    - "stewbeet.plugins.resource_pack.sounds"
+    - "stewbeet.plugins.resource_pack.item_models"
+    - "stewbeet.plugins.resource_pack.check_power_of_2"
+    - "stewbeet.plugins.custom_recipes"
+    - "stewbeet.plugins.datapack.loading"
+    - "stewbeet.plugins.datapack.loot_tables"
+    - "user.link" # User code
+    - "stewbeet.plugins.finalyze.basic_datapack_structure"
+    - "stewbeet.plugins.finalyze.dependencies"
+    - "stewbeet.plugins.auto.headers"
+    - "stewbeet.plugins.archive"
+    - "stewbeet.plugins.merge_smithed_weld"
+    - "stewbeet.plugins.copy_to_destination"
+    - "stewbeet.plugins.compute_sha1"
+
+# Generic dict which holds extra information usable by plugins
+meta:
+
+    # StewBeet specific configuration
+    stewbeet:
+        # Directory containing all project textures
+        textures_folder: "assets/textures"
+        # Directory containing all custom sounds
+        sounds_folder: "assets/sounds"
+        # Path where definitions debug information will be dumped
+        definitions_debug: "definitions_debug.json"
+        # Optional list of destination paths where generated files will be copied
+        build_copy_destinations:
+            # Paths to copy the datapack(s) to
+            datapack: ["D:/latest_snapshot/world/datapacks"]
+            # Paths to copy the resource pack(s) to
+            resource_pack: ["D:/minecraft/snapshot/resourcepacks"]
+

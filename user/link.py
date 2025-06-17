@@ -1,16 +1,17 @@
 
+# ruff: noqa: E501
 # Imports
-import stouputils as stp
-from python_datapack.constants import *
-from python_datapack.utils.io import *
+from beet import Advancement, Context, LootTable
+from stewbeet.core import *
+from stewbeet.core.utils.io import write_function, write_load_file, write_tick_file
 
 
 # Main function is run just before making finalyzing the build process (zip, headers, lang, ...)
-def main(config: dict) -> None:
-	ns: str = config["namespace"]
+def beet_default(ctx: Context):
+	ns: str = ctx.project_id
 
 	# Add scoreboard objectives
-	write_load_file(config, f"""
+	write_load_file(f"""
 scoreboard objectives add {ns}.kill playerKillCount
 scoreboard objectives add {ns}.death deathCount
 scoreboard objectives add {ns}.withdraw trigger
@@ -21,13 +22,13 @@ execute unless score NATURAL_DEATH_HEART_DROP {ns}.data matches 0..1 run scorebo
 """, prepend = True)
 
 	# Add tick function
-	write_tick_file(config, f"""
+	write_tick_file(f"""
 execute as @a[sort=random,scores={{{ns}.death=1..}}] run function {ns}:player/tick
 execute as @a[sort=random] run function {ns}:player/tick
 """)
 
 	# Add player function
-	write_function(config, f"{ns}:player/tick", f"""
+	write_function(f"{ns}:player/tick", f"""
 # Setup hearts objective if not set and get all recipes
 execute unless score @s {ns}.hearts matches 0.. run function {ns}:utils/get_all_recipes
 execute unless score @s {ns}.hearts matches 0.. store result score @s {ns}.hearts run attribute @s minecraft:max_health base get 0.5
@@ -57,15 +58,15 @@ execute if score @s {ns}.hearts matches 0 run function {ns}:player/death
 """)
 
 	# Add update_health function
-	write_function(config, f"{ns}:player/update_health", f"""
+	write_function(f"{ns}:player/update_health", f"""
 execute store result storage {ns}:main health int 2 run scoreboard players get @s {ns}.hearts
 function {ns}:player/update_macro with storage {ns}:main
 execute at @s run playsound entity.player.levelup ambient @s
 """)
-	write_function(config, f"{ns}:player/update_macro", "$attribute @s max_health base set $(health)")
+	write_function(f"{ns}:player/update_macro", "$attribute @s max_health base set $(health)")
 
 	# Add withdraw function
-	write_function(config, f"{ns}:player/withdraw", f"""
+	write_function(f"{ns}:player/withdraw", f"""
 # Reset withdraw trigger and stop function if not enough hearts
 scoreboard players set @s {ns}.withdraw 0
 execute if score @s {ns}.hearts matches ..1 run tellraw @s {{"text":"You don't have enough hearts to withdraw!","color":"red"}}
@@ -82,13 +83,14 @@ tellraw @s [{{"text":"You withdrew a heart, you now have ","color":"gray"}},{{"s
 
 	## Advancement when eating a heart
 	# JSON advancement
-	advancement: str = f"{config['build_datapack']}/data/{ns}/advancement/consume_heart.json"
 	json_content: dict = {"criteria":{"requirement":{"trigger":"minecraft:consume_item","conditions":{"item":{"predicates":{"minecraft:custom_data":f"{{\"{ns}\":{{\"heart\":true}}}}"}}}}}}
 	json_content["rewards"] = {"function": f"{ns}:player/consume_heart"}
-	write_file(advancement, stp.super_json_dump(json_content, max_level = -1))
+	adv = Advancement(json_content)
+	adv.encoder = lambda x: super_json_dump(x, max_level = -1)
+	ctx.data[ns].advancements["consume_heart"] = adv
 
 	# Function
-	write_function(config, f"{ns}:player/consume_heart", f"""
+	write_function(f"{ns}:player/consume_heart", f"""
 # Revoke the advancement
 advancement revoke @s only {ns}:consume_heart
 
@@ -107,10 +109,12 @@ tellraw @s [{{"text":"You ate a heart, you now have ","color":"gray"}},{{"score"
 
 	# Get player head loot table
 	json_content: dict = {"pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"minecraft:player_head","functions":[{"function":"minecraft:fill_player_head","entity":"this"}]}]}]}
-	write_file(f"{config['build_datapack']}/data/{ns}/loot_table/player_head.json", stp.super_json_dump(json_content, max_level = -1))
+	loot = LootTable(json_content)
+	loot.encoder = lambda x: super_json_dump(x, max_level = -1)
+	ctx.data[ns].loot_tables["player_head"] = loot
 
 	# Function death (when reaching 0 heart)
-	write_function(config, f"{ns}:player/death", f"""
+	write_function(f"{ns}:player/death", f"""
 # Get player username
 tag @e[type=item] add {ns}.temp
 execute at @s run loot spawn ~ ~ ~ loot {ns}:player_head
@@ -121,7 +125,7 @@ tag @e[type=item,tag={ns}.temp] remove {ns}.temp
 # Ban macro
 function {ns}:player/ban_macro with storage {ns}:main
 """)
-	write_function(config, f"{ns}:player/ban_macro", f"""
+	write_function(f"{ns}:player/ban_macro", f"""
 # Tellraw message and ban player
 $tellraw @a {{"text":"Player '$(player)' just got banned for reaching 0 hearts!","color":"red"}}
 $ban $(player) You reached 0 hearts!
@@ -134,13 +138,14 @@ $data modify storage {ns}:main banned_players.$(player) set value true
 
 	## Revive beacon
 	# JSON advancement
-	advancement: str = f"{config['build_datapack']}/data/{ns}/advancement/consume_beacon.json"
 	json_content: dict = {"criteria":{"requirement":{"trigger":"minecraft:consume_item","conditions":{"item":{"predicates":{"minecraft:custom_data":f"{{\"{ns}\":{{\"revive_beacon\":true}}}}"}}}}}}
 	json_content["rewards"] = {"function": f"{ns}:player/consume_beacon"}
-	write_file(advancement, stp.super_json_dump(json_content, max_level = -1))
+	adv = Advancement(json_content)
+	adv.encoder = lambda x: super_json_dump(x, max_level = -1)
+	ctx.data[ns].advancements["consume_beacon"] = adv
 
 	# Function
-	write_function(config, f"{ns}:player/consume_beacon", f"""
+	write_function(f"{ns}:player/consume_beacon", f"""
 # Revoke the advancement
 advancement revoke @s only {ns}:consume_beacon
 
@@ -155,7 +160,7 @@ function {ns}:player/revive with storage {ns}:main
 execute if score #success {ns}.data matches 0 run loot give @s[gamemode=!creative] loot {ns}:i/revive_beacon
 execute if score #success {ns}.data matches 0 run return fail
 """)
-	write_function(config, f"{ns}:player/revive", f"""
+	write_function(f"{ns}:player/revive", f"""
 # If player is banned, pardon him and return success
 $execute if data storage {ns}:main banned_players.$(player) run pardon $(player)
 $execute if data storage {ns}:main banned_players.$(player) run tellraw @a [{{"selector":"@s","color":"green"}},{{"text":" used a revive beacon to revive '$(player)'!"}}]
@@ -171,7 +176,7 @@ return fail
 """)
 
 	# Drop heart at death function
-	write_function(config, f"{ns}:player/drop_heart_at_death", f"""
+	write_function(f"{ns}:player/drop_heart_at_death", f"""
 # If NATURAL_DEATH_HEART_DROP is 0, don't drop a heart, give back the lost heart
 execute if score NATURAL_DEATH_HEART_DROP {ns}.data matches 0 run return run scoreboard players add @s {ns}.hearts 1
 
@@ -185,7 +190,7 @@ data modify storage {ns}:main death_pos.z set from entity @s LastDeathLocation.p
 # Drop the heart
 function {ns}:player/drop_heart_macro with storage {ns}:main death_pos
 """)
-	write_function(config, f"{ns}:player/drop_heart_macro", f"""
+	write_function(f"{ns}:player/drop_heart_macro", f"""
 $execute in $(dimension) run loot spawn $(x) $(y) $(z) loot {ns}:i/heart
 """)
 

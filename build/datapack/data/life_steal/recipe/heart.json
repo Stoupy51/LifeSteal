@@ -24,7 +24,18 @@
 			},
 			"minecraft:lore": [
 				[
-					{"text": "LifeSteal","italic": true,"color": "blue"}
+					"",
+					{
+						"text": "I",
+						"color": "white",
+						"italic": false,
+						"font": "life_steal:icons"
+					},
+					{
+						"text": " LifeSteal",
+						"italic": true,
+						"color": "blue"
+					}
 				]
 			],
 			"minecraft:custom_data": {
@@ -32,10 +43,12 @@
 					"heart": true
 				},
 				"smithed": {
-					"ignore": {"functionality": true,"crafting": true}
+					"ignore": {
+						"functionality": true,
+						"crafting": true
+					}
 				}
 			}
 		}
 	}
 }
-
