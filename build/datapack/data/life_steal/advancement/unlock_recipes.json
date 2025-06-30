@@ -1,10 +1,10 @@
 {
-  "criteria": {
-    "requirement": {
-      "trigger": "minecraft:inventory_changed"
-    }
-  },
-  "rewards": {
-    "function": "life_steal:advancements/unlock_recipes"
-  }
+	"criteria": {
+		"requirement": {
+			"trigger": "minecraft:inventory_changed"
+		}
+	},
+	"rewards": {
+		"function": "life_steal:advancements/unlock_recipes"
+	}
 }
