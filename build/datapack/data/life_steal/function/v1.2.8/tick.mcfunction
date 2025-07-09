@@ -1,7 +1,7 @@
 
-#> life_steal:v1.2.7/tick
+#> life_steal:v1.2.8/tick
 #
-# @within	life_steal:v1.2.7/load/tick_verification
+# @within	life_steal:v1.2.8/load/tick_verification
 #
 
 execute as @a[sort=random,scores={life_steal.death=1..}] run function life_steal:player/tick
