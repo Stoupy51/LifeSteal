@@ -48,13 +48,20 @@ execute if score @s {ns}.kill matches 1.. if score @s {ns}.hearts < MAX_HEARTS {
 execute if score @s {ns}.kill matches 1.. run function {ns}:player/update_health
 execute if score @s {ns}.kill matches 1.. run scoreboard players set @s {ns}.kill 0
 
-# If player died, remove a heart
-execute if score @s {ns}.death matches 1.. run scoreboard players remove @s {ns}.hearts 1
-execute if score @s {ns}.death matches 1.. run tellraw @s [{{"text":"You lost a heart, you now have ","color":"gray"}},{{"score":{{"name":"@s","objective":"{ns}.hearts"}}, "color":"red"}},{{"text":" hearts!"}}]
-execute if score @s {ns}.death matches 1.. unless entity @a[scores={{{ns}.kill=1..}}] run function {ns}:player/drop_heart_at_death
+# If (died from a player), or (died from natural causes and configuration is 1), remove a heart
+execute if score @s {ns}.death matches 1.. if entity @a[scores={{{ns}.kill=1..}}] run function {ns}:player/remove_one_heart
+execute if score @s {ns}.death matches 1.. unless entity @a[scores={{{ns}.kill=1..}}] unless score NATURAL_DEATH_HEART_DROP {ns}.data matches 0 run function {ns}:player/remove_one_heart
 execute if score @s {ns}.death matches 1.. run function {ns}:player/update_health
 execute if score @s {ns}.death matches 1.. run scoreboard players set @s {ns}.death 0
 execute if score @s {ns}.hearts matches 0 run function {ns}:player/death
+""")
+	# Add remove_one_heart function
+	write_function(f"{ns}:player/remove_one_heart", f"""
+scoreboard players remove @s {ns}.hearts 1
+tellraw @s [{{"text":"You lost a heart, you now have ","color":"gray"}},{{"score":{{"name":"@s","objective":"{ns}.hearts"}}, "color":"red"}},{{"text":" hearts!"}}]
+
+# Drop a heart if player wasn't killed by another player
+execute unless entity @a[scores={{{ns}.kill=1..}}] run function {ns}:player/drop_heart_at_death
 """)
 
 	# Add update_health function
@@ -177,9 +184,6 @@ return fail
 
 	# Drop heart at death function
 	write_function(f"{ns}:player/drop_heart_at_death", f"""
-# If NATURAL_DEATH_HEART_DROP is 0, don't drop a heart, give back the lost heart
-execute if score NATURAL_DEATH_HEART_DROP {ns}.data matches 0 run return run scoreboard players add @s {ns}.hearts 1
-
 # Copy in a storage the arguments for the macro
 data modify storage {ns}:main death_pos set value {{dimension:"minecraft:overworld",x:0,y:0,z:0}}
 data modify storage {ns}:main death_pos.dimension set from entity @s LastDeathLocation.dimension
