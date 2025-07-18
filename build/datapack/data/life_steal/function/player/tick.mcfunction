@@ -1,7 +1,7 @@
 
 #> life_steal:player/tick
 #
-# @within	life_steal:v1.2.8/tick
+# @within	life_steal:v1.2.9/tick
 #
 
 # Setup hearts objective if not set and get all recipes
