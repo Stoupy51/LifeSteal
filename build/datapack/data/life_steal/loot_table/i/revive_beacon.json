@@ -29,7 +29,9 @@
 									]
 								],
 								"minecraft:item_model": "life_steal:revive_beacon",
-								"minecraft:item_name": "Revive Beacon",
+								"minecraft:item_name": {
+									"text": "Revive Beacon"
+								},
 								"minecraft:custom_data": {
 									"life_steal": {
 										"revive_beacon": true

@@ -17,7 +17,9 @@
 		"components": {
 			"minecraft:consumable": {},
 			"minecraft:item_model": "life_steal:heart",
-			"minecraft:item_name": "Heart",
+			"minecraft:item_name": {
+				"text": "Heart"
+			},
 			"minecraft:lore": [
 				[
 					"",

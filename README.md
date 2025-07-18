@@ -33,7 +33,9 @@ These settings can be customized using the following commands (requires operator
 
 As datapack don't have `/ban` permissions by default, you should edit your `server.properties` file and set the line `function-permission-level` to `3`
 
-![Life Steal Image](https://cdn.modrinth.com/data/3Gjekf6h/images/e4342487d618915d2a9d913e5774b41ca47b08b4.png)
+![Recipe for the revive beacon](https://cdn.modrinth.com/data/3Gjekf6h/images/239a2eb205facdf1a2e95b89fb7c4d612286f336.png)
+
+![Recipe for the heart](https://cdn.modrinth.com/data/3Gjekf6h/images/b95bc94d66fd745813f18bcf21410b197d6fd58e.png)
 
 ## ⭐ Star History
 

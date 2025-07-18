@@ -5,7 +5,7 @@
 		"category": "food",
 		"consumable": {},
 		"item_model": "life_steal:heart",
-		"item_name": "Heart",
+		"item_name": {"text": "Heart"},
 		"lore": [["",{"text": "I","color": "white","italic": false,"font": "life_steal:icons"},{"text": " LifeSteal","italic": true,"color": "blue"}]],
 		"custom_data": {"life_steal": {"heart": true},"smithed": {"ignore": {"functionality": true,"crafting": true}}}
 	},
@@ -16,7 +16,7 @@
 		"consumable": {},
 		"lore": [{"text": "Rename the item to the username","italic": false,"color": "gray"},{"text": "of the player you want to revive.","italic": false,"color": "gray"},["",{"text": "I","color": "white","italic": false,"font": "life_steal:icons"},{"text": " LifeSteal","italic": true,"color": "blue"}]],
 		"item_model": "life_steal:revive_beacon",
-		"item_name": "Revive Beacon",
+		"item_name": {"text": "Revive Beacon"},
 		"custom_data": {"life_steal": {"revive_beacon": true},"smithed": {"ignore": {"functionality": true,"crafting": true}}}
 	}
 }
