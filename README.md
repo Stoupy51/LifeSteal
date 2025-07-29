@@ -12,7 +12,7 @@ Life Steal FR is a simple datapack configurable aiming to add life steal behavio
 
 This datapack adds texture for the revive beacon and use 1.21 food components for interactions with the system (eating a heart, consuming a renamed revive beacon)
 
-### **DON'T FORGET TO DOWNLOAD THE REQUIRED <u>RESOURCE PACK</u>**
+### **DON'T FORGET TO DOWNLOAD THE REQUIRED <u>[RESOURCE PACK](https://github.com/Stoupy51/LifeSteal/releases/)</u>**
 
 ## 📥 Download links:
 - Modrinth: [https://modrinth.com/datapack/lifestealfr/](https://modrinth.com/datapack/lifestealfr/)
