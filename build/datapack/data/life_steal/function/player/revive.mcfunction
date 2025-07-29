@@ -1,6 +1,8 @@
 
 #> life_steal:player/revive
 #
+# @executed	as the player & at current position
+#
 # @within	life_steal:player/consume_beacon with storage life_steal:main
 #
 

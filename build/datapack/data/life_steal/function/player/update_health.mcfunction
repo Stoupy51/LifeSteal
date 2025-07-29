@@ -1,6 +1,8 @@
 
 #> life_steal:player/update_health
 #
+# @executed	as @a[sort=random,scores={life_steal.death=1..}]
+#
 # @within	life_steal:player/tick
 #			life_steal:player/withdraw
 #			life_steal:player/consume_heart

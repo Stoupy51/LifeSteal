@@ -1,6 +1,8 @@
 
 #> life_steal:player/death
 #
+# @executed	as @a[sort=random,scores={life_steal.death=1..}]
+#
 # @within	life_steal:player/tick
 #
 

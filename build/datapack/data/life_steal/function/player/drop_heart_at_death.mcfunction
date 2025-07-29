@@ -1,6 +1,8 @@
 
 #> life_steal:player/drop_heart_at_death
 #
+# @executed	as @a[sort=random,scores={life_steal.death=1..}]
+#
 # @within	life_steal:player/remove_one_heart
 #
 

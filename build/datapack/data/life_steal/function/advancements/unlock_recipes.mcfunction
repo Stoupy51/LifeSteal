@@ -1,6 +1,8 @@
 
 #> life_steal:advancements/unlock_recipes
 #
+# @executed	as the player & at current position
+#
 # @within	advancement life_steal:unlock_recipes
 #
 

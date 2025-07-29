@@ -1,6 +1,8 @@
 
 #> life_steal:player/consume_heart
 #
+# @executed	as the player & at current position
+#
 # @within	advancement life_steal:consume_heart
 #
 
