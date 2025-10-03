@@ -3,8 +3,8 @@
 #
 # @executed	as @a[sort=random,scores={life_steal.death=1..}]
 #
-# @within	life_steal:v1.2.10/tick [ as @a[sort=random,scores={life_steal.death=1..}] ]
-#			life_steal:v1.2.10/tick [ as @a[sort=random] ]
+# @within	life_steal:v1.2.11/tick [ as @a[sort=random,scores={life_steal.death=1..}] ]
+#			life_steal:v1.2.11/tick [ as @a[sort=random] ]
 #
 
 # Setup hearts objective if not set and get all recipes
