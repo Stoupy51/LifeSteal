@@ -51,8 +51,8 @@ execute if score @s {ns}.kill matches 1.. run scoreboard players set @s {ns}.kil
 execute if score @s {ns}.death matches 1.. if entity @a[scores={{{ns}.kill=1..}}] run function {ns}:player/remove_one_heart
 execute if score @s {ns}.death matches 1.. unless entity @a[scores={{{ns}.kill=1..}}] unless score NATURAL_DEATH_HEART_DROP {ns}.data matches 0 run function {ns}:player/remove_one_heart
 execute if score @s {ns}.death matches 1.. run function {ns}:player/update_health
+execute if score @s {ns}.death matches 1.. if score @s {ns}.hearts matches 0 run function {ns}:player/reached_0_heart
 execute if score @s {ns}.death matches 1.. run scoreboard players set @s {ns}.death 0
-execute if score @s {ns}.hearts matches 0 run function {ns}:player/death
 """)
 	# Add remove_one_heart function
 	write_function(f"{ns}:player/remove_one_heart", f"""
@@ -116,7 +116,7 @@ tellraw @s [{{"text":"You ate a heart, you now have ","color":"gray"}},{{"score"
 	ctx.data[ns].loot_tables["player_head"] = set_json_encoder(LootTable(json_content), max_level=-1)
 
 	# Function death (when reaching 0 heart)
-	write_function(f"{ns}:player/death", f"""
+	write_function(f"{ns}:player/reached_0_heart", f"""
 # Get player username
 tag @e[type=item] add {ns}.temp
 execute at @s run loot spawn ~ ~ ~ loot {ns}:player_head

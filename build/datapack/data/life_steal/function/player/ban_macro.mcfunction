@@ -3,7 +3,7 @@
 #
 # @executed	as @a[sort=random,scores={life_steal.death=1..}]
 #
-# @within	life_steal:player/death with storage life_steal:main
+# @within	life_steal:player/reached_0_heart with storage life_steal:main
 #
 
 # Tellraw message and ban player

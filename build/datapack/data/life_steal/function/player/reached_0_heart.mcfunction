@@ -1,5 +1,5 @@
 
-#> life_steal:player/death
+#> life_steal:player/reached_0_heart
 #
 # @executed	as @a[sort=random,scores={life_steal.death=1..}]
 #
