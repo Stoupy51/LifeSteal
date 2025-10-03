@@ -10,7 +10,7 @@
 Life Steal FR is a simple datapack configurable aiming to add life steal behaviours from the original Lifesteal SMP:<br>
 [https://lifesteal.fandom.com/wiki/Season_1](https://lifesteal.fandom.com/wiki/Season_1)
 
-This datapack adds texture for the revive beacon and use 1.21 food components for interactions with the system (eating a heart, consuming a renamed revive beacon)
+This datapack adds texture for the revive beacon and use 1.21 food/consumable components for interactions with the system (eating a heart, consuming a renamed revive beacon)
 
 ### **DON'T FORGET TO DOWNLOAD THE REQUIRED <u>[RESOURCE PACK](https://github.com/Stoupy51/LifeSteal/releases/)</u>**
 
@@ -36,9 +36,13 @@ You can obtain the items using these commands:
 - `/loot give @s loot life_steal:i/heart` (gives a heart)
 - `/loot give @s loot life_steal:i/revive_beacon` (gives a revive beacon)
 
-## ⚠️ Installation
+## ⚠️ Administration
 
 As datapack don't have `/ban` permissions by default, you should edit your `server.properties` file and set the line `function-permission-level` to `3`
+
+If you want to manually revive a player, you can use the following command: 🔨<br>
+`function life_steal:player/revive {player:"Stoupy51"}`<br>
+(replace `Stoupy51` with the player name you want to revive)
 
 ---
 

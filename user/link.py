@@ -2,8 +2,7 @@
 # ruff: noqa: E501
 # Imports
 from beet import Advancement, Context, LootTable
-from stewbeet.core import *
-from stewbeet.core.utils.io import write_function, write_load_file, write_tick_file
+from stewbeet import JsonDict, set_json_encoder, write_function, write_load_file, write_tick_file
 
 
 # Main function is run just before making finalyzing the build process (zip, headers, lang, ...)
@@ -90,11 +89,9 @@ tellraw @s [{{"text":"You withdrew a heart, you now have ","color":"gray"}},{{"s
 
 	## Advancement when eating a heart
 	# JSON advancement
-	json_content: dict = {"criteria":{"requirement":{"trigger":"minecraft:consume_item","conditions":{"item":{"predicates":{"minecraft:custom_data":f"{{\"{ns}\":{{\"heart\":true}}}}"}}}}}}
+	json_content: JsonDict = {"criteria":{"requirement":{"trigger":"minecraft:consume_item","conditions":{"item":{"predicates":{"minecraft:custom_data":f"{{\"{ns}\":{{\"heart\":true}}}}"}}}}}}
 	json_content["rewards"] = {"function": f"{ns}:player/consume_heart"}
-	adv = Advancement(json_content)
-	adv.encoder = lambda x: super_json_dump(x, max_level = -1)
-	ctx.data[ns].advancements["consume_heart"] = adv
+	ctx.data[ns].advancements["consume_heart"] = set_json_encoder(Advancement(json_content), max_level=-1)
 
 	# Function
 	write_function(f"{ns}:player/consume_heart", f"""
@@ -115,10 +112,8 @@ tellraw @s [{{"text":"You ate a heart, you now have ","color":"gray"}},{{"score"
 """)
 
 	# Get player head loot table
-	json_content: dict = {"pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"minecraft:player_head","functions":[{"function":"minecraft:fill_player_head","entity":"this"}]}]}]}
-	loot = LootTable(json_content)
-	loot.encoder = lambda x: super_json_dump(x, max_level = -1)
-	ctx.data[ns].loot_tables["player_head"] = loot
+	json_content: JsonDict = {"pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"minecraft:player_head","functions":[{"function":"minecraft:fill_player_head","entity":"this"}]}]}]}
+	ctx.data[ns].loot_tables["player_head"] = set_json_encoder(LootTable(json_content), max_level=-1)
 
 	# Function death (when reaching 0 heart)
 	write_function(f"{ns}:player/death", f"""
@@ -145,11 +140,9 @@ $data modify storage {ns}:main banned_players.$(player) set value true
 
 	## Revive beacon
 	# JSON advancement
-	json_content: dict = {"criteria":{"requirement":{"trigger":"minecraft:consume_item","conditions":{"item":{"predicates":{"minecraft:custom_data":f"{{\"{ns}\":{{\"revive_beacon\":true}}}}"}}}}}}
+	json_content: JsonDict = {"criteria":{"requirement":{"trigger":"minecraft:consume_item","conditions":{"item":{"predicates":{"minecraft:custom_data":f"{{\"{ns}\":{{\"revive_beacon\":true}}}}"}}}}}}
 	json_content["rewards"] = {"function": f"{ns}:player/consume_beacon"}
-	adv = Advancement(json_content)
-	adv.encoder = lambda x: super_json_dump(x, max_level = -1)
-	ctx.data[ns].advancements["consume_beacon"] = adv
+	ctx.data[ns].advancements["consume_beacon"] = set_json_encoder(Advancement(json_content), max_level=-1)
 
 	# Function
 	write_function(f"{ns}:player/consume_beacon", f"""
