@@ -31,7 +31,16 @@ These settings can be customized using the following commands (requires operator
 - `scoreboard players set REVIVED_HEARTS life_steal.data 4` (Amount of hearts to respawn with when revived)
 - `scoreboard players set NATURAL_DEATH_HEART_DROP life_steal.data 1` (1 = drop a heart when dying to non player, 0 = disable that)
 
+You can obtain the items using these commands:
+- `/function life_steal:_give_all` (gives all items from the datapack)
+- `/loot give @s loot life_steal:i/heart` (gives a heart)
+- `/loot give @s loot life_steal:i/revive_beacon` (gives a revive beacon)
+
+## ⚠️ Installation
+
 As datapack don't have `/ban` permissions by default, you should edit your `server.properties` file and set the line `function-permission-level` to `3`
+
+---
 
 ![Recipe for the revive beacon](https://cdn.modrinth.com/data/3Gjekf6h/images/239a2eb205facdf1a2e95b89fb7c4d612286f336.png)
 
