@@ -17,5 +17,5 @@ scoreboard players remove @s life_steal.hearts 1
 function life_steal:player/update_health
 
 # Tellraw message
-tellraw @s [{"text":"You withdrew a heart, you now have ","color":"gray"},{"score":{"name":"@s","objective":"life_steal.hearts"}, "color":"red"},{"text":" hearts!"}]
+function life_steal:player/withdraw_msg
 

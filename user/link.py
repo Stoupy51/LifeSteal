@@ -15,13 +15,21 @@ scoreboard objectives add {ns}.kill playerKillCount
 scoreboard objectives add {ns}.death deathCount
 scoreboard objectives add {ns}.withdraw trigger
 scoreboard objectives add {ns}.hearts dummy
+
+scoreboard players set #2 {ns}.data 2
+
 execute unless score MAX_HEARTS {ns}.data matches 1.. run scoreboard players set MAX_HEARTS {ns}.data 20
 execute unless score REVIVED_HEARTS {ns}.data matches 1.. run scoreboard players set REVIVED_HEARTS {ns}.data 4
 execute unless score NATURAL_DEATH_HEART_DROP {ns}.data matches 0..1 run scoreboard players set NATURAL_DEATH_HEART_DROP {ns}.data 1
+execute unless score USE_HALF_HEARTS {ns}.data matches 0..1 run scoreboard players set USE_HALF_HEARTS {ns}.data 0
+execute unless score USE_HALF_HEARTS_PREV {ns}.data matches 0..1 run scoreboard players operation USE_HALF_HEARTS_PREV {ns}.data = USE_HALF_HEARTS {ns}.data
 """, prepend = True)
 
 	# Add tick function
 	write_tick_file(f"""
+# Check for USE_HALF_HEARTS configuration change
+execute unless score USE_HALF_HEARTS {ns}.data = USE_HALF_HEARTS_PREV {ns}.data run function {ns}:config/half_hearts_changed
+
 execute as @a[sort=random,scores={{{ns}.death=1..}}] run function {ns}:player/tick
 execute as @a[sort=random] run function {ns}:player/tick
 """)
@@ -30,7 +38,8 @@ execute as @a[sort=random] run function {ns}:player/tick
 	write_function(f"{ns}:player/tick", f"""
 # Setup hearts objective if not set and get all recipes
 execute unless score @s {ns}.hearts matches 0.. run function {ns}:utils/get_all_recipes
-execute unless score @s {ns}.hearts matches 0.. store result score @s {ns}.hearts run attribute @s minecraft:max_health base get 0.5
+execute unless score @s {ns}.hearts matches 0.. if score USE_HALF_HEARTS {ns}.data matches 0 store result score @s {ns}.hearts run attribute @s minecraft:max_health base get 0.5
+execute unless score @s {ns}.hearts matches 0.. if score USE_HALF_HEARTS {ns}.data matches 1 store result score @s {ns}.hearts run attribute @s minecraft:max_health base get 1.0
 
 # If data = 1, player is revived so update health
 execute if score @s {ns}.data matches 1 run function {ns}:player/update_health
@@ -41,9 +50,13 @@ scoreboard players enable @s {ns}.withdraw
 execute unless score @s {ns}.withdraw matches 0 run function {ns}:player/withdraw
 
 # If killed player, add a heart
-execute if score @s {ns}.kill matches 1.. if score @s {ns}.hearts >= MAX_HEARTS {ns}.data run tellraw @s [{{"text":"You stole a heart from a player, but you are already at max health!","color":"red"}}]
-execute if score @s {ns}.kill matches 1.. if score @s {ns}.hearts < MAX_HEARTS {ns}.data run scoreboard players operation @s {ns}.hearts += @s {ns}.kill
-execute if score @s {ns}.kill matches 1.. if score @s {ns}.hearts < MAX_HEARTS {ns}.data run tellraw @s [{{"text":"You stole a heart from a player, you now have ","color":"gray"}},{{"score":{{"name":"@s","objective":"{ns}.hearts"}}, "color":"red"}},{{"text":" hearts!"}}]
+execute if score @s {ns}.kill matches 1.. run scoreboard players operation #temp {ns}.data = MAX_HEARTS {ns}.data
+execute if score @s {ns}.kill matches 1.. if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
+execute if score @s {ns}.kill matches 1.. if score @s {ns}.hearts >= #temp {ns}.data run tellraw @s [{{"text":"You stole a heart from a player, but you are already at max health!","color":"red"}}]
+execute if score @s {ns}.kill matches 1.. if score @s {ns}.hearts < #temp {ns}.data run scoreboard players operation #add {ns}.data = @s {ns}.kill
+execute if score @s {ns}.kill matches 1.. if score @s {ns}.hearts < #temp {ns}.data if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation #add {ns}.data *= #2 {ns}.data
+execute if score @s {ns}.kill matches 1.. if score @s {ns}.hearts < #temp {ns}.data run scoreboard players operation @s {ns}.hearts += #add {ns}.data
+execute if score @s {ns}.kill matches 1.. if score @s {ns}.hearts < #temp {ns}.data run function {ns}:player/gain_heart_msg
 execute if score @s {ns}.kill matches 1.. run function {ns}:player/update_health
 execute if score @s {ns}.kill matches 1.. run scoreboard players set @s {ns}.kill 0
 
@@ -57,7 +70,8 @@ execute if score @s {ns}.death matches 1.. run scoreboard players set @s {ns}.de
 	# Add remove_one_heart function
 	write_function(f"{ns}:player/remove_one_heart", f"""
 scoreboard players remove @s {ns}.hearts 1
-tellraw @s [{{"text":"You lost a heart, you now have ","color":"gray"}},{{"score":{{"name":"@s","objective":"{ns}.hearts"}}, "color":"red"}},{{"text":" hearts!"}}]
+function {ns}:player/lose_heart_msg
+function {ns}:player/update_health
 
 # Drop a heart if player wasn't killed by another player
 execute unless entity @a[scores={{{ns}.kill=1..}}] run function {ns}:player/drop_heart_at_death
@@ -65,11 +79,38 @@ execute unless entity @a[scores={{{ns}.kill=1..}}] run function {ns}:player/drop
 
 	# Add update_health function
 	write_function(f"{ns}:player/update_health", f"""
-execute store result storage {ns}:main health int 2 run scoreboard players get @s {ns}.hearts
+execute if score USE_HALF_HEARTS {ns}.data matches 0 store result storage {ns}:main health int 2 run scoreboard players get @s {ns}.hearts
+execute if score USE_HALF_HEARTS {ns}.data matches 1 store result storage {ns}:main health int 1 run scoreboard players get @s {ns}.hearts
 function {ns}:player/update_macro with storage {ns}:main
 execute at @s run playsound entity.player.levelup ambient @s
 """)
 	write_function(f"{ns}:player/update_macro", "$attribute @s max_health base set $(health)")
+
+	# Add helper functions for displaying hearts
+	write_function(f"{ns}:player/gain_heart_msg", f"""
+execute if score USE_HALF_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"You stole a heart from a player, you now have ","color":"gray"}},{{"score":{{"name":"@s","objective":"{ns}.hearts"}}, "color":"red"}},{{"text":" hearts!"}}]
+execute if score USE_HALF_HEARTS {ns}.data matches 1 run function {ns}:player/gain_heart_msg_half
+""")
+	write_function(f"{ns}:player/gain_heart_msg_half", f"""
+scoreboard players operation #display_whole {ns}.data = @s {ns}.hearts
+scoreboard players operation #display_whole {ns}.data /= #2 {ns}.data
+scoreboard players operation #display_half {ns}.data = @s {ns}.hearts
+scoreboard players operation #display_half {ns}.data %= #2 {ns}.data
+execute if score #display_half {ns}.data matches 0 run tellraw @s [{{"text":"You stole a heart from a player, you now have ","color":"gray"}},{{"score":{{"name":"#display_whole","objective":"{ns}.data"}}, "color":"red"}},{{"text":".0","color":"red"}},{{"text":" hearts!"}}]
+execute if score #display_half {ns}.data matches 1 run tellraw @s [{{"text":"You stole a heart from a player, you now have ","color":"gray"}},{{"score":{{"name":"#display_whole","objective":"{ns}.data"}}, "color":"red"}},{{"text":".5","color":"red"}},{{"text":" hearts!"}}]
+""")
+	write_function(f"{ns}:player/lose_heart_msg", f"""
+execute if score USE_HALF_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"You lost a heart, you now have ","color":"gray"}},{{"score":{{"name":"@s","objective":"{ns}.hearts"}}, "color":"red"}},{{"text":" hearts!"}}]
+execute if score USE_HALF_HEARTS {ns}.data matches 1 run function {ns}:player/lose_heart_msg_half
+""")
+	write_function(f"{ns}:player/lose_heart_msg_half", f"""
+scoreboard players operation #display_whole {ns}.data = @s {ns}.hearts
+scoreboard players operation #display_whole {ns}.data /= #2 {ns}.data
+scoreboard players operation #display_half {ns}.data = @s {ns}.hearts
+scoreboard players operation #display_half {ns}.data %= #2 {ns}.data
+execute if score #display_half {ns}.data matches 0 run tellraw @s [{{"text":"You lost a heart, you now have ","color":"gray"}},{{"score":{{"name":"#display_whole","objective":"{ns}.data"}}, "color":"red"}},{{"text":".0","color":"red"}},{{"text":" hearts!"}}]
+execute if score #display_half {ns}.data matches 1 run tellraw @s [{{"text":"You lost a heart, you now have ","color":"gray"}},{{"score":{{"name":"#display_whole","objective":"{ns}.data"}}, "color":"red"}},{{"text":".5","color":"red"}},{{"text":" hearts!"}}]
+""")
 
 	# Add withdraw function
 	write_function(f"{ns}:player/withdraw", f"""
@@ -84,7 +125,19 @@ scoreboard players remove @s {ns}.hearts 1
 function {ns}:player/update_health
 
 # Tellraw message
-tellraw @s [{{"text":"You withdrew a heart, you now have ","color":"gray"}},{{"score":{{"name":"@s","objective":"{ns}.hearts"}}, "color":"red"}},{{"text":" hearts!"}}]
+function {ns}:player/withdraw_msg
+""")
+	write_function(f"{ns}:player/withdraw_msg", f"""
+execute if score USE_HALF_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"You withdrew a heart, you now have ","color":"gray"}},{{"score":{{"name":"@s","objective":"{ns}.hearts"}}, "color":"red"}},{{"text":" hearts!"}}]
+execute if score USE_HALF_HEARTS {ns}.data matches 1 run function {ns}:player/withdraw_msg_half
+""")
+	write_function(f"{ns}:player/withdraw_msg_half", f"""
+scoreboard players operation #display_whole {ns}.data = @s {ns}.hearts
+scoreboard players operation #display_whole {ns}.data /= #2 {ns}.data
+scoreboard players operation #display_half {ns}.data = @s {ns}.hearts
+scoreboard players operation #display_half {ns}.data %= #2 {ns}.data
+execute if score #display_half {ns}.data matches 0 run tellraw @s [{{"text":"You withdrew a heart, you now have ","color":"gray"}},{{"score":{{"name":"#display_whole","objective":"{ns}.data"}}, "color":"red"}},{{"text":".0","color":"red"}},{{"text":" hearts!"}}]
+execute if score #display_half {ns}.data matches 1 run tellraw @s [{{"text":"You withdrew a heart, you now have ","color":"gray"}},{{"score":{{"name":"#display_whole","objective":"{ns}.data"}}, "color":"red"}},{{"text":".5","color":"red"}},{{"text":" hearts!"}}]
 """)
 
 	## Advancement when eating a heart
@@ -99,16 +152,30 @@ tellraw @s [{{"text":"You withdrew a heart, you now have ","color":"gray"}},{{"s
 advancement revoke @s only {ns}:consume_heart
 
 # If already at max health, regive the heart and stop function
-execute if score @s {ns}.hearts >= MAX_HEARTS {ns}.data run tellraw @s {{"text":"You are already at max health!","color":"red"}}
-execute if score @s {ns}.hearts >= MAX_HEARTS {ns}.data at @s run loot spawn ~ ~ ~ loot {ns}:i/heart
-execute if score @s {ns}.hearts >= MAX_HEARTS {ns}.data run return fail
+scoreboard players operation #temp {ns}.data = MAX_HEARTS {ns}.data
+execute if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
+execute if score @s {ns}.hearts >= #temp {ns}.data run tellraw @s {{"text":"You are already at max health!","color":"red"}}
+execute if score @s {ns}.hearts >= #temp {ns}.data at @s run loot spawn ~ ~ ~ loot {ns}:i/heart
+execute if score @s {ns}.hearts >= #temp {ns}.data run return fail
 
 # Give a heart and update health
 scoreboard players add @s {ns}.hearts 1
 function {ns}:player/update_health
 
 # Tellraw message
-tellraw @s [{{"text":"You ate a heart, you now have ","color":"gray"}},{{"score":{{"name":"@s","objective":"{ns}.hearts"}}, "color":"red"}},{{"text":" hearts!"}}]
+function {ns}:player/consume_heart_msg
+""")
+	write_function(f"{ns}:player/consume_heart_msg", f"""
+execute if score USE_HALF_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"You ate a heart, you now have ","color":"gray"}},{{"score":{{"name":"@s","objective":"{ns}.hearts"}}, "color":"red"}},{{"text":" hearts!"}}]
+execute if score USE_HALF_HEARTS {ns}.data matches 1 run function {ns}:player/consume_heart_msg_half
+""")
+	write_function(f"{ns}:player/consume_heart_msg_half", f"""
+scoreboard players operation #display_whole {ns}.data = @s {ns}.hearts
+scoreboard players operation #display_whole {ns}.data /= #2 {ns}.data
+scoreboard players operation #display_half {ns}.data = @s {ns}.hearts
+scoreboard players operation #display_half {ns}.data %= #2 {ns}.data
+execute if score #display_half {ns}.data matches 0 run tellraw @s [{{"text":"You ate a heart, you now have ","color":"gray"}},{{"score":{{"name":"#display_whole","objective":"{ns}.data"}}, "color":"red"}},{{"text":".0","color":"red"}},{{"text":" hearts!"}}]
+execute if score #display_half {ns}.data matches 1 run tellraw @s [{{"text":"You ate a heart, you now have ","color":"gray"}},{{"score":{{"name":"#display_whole","objective":"{ns}.data"}}, "color":"red"}},{{"text":".5","color":"red"}},{{"text":" hearts!"}}]
 """)
 
 	# Get player head loot table
@@ -165,7 +232,9 @@ execute if score #success {ns}.data matches 0 run return fail
 $execute if data storage {ns}:main banned_players.$(player) run pardon $(player)
 $execute if data storage {ns}:main banned_players.$(player) run tellraw @a [{{"selector":"@s","color":"green"}},{{"text":" used a revive beacon to revive '$(player)'!"}}]
 $execute if data storage {ns}:main banned_players.$(player) as @a at @s run playsound ui.toast.challenge_complete ambient @s
-$execute if data storage {ns}:main banned_players.$(player) run scoreboard players operation $(player) {ns}.hearts = REVIVED_HEARTS {ns}.data
+$execute if data storage {ns}:main banned_players.$(player) if score USE_HALF_HEARTS {ns}.data matches 0 run scoreboard players operation $(player) {ns}.hearts = REVIVED_HEARTS {ns}.data
+$execute if data storage {ns}:main banned_players.$(player) if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation $(player) {ns}.hearts = REVIVED_HEARTS {ns}.data
+$execute if data storage {ns}:main banned_players.$(player) if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation $(player) {ns}.hearts *= #2 {ns}.data
 $execute if data storage {ns}:main banned_players.$(player) run scoreboard players set $(player) {ns}.data 1
 $execute if data storage {ns}:main banned_players.$(player) run scoreboard players set #success {ns}.data 1
 $execute if data storage {ns}:main banned_players.$(player) run return run data remove storage {ns}:main banned_players.$(player)
@@ -189,6 +258,36 @@ function {ns}:player/drop_heart_macro with storage {ns}:main death_pos
 """)
 	write_function(f"{ns}:player/drop_heart_macro", f"""
 $execute in $(dimension) run loot spawn $(x) $(y) $(z) loot {ns}:i/heart
+""")
+
+	# Configuration change detection
+	write_function(f"{ns}:config/half_hearts_changed", f"""
+# Convert hearts for all players based on new configuration
+execute if score USE_HALF_HEARTS {ns}.data matches 1 if score USE_HALF_HEARTS_PREV {ns}.data matches 0 run function {ns}:config/convert_to_half_hearts
+execute if score USE_HALF_HEARTS {ns}.data matches 0 if score USE_HALF_HEARTS_PREV {ns}.data matches 1 run function {ns}:config/convert_to_full_hearts
+
+# Update previous value
+scoreboard players operation USE_HALF_HEARTS_PREV {ns}.data = USE_HALF_HEARTS {ns}.data
+""")
+
+	write_function(f"{ns}:config/convert_to_half_hearts", f"""
+# Convert all players from full hearts to half hearts (multiply by 2)
+execute as @a run scoreboard players operation @s {ns}.hearts *= #2 {ns}.data
+execute as @a run function {ns}:player/update_health
+
+# Notify all players
+tellraw @a [{{"text":"[Life Steal] Configuration changed to half hearts mode! All hearts score have been doubled.","color":"green"}}]
+execute as @a at @s run playsound entity.experience_orb.pickup ambient @s
+""")
+
+	write_function(f"{ns}:config/convert_to_full_hearts", f"""
+# Convert all players from half hearts to full hearts (divide by 2)
+execute as @a run scoreboard players operation @s {ns}.hearts /= #2 {ns}.data
+execute as @a run function {ns}:player/update_health
+
+# Notify all players
+tellraw @a [{{"text":"[Life Steal] Configuration changed to full hearts mode! All hearts score have been halved.","color":"yellow"}}]
+execute as @a at @s run playsound entity.experience_orb.pickup ambient @s
 """)
 
 	pass
