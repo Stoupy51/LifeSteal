@@ -12,6 +12,9 @@ Life Steal FR is a simple datapack configurable aiming to add life steal behavio
 
 This datapack adds texture for the revive beacon and use 1.21 food/consumable components for interactions with the system (eating a heart, consuming a renamed revive beacon)
 
+**This datapack is and will 🔥 ALWAYS 🔥 be updated to support the latest Minecraft versions!**<br>
+I continuously maintain compatibility with new releases, ensuring you can enjoy Life Steal mechanics on the newest Minecraft updates without waiting, even on snapshots.
+
 ### **DON'T FORGET TO DOWNLOAD THE REQUIRED <u>[RESOURCE PACK](https://github.com/Stoupy51/LifeSteal/releases/)</u>**
 
 ## 📥 Download links:
