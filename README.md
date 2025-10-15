@@ -49,6 +49,7 @@ If you want to manually revive a player, you can use the following command: 🔨
 (replace `Stoupy51` with the player name you want to revive)
 
 ---
+![Promotional image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/promo_1.jpg)
 
 ![Recipe for the revive beacon](https://cdn.modrinth.com/data/3Gjekf6h/images/239a2eb205facdf1a2e95b89fb7c4d612286f336.png)
 
