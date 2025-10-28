@@ -13,6 +13,9 @@ data modify storage life_steal:main player set from entity @e[type=item,tag=!lif
 kill @e[type=item,tag=!life_steal.temp]
 tag @e[type=item,tag=life_steal.temp] remove life_steal.temp
 
+# Make sure player does not have negative hearts
+scoreboard players set @s life_steal.hearts 0
+
 # Ban macro
 function life_steal:player/ban_macro with storage life_steal:main
 
