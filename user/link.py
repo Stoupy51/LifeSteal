@@ -64,7 +64,7 @@ execute if score @s {ns}.kill matches 1.. run scoreboard players set @s {ns}.kil
 execute if score @s {ns}.death matches 1.. if entity @a[scores={{{ns}.kill=1..}}] run function {ns}:player/remove_one_heart
 execute if score @s {ns}.death matches 1.. unless entity @a[scores={{{ns}.kill=1..}}] unless score NATURAL_DEATH_HEART_DROP {ns}.data matches 0 run function {ns}:player/remove_one_heart
 execute if score @s {ns}.death matches 1.. run function {ns}:player/update_health
-execute if score @s {ns}.death matches 1.. if score @s {ns}.hearts matches 0 run function {ns}:player/reached_0_heart
+execute if score @s {ns}.death matches 1.. if score @s {ns}.hearts matches ..0 run function {ns}:player/reached_0_heart
 execute if score @s {ns}.death matches 1.. run scoreboard players set @s {ns}.death 0
 """)
 	# Add remove_one_heart function
@@ -190,6 +190,9 @@ execute at @s run loot spawn ~ ~ ~ loot {ns}:player_head
 data modify storage {ns}:main player set from entity @e[type=item,tag=!{ns}.temp,limit=1] Item.components."minecraft:profile".name
 kill @e[type=item,tag=!{ns}.temp]
 tag @e[type=item,tag={ns}.temp] remove {ns}.temp
+
+# Make sure player does not have negative hearts
+scoreboard players set @s {ns}.hearts 0
 
 # Ban macro
 function {ns}:player/ban_macro with storage {ns}:main
