@@ -1,12 +1,22 @@
 
 # Imports
-from stewbeet.core import *
+from stewbeet.core import (
+	CATEGORY,
+	CUSTOM_ITEM_VANILLA,
+	OVERRIDE_MODEL,
+	RESULT_OF_CRAFTING,
+	Context,
+	Mem,
+	add_item_model_component,
+	add_item_name_and_lore_if_missing,
+	add_private_custom_data_for_namespace,
+	add_smithed_ignore_vanilla_behaviours_convention,
+	ingr_repr,
+)
 
 
 # Main function
 def beet_default(ctx: Context):
-	if Mem.ctx is None:
-		Mem.ctx = ctx
 	ns: str = ctx.project_id
 
 	# Define custom items
@@ -30,7 +40,13 @@ def beet_default(ctx: Context):
 			CATEGORY: "food",
 			"consumable": {},
 			"lore": [{"text":"Rename the item to the username","italic":False,"color":"gray"}, {"text":"of the player you want to revive.","italic":False,"color":"gray"}],
-			OVERRIDE_MODEL: {"parent":"block/beacon","textures":{"beacon":f"{ns}:item/inner_beacon"}},
+			OVERRIDE_MODEL: {
+				"parent":"minecraft:block/beacon","textures":{
+					"beacon":f"{ns}:item/inner_beacon",
+					"particle":"minecraft:block/glass",
+					"glass":"minecraft:block/glass",
+					"obsidian":"minecraft:block/obsidian"
+			}},
 		},
 	}
 
