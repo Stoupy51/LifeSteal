@@ -1,7 +1,7 @@
 
-#> life_steal:v1.3.2/tick
+#> life_steal:v1.3.3/tick
 #
-# @within	life_steal:v1.3.2/load/tick_verification
+# @within	life_steal:v1.3.3/load/tick_verification
 #
 
 # Check for USE_HALF_HEARTS configuration change
