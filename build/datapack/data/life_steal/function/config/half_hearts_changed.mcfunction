@@ -1,7 +1,7 @@
 
 #> life_steal:config/half_hearts_changed
 #
-# @within	life_steal:v1.3.3/tick
+# @within	life_steal:v1.3.4/tick
 #
 
 # Convert hearts for all players based on new configuration
