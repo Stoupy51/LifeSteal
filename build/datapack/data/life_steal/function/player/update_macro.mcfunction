@@ -5,6 +5,8 @@
 #
 # @within	life_steal:player/update_health with storage life_steal:main
 #
+# @args		health (unknown)
+#
 
 $attribute @s max_health base set $(health)
 

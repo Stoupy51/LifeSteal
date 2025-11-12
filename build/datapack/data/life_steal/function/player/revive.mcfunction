@@ -5,6 +5,8 @@
 #
 # @within	life_steal:player/consume_beacon with storage life_steal:main
 #
+# @args		player (unknown)
+#
 
 # If player is banned, pardon him and return success
 $execute if data storage life_steal:main banned_players.$(player) run pardon $(player)

@@ -5,6 +5,8 @@
 #
 # @within	life_steal:player/reached_0_heart with storage life_steal:main
 #
+# @args		player (unknown)
+#
 
 # Tellraw message and ban player
 $tellraw @a {"text":"Player '$(player)' just got banned for reaching 0 hearts!","color":"red"}
