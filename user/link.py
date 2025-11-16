@@ -221,26 +221,29 @@ advancement revoke @s only {ns}:consume_beacon
 
 # Get username from beacon name
 data remove storage {ns}:main player
-scoreboard players set #success {ns}.data 0
 execute if data entity @s SelectedItem.components."minecraft:custom_data".life_steal.revive_beacon run data modify storage {ns}:main player set string entity @s SelectedItem.components."minecraft:custom_name"
 execute unless data storage {ns}:main player if data entity @s equipment.offhand.components."minecraft:custom_data".life_steal.revive_beacon run data modify storage {ns}:main player set string entity @s equipment.offhand.components."minecraft:custom_name"
-function {ns}:player/revive with storage {ns}:main
+
+# Try to revive
+execute store success score #success {ns}.data run function {ns}:player/revive with storage {ns}:main
+execute if score #success {ns}.data matches 1 run return 1
 
 # If not success, regive the beacon and stop function
-execute if score #success {ns}.data matches 0 run loot give @s[gamemode=!creative] loot {ns}:i/revive_beacon
-execute if score #success {ns}.data matches 0 run return fail
+loot give @s[gamemode=!creative] loot {ns}:i/revive_beacon
+return fail
 """)
 	write_function(f"{ns}:player/revive", f"""
 # If player is banned, pardon him and return success
-$execute if data storage {ns}:main banned_players.$(player) run pardon $(player)
-$execute if data storage {ns}:main banned_players.$(player) run tellraw @a [{{"selector":"@s","color":"green"}},{{"text":" used a revive beacon to revive '$(player)'!"}}]
-$execute if data storage {ns}:main banned_players.$(player) as @a at @s run playsound ui.toast.challenge_complete ambient @s
-$execute if data storage {ns}:main banned_players.$(player) if score USE_HALF_HEARTS {ns}.data matches 0 run scoreboard players operation $(player) {ns}.hearts = REVIVED_HEARTS {ns}.data
-$execute if data storage {ns}:main banned_players.$(player) if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation $(player) {ns}.hearts = REVIVED_HEARTS {ns}.data
-$execute if data storage {ns}:main banned_players.$(player) if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation $(player) {ns}.hearts *= #2 {ns}.data
-$execute if data storage {ns}:main banned_players.$(player) run scoreboard players set $(player) {ns}.data 1
-$execute if data storage {ns}:main banned_players.$(player) run scoreboard players set #success {ns}.data 1
-$execute if data storage {ns}:main banned_players.$(player) run return run data remove storage {ns}:main banned_players.$(player)
+$execute store success score #is_banned {ns}.data if data storage {ns}:main banned_players.$(player)
+$execute if score #is_banned {ns}.data matches 1 run pardon $(player)
+$execute if score #is_banned {ns}.data matches 1 run tellraw @a [{{"selector":"@s","color":"green"}},{{"text":" used a revive beacon to revive '$(player)'!"}}]
+execute if score #is_banned {ns}.data matches 1 as @a at @s run playsound ui.toast.challenge_complete ambient @s
+$execute if score #is_banned {ns}.data matches 1 if score USE_HALF_HEARTS {ns}.data matches 0 run scoreboard players operation $(player) {ns}.hearts = REVIVED_HEARTS {ns}.data
+$execute if score #is_banned {ns}.data matches 1 if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation $(player) {ns}.hearts = REVIVED_HEARTS {ns}.data
+$execute if score #is_banned {ns}.data matches 1 if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation $(player) {ns}.hearts *= #2 {ns}.data
+$execute if score #is_banned {ns}.data matches 1 run scoreboard players set $(player) {ns}.data 1
+$execute if score #is_banned {ns}.data matches 1 run data remove storage {ns}:main banned_players.$(player)
+execute if score #is_banned {ns}.data matches 1 run return 1
 
 # If player is not found, return fail
 $tellraw @s [{{"text":"Player '$(player)' not found in the banned list!","color":"red"}}]
