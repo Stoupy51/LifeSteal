@@ -6,10 +6,11 @@
 # @within	life_steal:player/on_death
 #
 
+# If died from a player but not BAN_BELOW_MIN_HEARTS configuration, do not reward the killer
+execute unless score BAN_BELOW_MIN_HEARTS life_steal.data matches 1 run scoreboard players remove @a[scores={life_steal.kill=1..}] life_steal.kill 1
+
 # Make sure player does not have less than minimum hearts
-scoreboard players operation #temp life_steal.data = MIN_HEARTS life_steal.data
-execute if score USE_HALF_HEARTS life_steal.data matches 1 unless score #temp life_steal.data matches 1 run scoreboard players operation #temp life_steal.data *= #2 life_steal.data
-execute if score @s life_steal.hearts < #temp life_steal.data run scoreboard players operation @s life_steal.hearts = #temp life_steal.data
+execute if score @s life_steal.hearts < #real_min_hearts life_steal.data run scoreboard players operation @s life_steal.hearts = #real_min_hearts life_steal.data
 
 # If not BAN_BELOW_MIN_HEARTS configuration, stop here
 execute unless score BAN_BELOW_MIN_HEARTS life_steal.data matches 1 run return 1

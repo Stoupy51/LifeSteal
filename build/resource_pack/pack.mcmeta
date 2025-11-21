@@ -5,6 +5,11 @@
 		"supported_formats": [
 			55,
 			1000
+		],
+		"min_format": 55,
+		"max_format": [
+			1000,
+			0
 		]
 	},
 	"id": "life_steal",

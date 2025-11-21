@@ -74,24 +74,32 @@ function {ns}:player/update_health
 scoreboard players set @s {ns}.kill 0
 """)
 	write_function(f"{ns}:player/on_death", f"""
-# If (died from a player), or (died from natural causes and configuration is 1), remove a heart
-execute if entity @a[scores={{{ns}.kill=1..}}] run function {ns}:player/remove_one_heart
-execute unless entity @a[scores={{{ns}.kill=1..}}] unless score NATURAL_DEATH_HEART_DROP {ns}.data matches 0 run function {ns}:player/remove_one_heart
+# Reset death score
+scoreboard players set @s {ns}.death 0
+
+# Calculate minimum hearts threshold
+execute store result score #real_min_hearts {ns}.data run scoreboard players get MIN_HEARTS {ns}.data
+execute if score USE_HALF_HEARTS {ns}.data matches 1 unless score #real_min_hearts {ns}.data matches 1 run scoreboard players operation #real_min_hearts {ns}.data *= #2 {ns}.data
+
+# If (died from a player), or (died from natural causes and configuration is 1), remove a heart (only if not at minimum)
+execute if score @s {ns}.hearts >= #real_min_hearts {ns}.data if entity @a[scores={{{ns}.kill=1..}}] run function {ns}:player/remove_one_heart
+execute if score @s {ns}.hearts >= #real_min_hearts {ns}.data unless entity @a[scores={{{ns}.kill=1..}}] unless score NATURAL_DEATH_HEART_DROP {ns}.data matches 0 run function {ns}:player/remove_one_heart
+
+# Check if fall below minimum hearts
+execute if score @s {ns}.hearts < #real_min_hearts {ns}.data run function {ns}:player/below_min_hearts
 
 # Update health
 function {ns}:player/update_health
-
-# Check if fall below minimum hearts
-execute store result score #temp {ns}.data run scoreboard players get MIN_HEARTS {ns}.data
-execute if score USE_HALF_HEARTS {ns}.data matches 1 unless score #temp {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
-execute if score @s {ns}.hearts < #temp {ns}.data run function {ns}:player/below_min_hearts
-
-# Reset death score
-scoreboard players set @s {ns}.death 0
 """)
 	# Add remove_one_heart function
 	write_function(f"{ns}:player/remove_one_heart", f"""
+# Remove one heart
 scoreboard players remove @s {ns}.hearts 1
+
+# Stop not BAN_BELOW_MIN_HEARTS configuration and under minimum hearts
+execute if score @s {ns}.hearts < #real_min_hearts {ns}.data unless score BAN_BELOW_MIN_HEARTS {ns}.data matches 1 run return 1
+
+# Tellraw message and update health
 function {ns}:player/lose_heart_msg
 function {ns}:player/update_health
 
@@ -213,10 +221,11 @@ execute if score #display_half {ns}.data matches 1 run tellraw @s [{{"text":"You
 
 	# Function death (when reaching minimum hearts)
 	write_function(f"{ns}:player/below_min_hearts", f"""
+# If died from a player but not BAN_BELOW_MIN_HEARTS configuration, do not reward the killer
+execute unless score BAN_BELOW_MIN_HEARTS {ns}.data matches 1 run scoreboard players remove @a[scores={{{ns}.kill=1..}}] {ns}.kill 1
+
 # Make sure player does not have less than minimum hearts
-scoreboard players operation #temp {ns}.data = MIN_HEARTS {ns}.data
-execute if score USE_HALF_HEARTS {ns}.data matches 1 unless score #temp {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
-execute if score @s {ns}.hearts < #temp {ns}.data run scoreboard players operation @s {ns}.hearts = #temp {ns}.data
+execute if score @s {ns}.hearts < #real_min_hearts {ns}.data run scoreboard players operation @s {ns}.hearts = #real_min_hearts {ns}.data
 
 # If not BAN_BELOW_MIN_HEARTS configuration, stop here
 execute unless score BAN_BELOW_MIN_HEARTS {ns}.data matches 1 run return 1
