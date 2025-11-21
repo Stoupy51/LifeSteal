@@ -11,7 +11,7 @@ scoreboard players set @s life_steal.withdraw 0
 
 # Check if player has more than minimum hearts
 scoreboard players operation #temp life_steal.data = MIN_HEARTS life_steal.data
-execute if score USE_HALF_HEARTS life_steal.data matches 1 run scoreboard players operation #temp life_steal.data *= #2 life_steal.data
+execute if score USE_HALF_HEARTS life_steal.data matches 1 unless score #temp life_steal.data matches 1 run scoreboard players operation #temp life_steal.data *= #2 life_steal.data
 scoreboard players add #temp life_steal.data 1
 
 # Stop function if not enough hearts

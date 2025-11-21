@@ -4,6 +4,8 @@
 # @executed	as @a[sort=random,scores={life_steal.death=1..}]
 #
 # @within	life_steal:player/tick
+#			life_steal:player/on_kill
+#			life_steal:player/on_death
 #			life_steal:player/remove_one_heart
 #			life_steal:player/withdraw
 #			life_steal:player/consume_heart

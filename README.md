@@ -25,17 +25,20 @@ I continuously maintain compatibility with new releases, ensuring you can enjoy 
 Players can withdraw hearts by typing `/trigger life_steal.withdraw`.
 
 Default settings:
-- Revived players respawn with 4 hearts
-- Maximum heart limit is set to 20 hearts
-- Players lose a heart upon death (whether killed by another player or from natural causes)
+- 🔄 Revived players respawn with 4 hearts
+- ⬆️ Maximum heart limit is set to 20 hearts
+- ⬇️ Minimum heart limit is set to 0 hearts
+- 💀 Players lose a heart upon death (whether killed by another player or from natural causes)
+- ➗ Half hearts mode is disabled (hearts are tracked in whole numbers)
+- 🚫 Players are banned when falling below the minimum heart limit
 
 These settings can be customized using the following commands (requires operator permissions):
-- `scoreboard players set MAX_HEARTS life_steal.data 20` (Maximum of 20 hearts)
-- `scoreboard players set REVIVED_HEARTS life_steal.data 4` (Amount of hearts to respawn with when revived)
-- `scoreboard players set NATURAL_DEATH_HEART_DROP life_steal.data 1` (1 = drop a heart when dying to non player, 0 = disable that)
-- `scoreboard players set USE_HALF_HEARTS life_steal.data 1` (1 = enable half hearts mode, 0 = disable - tracks hearts in 0.5 increments instead of whole numbers)
-- `scoreboard players set MIN_HEARTS life_steal.data 0` (Minimum number of hearts a player can have, default is 0)
-- `scoreboard players set BAN_AT_MIN_HEARTS life_steal.data 1` (1 = ban player when reaching minimum hearts, 0 = just prevent them from going lower)
+- ⬆️ `scoreboard players set MAX_HEARTS life_steal.data 20` (Maximum of 20 hearts)
+- ⬇️ `scoreboard players set MIN_HEARTS life_steal.data 1` (Minimum number of hearts a player can have, default is 1)
+- 🔄 `scoreboard players set REVIVED_HEARTS life_steal.data 4` (Amount of hearts to respawn with when revived)
+- 💀 `scoreboard players set NATURAL_DEATH_HEART_DROP life_steal.data 1` (1 = drop a heart when dying to non player, 0 = disable that)
+- ➗ `scoreboard players set USE_HALF_HEARTS life_steal.data 1` (1 = enable half hearts mode, 0 = disable - tracks hearts in 0.5 increments instead of whole numbers)
+- 🚫 `scoreboard players set BAN_BELOW_MIN_HEARTS life_steal.data 1` (1 = ban player when falling below minimum hearts, 0 = just prevent them from going lower)
 
 You can obtain the items using these commands:
 - `/function life_steal:_give_all` (gives all items from the datapack)
