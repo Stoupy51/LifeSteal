@@ -20,5 +20,4 @@ scoreboard players operation @s life_steal.hearts > #temp life_steal.data
 
 # Ban macro if configuration is enabled
 execute if score BAN_AT_MIN_HEARTS life_steal.data matches 1 run function life_steal:player/ban_macro with storage life_steal:main
-execute if score BAN_AT_MIN_HEARTS life_steal.data matches 0 run function life_steal:player/min_hearts_reached_msg with storage life_steal:main
 

@@ -209,7 +209,6 @@ scoreboard players operation @s {ns}.hearts > #temp {ns}.data
 
 # Ban macro if configuration is enabled
 execute if score BAN_AT_MIN_HEARTS {ns}.data matches 1 run function {ns}:player/ban_macro with storage {ns}:main
-execute if score BAN_AT_MIN_HEARTS {ns}.data matches 0 run function {ns}:player/min_hearts_reached_msg with storage {ns}:main
 """)
 	write_function(f"{ns}:player/ban_macro", f"""
 # Tellraw message and ban player
@@ -219,11 +218,6 @@ $ban $(player) You reached the minimum hearts!
 # Add player name to banned list
 execute unless data storage {ns}:main banned_players run data modify storage {ns}:main banned_players set value {{}}
 $data modify storage {ns}:main banned_players.$(player) set value true
-""")
-	write_function(f"{ns}:player/min_hearts_reached_msg", f"""
-# Tellraw message when reaching minimum hearts without banning
-$tellraw @a [{{"text":"Player '$(player)' reached the minimum hearts!","color":"yellow"}}]
-execute as @a at @s run playsound entity.player.hurt ambient @s
 """)
 
 
