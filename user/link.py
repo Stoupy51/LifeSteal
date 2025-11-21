@@ -19,10 +19,12 @@ scoreboard objectives add {ns}.hearts dummy
 scoreboard players set #2 {ns}.data 2
 
 execute unless score MAX_HEARTS {ns}.data matches 1.. run scoreboard players set MAX_HEARTS {ns}.data 20
+execute unless score MIN_HEARTS {ns}.data matches 1.. run scoreboard players set MIN_HEARTS {ns}.data 1
 execute unless score REVIVED_HEARTS {ns}.data matches 1.. run scoreboard players set REVIVED_HEARTS {ns}.data 4
 execute unless score NATURAL_DEATH_HEART_DROP {ns}.data matches 0..1 run scoreboard players set NATURAL_DEATH_HEART_DROP {ns}.data 1
 execute unless score USE_HALF_HEARTS {ns}.data matches 0..1 run scoreboard players set USE_HALF_HEARTS {ns}.data 0
 execute unless score USE_HALF_HEARTS_PREV {ns}.data matches 0..1 run scoreboard players operation USE_HALF_HEARTS_PREV {ns}.data = USE_HALF_HEARTS {ns}.data
+execute unless score BAN_BELOW_MIN_HEARTS {ns}.data matches 0..1 run scoreboard players set BAN_BELOW_MIN_HEARTS {ns}.data 1
 """, prepend = True)
 
 	# Add tick function
@@ -50,22 +52,42 @@ scoreboard players enable @s {ns}.withdraw
 execute unless score @s {ns}.withdraw matches 0 run function {ns}:player/withdraw
 
 # If killed player, add a heart
-execute if score @s {ns}.kill matches 1.. run scoreboard players operation #temp {ns}.data = MAX_HEARTS {ns}.data
-execute if score @s {ns}.kill matches 1.. if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
-execute if score @s {ns}.kill matches 1.. if score @s {ns}.hearts >= #temp {ns}.data run tellraw @s [{{"text":"You stole a heart from a player, but you are already at max health!","color":"red"}}]
-execute if score @s {ns}.kill matches 1.. if score @s {ns}.hearts < #temp {ns}.data run scoreboard players operation #add {ns}.data = @s {ns}.kill
-execute if score @s {ns}.kill matches 1.. if score @s {ns}.hearts < #temp {ns}.data if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation #add {ns}.data *= #2 {ns}.data
-execute if score @s {ns}.kill matches 1.. if score @s {ns}.hearts < #temp {ns}.data run scoreboard players operation @s {ns}.hearts += #add {ns}.data
-execute if score @s {ns}.kill matches 1.. if score @s {ns}.hearts < #temp {ns}.data run function {ns}:player/gain_heart_msg
-execute if score @s {ns}.kill matches 1.. run function {ns}:player/update_health
-execute if score @s {ns}.kill matches 1.. run scoreboard players set @s {ns}.kill 0
+execute if score @s {ns}.kill matches 1.. run function {ns}:player/on_kill
 
+# On any death, run on_death function
+execute if score @s {ns}.death matches 1.. run function {ns}:player/on_death
+""")
+	write_function(f"{ns}:player/on_kill", f"""
+# Compute max hearts
+scoreboard players operation #temp {ns}.data = MAX_HEARTS {ns}.data
+execute if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
+
+# If at max hearts, send message
+execute if score @s {ns}.hearts >= #temp {ns}.data run tellraw @s [{{"text":"You stole a heart from a player, but you are already at max health!","color":"red"}}]
+
+# Else, add a heart (or half heart)
+execute if score @s {ns}.hearts < #temp {ns}.data run scoreboard players operation @s {ns}.hearts += @s {ns}.kill
+execute if score @s {ns}.hearts < #temp {ns}.data run function {ns}:player/gain_heart_msg
+
+# Update health and reset kill score
+function {ns}:player/update_health
+scoreboard players set @s {ns}.kill 0
+""")
+	write_function(f"{ns}:player/on_death", f"""
 # If (died from a player), or (died from natural causes and configuration is 1), remove a heart
-execute if score @s {ns}.death matches 1.. if entity @a[scores={{{ns}.kill=1..}}] run function {ns}:player/remove_one_heart
-execute if score @s {ns}.death matches 1.. unless entity @a[scores={{{ns}.kill=1..}}] unless score NATURAL_DEATH_HEART_DROP {ns}.data matches 0 run function {ns}:player/remove_one_heart
-execute if score @s {ns}.death matches 1.. run function {ns}:player/update_health
-execute if score @s {ns}.death matches 1.. if score @s {ns}.hearts matches ..0 run function {ns}:player/reached_0_heart
-execute if score @s {ns}.death matches 1.. run scoreboard players set @s {ns}.death 0
+execute if entity @a[scores={{{ns}.kill=1..}}] run function {ns}:player/remove_one_heart
+execute unless entity @a[scores={{{ns}.kill=1..}}] unless score NATURAL_DEATH_HEART_DROP {ns}.data matches 0 run function {ns}:player/remove_one_heart
+
+# Update health
+function {ns}:player/update_health
+
+# Check if fall below minimum hearts
+execute store result score #temp {ns}.data run scoreboard players get MIN_HEARTS {ns}.data
+execute if score USE_HALF_HEARTS {ns}.data matches 1 unless score #temp {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
+execute if score @s {ns}.hearts < #temp {ns}.data run function {ns}:player/below_min_hearts
+
+# Reset death score
+scoreboard players set @s {ns}.death 0
 """)
 	# Add remove_one_heart function
 	write_function(f"{ns}:player/remove_one_heart", f"""
@@ -114,10 +136,17 @@ execute if score #display_half {ns}.data matches 1 run tellraw @s [{{"text":"You
 
 	# Add withdraw function
 	write_function(f"{ns}:player/withdraw", f"""
-# Reset withdraw trigger and stop function if not enough hearts
+# Reset withdraw trigger
 scoreboard players set @s {ns}.withdraw 0
-execute if score @s {ns}.hearts matches ..1 run tellraw @s {{"text":"You don't have enough hearts to withdraw!","color":"red"}}
-execute if score @s {ns}.hearts matches ..1 run return fail
+
+# Check if player has more than minimum hearts
+scoreboard players operation #temp {ns}.data = MIN_HEARTS {ns}.data
+execute if score USE_HALF_HEARTS {ns}.data matches 1 unless score #temp {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
+scoreboard players add #temp {ns}.data 1
+
+# Stop function if not enough hearts
+execute if score @s {ns}.hearts < #temp {ns}.data run tellraw @s {{"text":"You don't have enough hearts to withdraw!","color":"red"}}
+execute if score @s {ns}.hearts < #temp {ns}.data run return fail
 
 # Give heart, decrease score, and update health
 loot give @s[gamemode=!creative] loot {ns}:i/heart
@@ -182,25 +211,30 @@ execute if score #display_half {ns}.data matches 1 run tellraw @s [{{"text":"You
 	json_content: JsonDict = {"pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"minecraft:player_head","functions":[{"function":"minecraft:fill_player_head","entity":"this"}]}]}]}
 	ctx.data[ns].loot_tables["player_head"] = set_json_encoder(LootTable(json_content), max_level=-1)
 
-	# Function death (when reaching 0 heart)
-	write_function(f"{ns}:player/reached_0_heart", f"""
-# Get player username
+	# Function death (when reaching minimum hearts)
+	write_function(f"{ns}:player/below_min_hearts", f"""
+# Make sure player does not have less than minimum hearts
+scoreboard players operation #temp {ns}.data = MIN_HEARTS {ns}.data
+execute if score USE_HALF_HEARTS {ns}.data matches 1 unless score #temp {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
+execute if score @s {ns}.hearts < #temp {ns}.data run scoreboard players operation @s {ns}.hearts = #temp {ns}.data
+
+# If not BAN_BELOW_MIN_HEARTS configuration, stop here
+execute unless score BAN_BELOW_MIN_HEARTS {ns}.data matches 1 run return 1
+
+# Get player username for macro
 tag @e[type=item] add {ns}.temp
 execute at @s run loot spawn ~ ~ ~ loot {ns}:player_head
 data modify storage {ns}:main player set from entity @e[type=item,tag=!{ns}.temp,limit=1] Item.components."minecraft:profile".name
 kill @e[type=item,tag=!{ns}.temp]
 tag @e[type=item,tag={ns}.temp] remove {ns}.temp
 
-# Make sure player does not have negative hearts
-scoreboard players set @s {ns}.hearts 0
-
 # Ban macro
 function {ns}:player/ban_macro with storage {ns}:main
 """)
 	write_function(f"{ns}:player/ban_macro", f"""
 # Tellraw message and ban player
-$tellraw @a {{"text":"Player '$(player)' just got banned for reaching 0 hearts!","color":"red"}}
-$ban $(player) You reached 0 hearts!
+$tellraw @a {{"text":"Player '$(player)' just got banned for reaching minimum hearts!","color":"red"}}
+$ban $(player) You reached the minimum hearts!
 
 # Add player name to banned list
 execute unless data storage {ns}:main banned_players run data modify storage {ns}:main banned_players set value {{}}
