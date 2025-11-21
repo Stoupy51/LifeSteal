@@ -35,8 +35,6 @@ execute if score @s life_steal.kill matches 1.. run scoreboard players set @s li
 execute if score @s life_steal.death matches 1.. if entity @a[scores={life_steal.kill=1..}] run function life_steal:player/remove_one_heart
 execute if score @s life_steal.death matches 1.. unless entity @a[scores={life_steal.kill=1..}] unless score NATURAL_DEATH_HEART_DROP life_steal.data matches 0 run function life_steal:player/remove_one_heart
 execute if score @s life_steal.death matches 1.. run function life_steal:player/update_health
-execute if score @s life_steal.death matches 1.. store result score #temp life_steal.data run scoreboard players get MIN_HEARTS life_steal.data
-execute if score @s life_steal.death matches 1.. if score USE_HALF_HEARTS life_steal.data matches 1 run scoreboard players operation #temp life_steal.data *= #2 life_steal.data
-execute if score @s life_steal.death matches 1.. if score @s life_steal.hearts <= #temp life_steal.data run function life_steal:player/reached_min_hearts
+execute if score @s life_steal.death matches 1.. if score @s life_steal.hearts matches ..0 run function life_steal:player/reached_0_heart
 execute if score @s life_steal.death matches 1.. run scoreboard players set @s life_steal.death 0
 
