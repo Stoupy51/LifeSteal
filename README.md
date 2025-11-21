@@ -34,6 +34,8 @@ These settings can be customized using the following commands (requires operator
 - `scoreboard players set REVIVED_HEARTS life_steal.data 4` (Amount of hearts to respawn with when revived)
 - `scoreboard players set NATURAL_DEATH_HEART_DROP life_steal.data 1` (1 = drop a heart when dying to non player, 0 = disable that)
 - `scoreboard players set USE_HALF_HEARTS life_steal.data 1` (1 = enable half hearts mode, 0 = disable - tracks hearts in 0.5 increments instead of whole numbers)
+- `scoreboard players set MIN_HEARTS life_steal.data 0` (Minimum number of hearts a player can have, default is 0)
+- `scoreboard players set BAN_AT_MIN_HEARTS life_steal.data 1` (1 = ban player when reaching minimum hearts, 0 = just prevent them from going lower)
 
 You can obtain the items using these commands:
 - `/function life_steal:_give_all` (gives all items from the datapack)
