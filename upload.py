@@ -18,7 +18,7 @@ github_config: JsonDict = {
     "project_name": cfg.name,
     "version": cfg.version,
     "build_folder": cfg.output,
-    "endswith": [".zip"]
+    "endswith": [".zip", ".jar"]
 }
 changelog: str = upload_to_github(credentials, github_config)
 
