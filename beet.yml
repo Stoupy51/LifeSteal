@@ -6,7 +6,7 @@ name: "LifeSteal"
 # Author(s) name(s) displayed in pack.mcmeta, also used to add 'convention.debug' tag to the players of the same name(s) <-- showing additionnal displays like datapack loading
 author: "Stoupy51"
 # Project version in semantic versioning format: major.minor.patch (e.g., 1.0.0 or 2.84.615).
-version: "1.4.0"
+version: "1.4.1"
 # Minecraft version. Determines what resources beet loads (plugins like `mecha` determine what commands to use). Defaults: Latest
 minecraft: "1.21.5"
 
@@ -47,7 +47,7 @@ pipeline:
 # Generic dict which holds extra information usable by plugins
 meta:
     # List of supported Minecraft versions (used when uploading to Modrinth or Smithed)
-    mc_supports: ["1.21.5", "1.21.6", "1.21.7", "1.21.8", "1.21.9", "1.21.10", "1.21.11", "25w41a", "25w42a", "25w43a", "25w44a", "25w45a", "25w46a", "1.21.11-pre1", "infinite"]
+    mc_supports: ["1.21.5", "1.21.6", "1.21.7", "1.21.8", "1.21.9", "1.21.10", "1.21.11", "25w41a", "25w42a", "25w43a", "25w44a", "25w45a", "25w46a", "1.21.11-pre1", "1.21.11-pre2", "1.21.11-pre3", "infinite"]
 
     # StewBeet specific configuration
     stewbeet:
