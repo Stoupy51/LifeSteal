@@ -1,9 +1,10 @@
 {
 	"heart": {
 		"id": "minecraft:command_block",
-		"result_of_crafting": [{"type": "crafting_shaped","result_count": 1,"category": "misc","shape": ["NDN","DTD","NDN"],"ingredients": {"N": {"item": "minecraft:netherite_ingot"},"D": {"item": "minecraft:diamond_block"},"T": {"item": "minecraft:totem_of_undying"}}}],
-		"category": "food",
+		"damage_resistant": {"types": "#life_steal:is_explosion_or_fire"},
 		"consumable": {},
+		"category": "food",
+		"result_of_crafting": [{"type": "crafting_shaped","result_count": 1,"category": "misc","shape": ["NDN","DTD","NDN"],"ingredients": {"N": {"item": "minecraft:netherite_ingot"},"D": {"item": "minecraft:diamond_block"},"T": {"item": "minecraft:totem_of_undying"}}}],
 		"item_model": "life_steal:heart",
 		"item_name": {"text": "Heart"},
 		"lore": [["",{"text": "I","color": "white","italic": false,"font": "life_steal:icons"},{"text": " LifeSteal","italic": true,"color": "blue"}]],
@@ -11,10 +12,10 @@
 	},
 	"revive_beacon": {
 		"id": "minecraft:command_block",
-		"result_of_crafting": [{"type": "crafting_shaped","result_count": 1,"category": "misc","shape": ["TNT","NBN","TNT"],"ingredients": {"T": {"item": "minecraft:totem_of_undying"},"N": {"item": "minecraft:netherite_ingot"},"B": {"item": "minecraft:beacon"}}}],
-		"category": "food",
 		"consumable": {},
 		"lore": [{"text": "Rename the item to the username","italic": false,"color": "gray"},{"text": "of the player you want to revive.","italic": false,"color": "gray"},["",{"text": "I","color": "white","italic": false,"font": "life_steal:icons"},{"text": " LifeSteal","italic": true,"color": "blue"}]],
+		"category": "food",
+		"result_of_crafting": [{"type": "crafting_shaped","result_count": 1,"category": "misc","shape": ["TNT","NBN","TNT"],"ingredients": {"T": {"item": "minecraft:totem_of_undying"},"N": {"item": "minecraft:netherite_ingot"},"B": {"item": "minecraft:beacon"}}}],
 		"item_model": "life_steal:revive_beacon",
 		"item_name": {"text": "Revive Beacon"},
 		"custom_data": {"life_steal": {"revive_beacon": true},"smithed": {"ignore": {"functionality": true,"crafting": true}}}

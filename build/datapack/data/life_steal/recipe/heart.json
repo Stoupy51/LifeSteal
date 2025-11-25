@@ -15,6 +15,9 @@
 		"id": "minecraft:command_block",
 		"count": 1,
 		"components": {
+			"minecraft:damage_resistant": {
+				"types": "#life_steal:is_explosion_or_fire"
+			},
 			"minecraft:consumable": {},
 			"minecraft:item_model": "life_steal:heart",
 			"minecraft:item_name": {
