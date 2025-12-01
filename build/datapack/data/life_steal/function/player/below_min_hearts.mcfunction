@@ -11,6 +11,8 @@ execute unless score BAN_BELOW_MIN_HEARTS life_steal.data matches 1 run scoreboa
 
 # Make sure player does not have less than minimum hearts
 execute if score @s life_steal.hearts < #real_min_hearts life_steal.data run scoreboard players operation @s life_steal.hearts = #real_min_hearts life_steal.data
+execute if score @s life_steal.hearts matches ..0 run scoreboard players set @s life_steal.hearts 1
+function life_steal:player/update_health
 
 # If not BAN_BELOW_MIN_HEARTS configuration, stop here
 execute unless score BAN_BELOW_MIN_HEARTS life_steal.data matches 1 run return 1

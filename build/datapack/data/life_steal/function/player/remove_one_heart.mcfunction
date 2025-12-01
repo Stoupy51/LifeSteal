@@ -9,9 +9,6 @@
 # Remove one heart
 scoreboard players remove @s life_steal.hearts 1
 
-# Stop not BAN_BELOW_MIN_HEARTS configuration and under minimum hearts
-execute if score @s life_steal.hearts < #real_min_hearts life_steal.data unless score BAN_BELOW_MIN_HEARTS life_steal.data matches 1 run return 1
-
 # Tellraw message and update health
 function life_steal:player/lose_heart_msg
 function life_steal:player/update_health
