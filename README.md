@@ -24,6 +24,12 @@ I continuously maintain compatibility with new releases, ensuring you can enjoy 
 ## ⚙️ Configuration
 Players can withdraw hearts by typing `/trigger life_steal.withdraw`.
 
+**Since 1.5.0, you can now view and modify all settings interactively by running:**
+```
+/function life_steal:config
+```
+This displays an interactive menu where you can click on any setting to modify it directly!
+
 Default settings:
 - 🔄 Revived players respawn with 4 hearts
 - ⬆️ Maximum heart limit is set to 20 hearts
@@ -32,7 +38,7 @@ Default settings:
 - ➗ Half hearts mode is disabled (hearts are tracked in whole numbers)
 - 🚫 Players are banned when falling below the minimum heart limit
 
-These settings can be customized using the following commands (requires operator permissions):
+Alternatively, settings can be customized manually using the following commands (requires operator permissions):
 - ⬆️ `scoreboard players set MAX_HEARTS life_steal.data 20` (Maximum of 20 hearts)
 - ⬇️ `scoreboard players set MIN_HEARTS life_steal.data 1` (Minimum number of hearts a player can have, default is 1)
 - 🔄 `scoreboard players set REVIVED_HEARTS life_steal.data 4` (Amount of hearts to respawn with when revived)
