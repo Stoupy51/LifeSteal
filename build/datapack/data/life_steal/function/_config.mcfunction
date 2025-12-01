@@ -1,5 +1,5 @@
 
-#> life_steal:config
+#> life_steal:_config
 #
 # @within	???
 #

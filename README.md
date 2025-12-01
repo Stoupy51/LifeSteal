@@ -26,7 +26,7 @@ Players can withdraw hearts by typing `/trigger life_steal.withdraw`.
 
 **Since 1.5.0, you can now view and modify all settings interactively by running:**
 ```
-/function life_steal:config
+/function life_steal:_config
 ```
 This displays an interactive menu where you can click on any setting to modify it directly!
 

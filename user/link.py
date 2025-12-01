@@ -339,7 +339,7 @@ execute as @a at @s run playsound entity.experience_orb.pickup ambient @s
 """)
 
 	# Interactive configuration display function
-	write_function(f"{ns}:config", f"""
+	write_function(f"{ns}:_config", f"""
 # Display configuration header
 tellraw @s {{"text":"[Life Steal Configuration]","color":"gold"}}
 
