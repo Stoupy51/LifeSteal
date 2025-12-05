@@ -1,0 +1,17 @@
+{
+	"criteria": {
+		"requirement": {
+			"trigger": "minecraft:using_item",
+			"conditions": {
+				"item": {
+					"predicates": {
+						"minecraft:custom_data": "{\"life_steal\":{\"heart\":true}}"
+					}
+				}
+			}
+		}
+	},
+	"rewards": {
+		"function": "life_steal:player/using_heart"
+	}
+}

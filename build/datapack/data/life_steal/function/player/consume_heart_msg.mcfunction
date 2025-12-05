@@ -4,6 +4,7 @@
 # @executed	as the player & at current position
 #
 # @within	life_steal:player/consume_heart
+#			life_steal:player/using_heart
 #
 
 execute if score USE_HALF_HEARTS life_steal.data matches 0 run tellraw @s [{"text":"You ate a heart, you now have ","color":"gray"},{"score":{"name":"@s","objective":"life_steal.hearts"}, "color":"red"},{"text":" hearts!"}]

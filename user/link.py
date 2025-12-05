@@ -28,6 +28,7 @@ execute unless score USE_HALF_HEARTS {ns}.data matches 0..1 run scoreboard playe
 execute unless score USE_HALF_HEARTS_PREV {ns}.data matches 0..1 run scoreboard players operation USE_HALF_HEARTS_PREV {ns}.data = USE_HALF_HEARTS {ns}.data
 execute unless score BAN_BELOW_MIN_HEARTS {ns}.data matches 0..1 run scoreboard players set BAN_BELOW_MIN_HEARTS {ns}.data 1
 execute unless score STEAL_ON_KILL {ns}.data matches 0..1 run scoreboard players set STEAL_ON_KILL {ns}.data 1
+execute unless score INSTANTLY_CONSUME_HEARTS {ns}.data matches 0..1 run scoreboard players set INSTANTLY_CONSUME_HEARTS {ns}.data 0
 """, prepend = True)
 
 	# Add tick function
@@ -181,10 +182,15 @@ execute if score #display_half {ns}.data matches 1 run tellraw @s [{{"text":"You
 """)
 
 	## Advancement when eating a heart
-	# JSON advancement
+	# JSON advancement for consuming
 	json_content: JsonDict = {"criteria":{"requirement":{"trigger":"minecraft:consume_item","conditions":{"item":{"predicates":{"minecraft:custom_data":f"{{\"{ns}\":{{\"heart\":true}}}}"}}}}}}
 	json_content["rewards"] = {"function": f"{ns}:player/consume_heart"}
 	ctx.data[ns].advancements["consume_heart"] = set_json_encoder(Advancement(json_content), max_level=-1)
+
+	# JSON advancement for using (instant consume)
+	json_content: JsonDict = {"criteria":{"requirement":{"trigger":"minecraft:using_item","conditions":{"item":{"predicates":{"minecraft:custom_data":f"{{\"{ns}\":{{\"heart\":true}}}}"}}}}}}
+	json_content["rewards"] = {"function": f"{ns}:player/using_heart"}
+	ctx.data[ns].advancements["using_heart"] = set_json_encoder(Advancement(json_content), max_level=-1)
 
 	# Function
 	write_function(f"{ns}:player/consume_heart", f"""
@@ -216,6 +222,31 @@ scoreboard players operation #display_half {ns}.data = @s {ns}.hearts
 scoreboard players operation #display_half {ns}.data %= #2 {ns}.data
 execute if score #display_half {ns}.data matches 0 run tellraw @s [{{"text":"You ate a heart, you now have ","color":"gray"}},{{"score":{{"name":"#display_whole","objective":"{ns}.data"}}, "color":"red"}},{{"text":".0","color":"red"}},{{"text":" hearts!"}}]
 execute if score #display_half {ns}.data matches 1 run tellraw @s [{{"text":"You ate a heart, you now have ","color":"gray"}},{{"score":{{"name":"#display_whole","objective":"{ns}.data"}}, "color":"red"}},{{"text":".5","color":"red"}},{{"text":" hearts!"}}]
+""")
+
+	# Function for using heart (instant consume)
+	write_function(f"{ns}:player/using_heart", f"""
+# Revoke the advancement
+advancement revoke @s only {ns}:using_heart
+
+# Stop if INSTANTLY_CONSUME_HEARTS is disabled
+execute unless score INSTANTLY_CONSUME_HEARTS {ns}.data matches 1 run return fail
+
+# If already at max health, stop
+scoreboard players operation #temp {ns}.data = MAX_HEARTS {ns}.data
+execute if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
+execute if score @s {ns}.hearts >= #temp {ns}.data run tellraw @s {{"text":"You are already at max health!","color":"red"}}
+execute if score @s {ns}.hearts >= #temp {ns}.data run return fail
+
+# Give a heart and update health
+scoreboard players add @s {ns}.hearts 1
+function {ns}:player/update_health
+
+# Clear one heart
+clear @s *[custom_data~{{{ns}:{{"heart":true}}}}] 1
+
+# Tellraw message
+function {ns}:player/consume_heart_msg
 """)
 
 	# Get player head loot table
@@ -368,6 +399,8 @@ execute if score BAN_BELOW_MIN_HEARTS {ns}.data matches 1 run tellraw @s [{{"tex
 execute if score BAN_BELOW_MIN_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"- Ban Below Min Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set BAN_BELOW_MIN_HEARTS {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Players will be banned when reaching minimum hearts\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
 execute if score STEAL_ON_KILL {ns}.data matches 1 run tellraw @s [{{"text":"- Steal On Kill: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set STEAL_ON_KILL {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Killing players won't reward hearts or remove them from victims\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
 execute if score STEAL_ON_KILL {ns}.data matches 0 run tellraw @s [{{"text":"- Steal On Kill: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set STEAL_ON_KILL {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Killing players will reward hearts and remove them from victims\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
+execute if score INSTANTLY_CONSUME_HEARTS {ns}.data matches 1 run tellraw @s [{{"text":"- Instantly Consume Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set INSTANTLY_CONSUME_HEARTS {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Hearts will need to be fully consumed (eating animation)\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
+execute if score INSTANTLY_CONSUME_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"- Instantly Consume Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set INSTANTLY_CONSUME_HEARTS {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Hearts will be consumed instantly when used\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
 """)
 	pass
 

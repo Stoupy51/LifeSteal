@@ -7,8 +7,7 @@
 #
 
 # If STEAL_ON_KILL is disabled, do nothing
-execute unless score STEAL_ON_KILL life_steal.data matches 1 run scoreboard players set @s life_steal.kill 0
-execute unless score STEAL_ON_KILL life_steal.data matches 1 run return fail
+execute unless score STEAL_ON_KILL life_steal.data matches 1 run return run scoreboard players set @s life_steal.kill 0
 
 # Compute max hearts
 scoreboard players operation #temp life_steal.data = MAX_HEARTS life_steal.data
