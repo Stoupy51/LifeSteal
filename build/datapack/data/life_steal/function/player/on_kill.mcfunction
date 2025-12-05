@@ -6,6 +6,10 @@
 # @within	life_steal:player/tick
 #
 
+# If STEAL_ON_KILL is disabled, do nothing
+execute unless score STEAL_ON_KILL life_steal.data matches 1 run scoreboard players set @s life_steal.kill 0
+execute unless score STEAL_ON_KILL life_steal.data matches 1 run return fail
+
 # Compute max hearts
 scoreboard players operation #temp life_steal.data = MAX_HEARTS life_steal.data
 execute if score USE_HALF_HEARTS life_steal.data matches 1 run scoreboard players operation #temp life_steal.data *= #2 life_steal.data

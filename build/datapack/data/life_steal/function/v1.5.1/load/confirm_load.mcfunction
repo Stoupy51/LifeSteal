@@ -18,6 +18,7 @@ execute unless score NATURAL_DEATH_HEART_DROP life_steal.data matches 0..1 run s
 execute unless score USE_HALF_HEARTS life_steal.data matches 0..1 run scoreboard players set USE_HALF_HEARTS life_steal.data 0
 execute unless score USE_HALF_HEARTS_PREV life_steal.data matches 0..1 run scoreboard players operation USE_HALF_HEARTS_PREV life_steal.data = USE_HALF_HEARTS life_steal.data
 execute unless score BAN_BELOW_MIN_HEARTS life_steal.data matches 0..1 run scoreboard players set BAN_BELOW_MIN_HEARTS life_steal.data 1
+execute unless score STEAL_ON_KILL life_steal.data matches 0..1 run scoreboard players set STEAL_ON_KILL life_steal.data 1
 
 # Confirm load
 tellraw @a[tag=convention.debug] {"text":"[Loaded LifeSteal v1.5.1]","color":"green"}

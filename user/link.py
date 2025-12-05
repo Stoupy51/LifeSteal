@@ -27,6 +27,7 @@ execute unless score NATURAL_DEATH_HEART_DROP {ns}.data matches 0..1 run scorebo
 execute unless score USE_HALF_HEARTS {ns}.data matches 0..1 run scoreboard players set USE_HALF_HEARTS {ns}.data 0
 execute unless score USE_HALF_HEARTS_PREV {ns}.data matches 0..1 run scoreboard players operation USE_HALF_HEARTS_PREV {ns}.data = USE_HALF_HEARTS {ns}.data
 execute unless score BAN_BELOW_MIN_HEARTS {ns}.data matches 0..1 run scoreboard players set BAN_BELOW_MIN_HEARTS {ns}.data 1
+execute unless score STEAL_ON_KILL {ns}.data matches 0..1 run scoreboard players set STEAL_ON_KILL {ns}.data 1
 """, prepend = True)
 
 	# Add tick function
@@ -60,6 +61,9 @@ execute if score @s {ns}.kill matches 1.. run function {ns}:player/on_kill
 execute if score @s {ns}.death matches 1.. run function {ns}:player/on_death
 """)
 	write_function(f"{ns}:player/on_kill", f"""
+# If STEAL_ON_KILL is disabled, do nothing
+execute unless score STEAL_ON_KILL {ns}.data matches 1 run return run scoreboard players set @s {ns}.kill 0
+
 # Compute max hearts
 scoreboard players operation #temp {ns}.data = MAX_HEARTS {ns}.data
 execute if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
@@ -83,8 +87,8 @@ scoreboard players set @s {ns}.death 0
 execute store result score #real_min_hearts {ns}.data run scoreboard players get MIN_HEARTS {ns}.data
 execute if score USE_HALF_HEARTS {ns}.data matches 1 unless score #real_min_hearts {ns}.data matches 1 run scoreboard players operation #real_min_hearts {ns}.data *= #2 {ns}.data
 
-# If (died from a player), or (died from natural causes and configuration is 1), remove a heart (only if above minimum)
-execute if score @s {ns}.hearts > #real_min_hearts {ns}.data if entity @a[scores={{{ns}.kill=1..}}] run function {ns}:player/remove_one_heart
+# If (died from a player AND STEAL_ON_KILL is enabled), or (died from natural causes and NATURAL_DEATH_HEART_DROP is 1), remove a heart (only if above minimum)
+execute if score @s {ns}.hearts > #real_min_hearts {ns}.data if entity @a[scores={{{ns}.kill=1..}}] if score STEAL_ON_KILL {ns}.data matches 1 run function {ns}:player/remove_one_heart
 execute if score @s {ns}.hearts > #real_min_hearts {ns}.data unless entity @a[scores={{{ns}.kill=1..}}] unless score NATURAL_DEATH_HEART_DROP {ns}.data matches 0 run function {ns}:player/remove_one_heart
 
 # Check if fall below minimum hearts
@@ -362,6 +366,8 @@ execute if score USE_HALF_HEARTS {ns}.data matches 1 run tellraw @s [{{"text":"-
 execute if score USE_HALF_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"- Half Hearts Mode: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set USE_HALF_HEARTS {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Hearts will be tracked in 0.5 increments\\nWarning: This will convert all players' hearts!\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
 execute if score BAN_BELOW_MIN_HEARTS {ns}.data matches 1 run tellraw @s [{{"text":"- Ban Below Min Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set BAN_BELOW_MIN_HEARTS {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Players won't be banned when reaching minimum hearts\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
 execute if score BAN_BELOW_MIN_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"- Ban Below Min Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set BAN_BELOW_MIN_HEARTS {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Players will be banned when reaching minimum hearts\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
+execute if score STEAL_ON_KILL {ns}.data matches 1 run tellraw @s [{{"text":"- Steal On Kill: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set STEAL_ON_KILL {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Killing players won't reward hearts or remove them from victims\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
+execute if score STEAL_ON_KILL {ns}.data matches 0 run tellraw @s [{{"text":"- Steal On Kill: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set STEAL_ON_KILL {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Killing players will reward hearts and remove them from victims\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
 """)
 	pass
 

@@ -37,6 +37,7 @@ Default settings:
 - 💀 Players lose a heart upon death (whether killed by another player or from natural causes)
 - ➗ Half hearts mode is disabled (hearts are tracked in whole numbers)
 - 🚫 Players are banned when falling below the minimum heart limit
+- ⚔️ Steal on kill is enabled (killing players rewards hearts and removes them from victims)
 
 Alternatively, settings can be customized manually using the following commands (requires operator permissions):
 - ⬆️ `scoreboard players set MAX_HEARTS life_steal.data 20` (Maximum of 20 hearts)
@@ -45,6 +46,7 @@ Alternatively, settings can be customized manually using the following commands 
 - 💀 `scoreboard players set NATURAL_DEATH_HEART_DROP life_steal.data 1` (1 = drop a heart when dying to non player, 0 = disable that)
 - ➗ `scoreboard players set USE_HALF_HEARTS life_steal.data 1` (1 = enable half hearts mode, 0 = disable - tracks hearts in 0.5 increments instead of whole numbers)
 - 🚫 `scoreboard players set BAN_BELOW_MIN_HEARTS life_steal.data 1` (1 = ban player when falling below minimum hearts, 0 = just prevent them from going lower)
+- ⚔️ `scoreboard players set STEAL_ON_KILL life_steal.data 1` (1 = killing players rewards hearts and removes them from victims, 0 = disable heart stealing on kill)
 
 You can obtain the items using these commands:
 - `/function life_steal:_give_all` (gives all items from the datapack)

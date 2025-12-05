@@ -13,8 +13,8 @@ scoreboard players set @s life_steal.death 0
 execute store result score #real_min_hearts life_steal.data run scoreboard players get MIN_HEARTS life_steal.data
 execute if score USE_HALF_HEARTS life_steal.data matches 1 unless score #real_min_hearts life_steal.data matches 1 run scoreboard players operation #real_min_hearts life_steal.data *= #2 life_steal.data
 
-# If (died from a player), or (died from natural causes and configuration is 1), remove a heart (only if above minimum)
-execute if score @s life_steal.hearts > #real_min_hearts life_steal.data if entity @a[scores={life_steal.kill=1..}] run function life_steal:player/remove_one_heart
+# If (died from a player AND STEAL_ON_KILL is enabled), or (died from natural causes and NATURAL_DEATH_HEART_DROP is 1), remove a heart (only if above minimum)
+execute if score @s life_steal.hearts > #real_min_hearts life_steal.data if entity @a[scores={life_steal.kill=1..}] if score STEAL_ON_KILL life_steal.data matches 1 run function life_steal:player/remove_one_heart
 execute if score @s life_steal.hearts > #real_min_hearts life_steal.data unless entity @a[scores={life_steal.kill=1..}] unless score NATURAL_DEATH_HEART_DROP life_steal.data matches 0 run function life_steal:player/remove_one_heart
 
 # Check if fall below minimum hearts
