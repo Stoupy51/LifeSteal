@@ -40,7 +40,7 @@ Default settings:
 
 Alternatively, settings can be customized manually using the following commands (requires operator permissions):
 - ⬆️ `scoreboard players set MAX_HEARTS life_steal.data 20` (Maximum of 20 hearts)
-- ⬇️ `scoreboard players set MIN_HEARTS life_steal.data 1` (Minimum number of hearts a player can have, default is 1)
+- ⬇️ `scoreboard players set MIN_HEARTS life_steal.data 0` (Minimum number of hearts a player can have, default is 0)
 - 🔄 `scoreboard players set REVIVED_HEARTS life_steal.data 4` (Amount of hearts to respawn with when revived)
 - 💀 `scoreboard players set NATURAL_DEATH_HEART_DROP life_steal.data 1` (1 = drop a heart when dying to non player, 0 = disable that)
 - ➗ `scoreboard players set USE_HALF_HEARTS life_steal.data 1` (1 = enable half hearts mode, 0 = disable - tracks hearts in 0.5 increments instead of whole numbers)

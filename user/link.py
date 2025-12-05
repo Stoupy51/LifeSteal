@@ -21,7 +21,7 @@ scoreboard objectives add {ns}.hearts dummy
 scoreboard players set #2 {ns}.data 2
 
 execute unless score MAX_HEARTS {ns}.data matches 1.. run scoreboard players set MAX_HEARTS {ns}.data 20
-execute unless score MIN_HEARTS {ns}.data matches 1.. run scoreboard players set MIN_HEARTS {ns}.data 1
+execute unless score MIN_HEARTS {ns}.data matches 0.. run scoreboard players set MIN_HEARTS {ns}.data 0
 execute unless score REVIVED_HEARTS {ns}.data matches 1.. run scoreboard players set REVIVED_HEARTS {ns}.data 4
 execute unless score NATURAL_DEATH_HEART_DROP {ns}.data matches 0..1 run scoreboard players set NATURAL_DEATH_HEART_DROP {ns}.data 1
 execute unless score USE_HALF_HEARTS {ns}.data matches 0..1 run scoreboard players set USE_HALF_HEARTS {ns}.data 0
@@ -351,7 +351,7 @@ tellraw @s {LIFE_STEAL_TEXT}
 # Numeric settings
 tellraw @s ["\\n",{NUMERIC_SETTING}]
 tellraw @s [{{"text":"- Max Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set MAX_HEARTS {ns}.data 20"}},"hover_event":{{"action":"show_text","value":{{"text":"Enter the maximum number of hearts a player can have\\nDefault: 20","color":"white"}}}}}},{{"score":{{"name":"MAX_HEARTS","objective":"{ns}.data"}},"color":"yellow"}},{{"text":" 👈","color":"gray"}}]
-tellraw @s [{{"text":"- Min Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set MIN_HEARTS {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Enter the minimum number of hearts a player can have\\nDefault: 1","color":"white"}}}}}},{{"score":{{"name":"MIN_HEARTS","objective":"{ns}.data"}},"color":"yellow"}},{{"text":" 👈","color":"gray"}}]
+tellraw @s [{{"text":"- Min Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set MIN_HEARTS {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Enter the minimum number of hearts a player can have\\nDefault: 1","color":"white"}}}}}},{{"score":{{"name":"MIN_HEARTS","objective":"{ns}.data"}},"color":"yellow"}},{{"text":" 👈","color":"gray"}}]
 tellraw @s [{{"text":"- Revived Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set REVIVED_HEARTS {ns}.data 4"}},"hover_event":{{"action":"show_text","value":{{"text":"Enter the number of hearts a player respawns with when revived\\nDefault: 4","color":"white"}}}}}},{{"score":{{"name":"REVIVED_HEARTS","objective":"{ns}.data"}},"color":"yellow"}},{{"text":" 👈","color":"gray"}}]
 
 # Boolean settings
