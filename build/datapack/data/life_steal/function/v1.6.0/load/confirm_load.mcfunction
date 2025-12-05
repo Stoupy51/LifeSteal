@@ -1,7 +1,7 @@
 
-#> life_steal:v1.5.1/load/confirm_load
+#> life_steal:v1.6.0/load/confirm_load
 #
-# @within	life_steal:v1.5.1/load/secondary
+# @within	life_steal:v1.6.0/load/secondary
 #
 
 scoreboard objectives add life_steal.kill playerKillCount
@@ -22,7 +22,7 @@ execute unless score STEAL_ON_KILL life_steal.data matches 0..1 run scoreboard p
 execute unless score INSTANTLY_CONSUME_HEARTS life_steal.data matches 0..1 run scoreboard players set INSTANTLY_CONSUME_HEARTS life_steal.data 0
 
 # Confirm load
-tellraw @a[tag=convention.debug] {"text":"[Loaded LifeSteal v1.5.1]","color":"green"}
+tellraw @a[tag=convention.debug] {"text":"[Loaded LifeSteal v1.6.0]","color":"green"}
 scoreboard players set #life_steal.loaded load.status 1
 
 # Items storage
