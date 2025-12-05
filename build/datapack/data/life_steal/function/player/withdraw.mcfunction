@@ -9,10 +9,11 @@
 # Reset withdraw trigger
 scoreboard players set @s life_steal.withdraw 0
 
-# Check if player has more than minimum hearts
+# Check if player has more than minimum hearts (add 1 if banning is enabled to prevent withdrawing at min+1)
 scoreboard players operation #temp life_steal.data = MIN_HEARTS life_steal.data
 execute if score USE_HALF_HEARTS life_steal.data matches 1 unless score #temp life_steal.data matches 1 run scoreboard players operation #temp life_steal.data *= #2 life_steal.data
-scoreboard players add #temp life_steal.data 1
+execute if score BAN_BELOW_MIN_HEARTS life_steal.data matches 1 run scoreboard players add #temp life_steal.data 2
+execute unless score BAN_BELOW_MIN_HEARTS life_steal.data matches 1 run scoreboard players add #temp life_steal.data 1
 
 # Stop function if not enough hearts
 execute if score @s life_steal.hearts < #temp life_steal.data run tellraw @s {"text":"You don't have enough hearts to withdraw!","color":"red"}

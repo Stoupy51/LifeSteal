@@ -151,10 +151,11 @@ execute if score #display_half {ns}.data matches 1 run tellraw @s [{{"text":"You
 # Reset withdraw trigger
 scoreboard players set @s {ns}.withdraw 0
 
-# Check if player has more than minimum hearts
+# Check if player has more than minimum hearts (add 1 if banning is enabled to prevent withdrawing at min+1)
 scoreboard players operation #temp {ns}.data = MIN_HEARTS {ns}.data
 execute if score USE_HALF_HEARTS {ns}.data matches 1 unless score #temp {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
-scoreboard players add #temp {ns}.data 1
+execute if score BAN_BELOW_MIN_HEARTS {ns}.data matches 1 run scoreboard players add #temp {ns}.data 2
+execute unless score BAN_BELOW_MIN_HEARTS {ns}.data matches 1 run scoreboard players add #temp {ns}.data 1
 
 # Stop function if not enough hearts
 execute if score @s {ns}.hearts < #temp {ns}.data run tellraw @s {{"text":"You don't have enough hearts to withdraw!","color":"red"}}
