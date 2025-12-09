@@ -1,11 +1,13 @@
 {
 	"pack": {
 		"pack_format": 71,
-		"description": "LifeSteal [1.7.0] by Stoupy51",
+		"description": "LifeSteal [1.7.1] by Stoupy51",
 		"supported_formats": [
 			71,
 			71
-		]
+		],
+		"min_format": 71,
+		"max_format": 71
 	},
 	"id": "life_steal"
 }
