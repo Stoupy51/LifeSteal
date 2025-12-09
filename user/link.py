@@ -204,6 +204,7 @@ advancement revoke @s only {ns}:consume_heart
 scoreboard players operation #temp {ns}.data = MAX_HEARTS {ns}.data
 execute if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
 execute if score @s {ns}.hearts >= #temp {ns}.data run tellraw @s {{"text":"You are already at max health!","color":"red"}}
+execute if score @s {ns}.hearts >= #temp {ns}.data at @s run playsound entity.villager.no ambient @s
 execute if score @s {ns}.hearts >= #temp {ns}.data at @s run loot spawn ~ ~ ~ loot {ns}:i/heart
 execute if score @s {ns}.hearts >= #temp {ns}.data run return fail
 
@@ -239,6 +240,7 @@ execute unless score INSTANTLY_CONSUME_HEARTS {ns}.data matches 1 run return fai
 scoreboard players operation #temp {ns}.data = MAX_HEARTS {ns}.data
 execute if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
 execute if score @s {ns}.hearts >= #temp {ns}.data run tellraw @s {{"text":"You are already at max health!","color":"red"}}
+execute if score @s {ns}.hearts >= #temp {ns}.data at @s run playsound entity.villager.no ambient @s
 execute if score @s {ns}.hearts >= #temp {ns}.data run return fail
 
 # Give a heart and update health
