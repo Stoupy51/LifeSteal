@@ -29,6 +29,7 @@ execute unless score USE_HALF_HEARTS_PREV {ns}.data matches 0..1 run scoreboard 
 execute unless score BAN_BELOW_MIN_HEARTS {ns}.data matches 0..1 run scoreboard players set BAN_BELOW_MIN_HEARTS {ns}.data 1
 execute unless score STEAL_ON_KILL {ns}.data matches 0..1 run scoreboard players set STEAL_ON_KILL {ns}.data 1
 execute unless score INSTANTLY_CONSUME_HEARTS {ns}.data matches 0..1 run scoreboard players set INSTANTLY_CONSUME_HEARTS {ns}.data 0
+execute unless score NO_HEART_DROP {ns}.data matches 0..1 run scoreboard players set NO_HEART_DROP {ns}.data 0
 """, prepend = True)
 
 	# Add tick function
@@ -62,8 +63,9 @@ execute if score @s {ns}.kill matches 1.. run function {ns}:player/on_kill
 execute if score @s {ns}.death matches 1.. run function {ns}:player/on_death
 """)
 	write_function(f"{ns}:player/on_kill", f"""
-# If STEAL_ON_KILL is disabled, do nothing
+# If STEAL_ON_KILL is disabled, or NO_HEART_DROP is enabled, do nothing
 execute unless score STEAL_ON_KILL {ns}.data matches 1 run return run scoreboard players set @s {ns}.kill 0
+execute if score NO_HEART_DROP {ns}.data matches 1 run return run scoreboard players set @s {ns}.kill 0
 
 # Compute max hearts
 scoreboard players operation #temp {ns}.data = MAX_HEARTS {ns}.data
@@ -107,8 +109,8 @@ scoreboard players remove @s {ns}.hearts 1
 function {ns}:player/lose_heart_msg
 function {ns}:player/update_health
 
-# Drop a heart if player wasn't killed by another player
-execute unless entity @a[scores={{{ns}.kill=1..}}] run function {ns}:player/drop_heart_at_death
+# Drop a heart if player wasn't killed by another, and if NO_HEART_DROP is disabled
+execute unless score NO_HEART_DROP {ns}.data matches 1 unless entity @a[scores={{{ns}.kill=1..}}] run function {ns}:player/drop_heart_at_death
 """)
 
 	# Add update_health function
@@ -402,6 +404,8 @@ execute if score STEAL_ON_KILL {ns}.data matches 1 run tellraw @s [{{"text":"- S
 execute if score STEAL_ON_KILL {ns}.data matches 0 run tellraw @s [{{"text":"- Steal On Kill: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set STEAL_ON_KILL {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Killing players will reward hearts and remove them from victims\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
 execute if score INSTANTLY_CONSUME_HEARTS {ns}.data matches 1 run tellraw @s [{{"text":"- Instantly Consume Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set INSTANTLY_CONSUME_HEARTS {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Hearts will need to be fully consumed (eating animation)\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
 execute if score INSTANTLY_CONSUME_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"- Instantly Consume Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set INSTANTLY_CONSUME_HEARTS {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Hearts will be consumed instantly when used\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
+execute if score NO_HEART_DROP {ns}.data matches 1 run tellraw @s [{{"text":"- No Heart Drop: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set NO_HEART_DROP {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Hearts will drop/be stolen normally on death\\nOverrides STEAL_ON_KILL by preventing all heart steal/drop on death\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
+execute if score NO_HEART_DROP {ns}.data matches 0 run tellraw @s [{{"text":"- No Heart Drop: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set NO_HEART_DROP {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Hearts won't drop or be stolen when players die\\nOverrides STEAL_ON_KILL by preventing all heart steal/drop on death\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
 """)
 	pass
 
