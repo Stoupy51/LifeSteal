@@ -15,11 +15,18 @@ This datapack adds texture for the revive beacon and use 1.21 food/consumable co
 **This datapack is and will 🔥 ALWAYS 🔥 be updated to support the latest Minecraft versions!**<br>
 I continuously maintain compatibility with new releases, ensuring you can enjoy Life Steal mechanics on the newest Minecraft updates without waiting, even on snapshots.
 
-### **DON'T FORGET TO DOWNLOAD THE REQUIRED <u>[RESOURCE PACK](https://github.com/Stoupy51/LifeSteal/releases/)</u>**
+### **DON'T FORGET TO DOWNLOAD THE REQUIRED <u>[RESOURCE PACK](https://github.com/Stoupy51/LifeSteal/releases/)</u> IF YOU ARE USING THE DATAPACK VERSION**
 
-## 📥 Download links:
-- Modrinth: [https://modrinth.com/datapack/lifestealfr/](https://modrinth.com/datapack/lifestealfr/)
-- PlanetMinecraft: [https://www.planetminecraft.com/data-pack/life-steal-fr/](https://www.planetminecraft.com/data-pack/life-steal-fr/)
+## ⚠️ IMPORTANT: Server Setup Required
+
+**This project requires special permissions to ban players!**<br>
+If you're running a server, you **MUST** edit your `server.properties` file and set:
+```properties
+function-permission-level=3
+```
+
+**Without this setting, the ban feature will not work!** This is the most common issue users encounter.<br>
+After making this change, restart your server for it to take effect.
 
 ## ⚙️ Configuration
 Players can withdraw hearts by typing `/trigger life_steal.withdraw`.
@@ -59,11 +66,13 @@ You can obtain the items using these commands:
 
 ## ⚠️ Administration
 
-As datapack don't have `/ban` permissions by default, you should edit your `server.properties` file and set the line `function-permission-level` to `3`
-
 If you want to manually revive a player, you can use the following command: 🔨<br>
 `function life_steal:player/revive {player:"Stoupy51"}`<br>
 (replace `Stoupy51` with the player name you want to revive)
+
+## 📥 Download links:
+- Modrinth: [https://modrinth.com/datapack/lifestealfr/](https://modrinth.com/datapack/lifestealfr/)
+- PlanetMinecraft: [https://www.planetminecraft.com/data-pack/life-steal-fr/](https://www.planetminecraft.com/data-pack/life-steal-fr/)
 
 ---
 ![Promotional image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/promo_1.jpg)
