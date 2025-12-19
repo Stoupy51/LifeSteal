@@ -25,5 +25,10 @@ kill @e[type=item,tag=!life_steal.temp]
 tag @e[type=item,tag=life_steal.temp] remove life_steal.temp
 
 # Ban macro
+scoreboard players set #banned life_steal.data 0
 function life_steal:player/ban_macro with storage life_steal:main
+
+# If banned player is still in the world, make him spectator and send an error message (function permission issue)
+execute if score #banned life_steal.data matches 0 run gamemode spectator @s
+execute if score #banned life_steal.data matches 0 run tellraw @a [{"text":"[LifeStealFR] ERROR: Could not ban player '","color":"red"},{"selector":"@s"},{"text":"'. Set 'function-permission-level' to 3 in server.properties!"}]
 

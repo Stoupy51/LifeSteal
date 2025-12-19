@@ -1,5 +1,6 @@
 {
 	"values": [
-		"life_steal:v1.7.1/load/enumerate"
+		"#life_steal:dependencies",
+		"life_steal:v1.7.2/load/enumerate"
 	]
 }

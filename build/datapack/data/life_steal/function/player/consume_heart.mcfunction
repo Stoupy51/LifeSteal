@@ -13,6 +13,7 @@ advancement revoke @s only life_steal:consume_heart
 scoreboard players operation #temp life_steal.data = MAX_HEARTS life_steal.data
 execute if score USE_HALF_HEARTS life_steal.data matches 1 run scoreboard players operation #temp life_steal.data *= #2 life_steal.data
 execute if score @s life_steal.hearts >= #temp life_steal.data run tellraw @s {"text":"You are already at max health!","color":"red"}
+execute if score @s life_steal.hearts >= #temp life_steal.data at @s run playsound entity.villager.no ambient @s
 execute if score @s life_steal.hearts >= #temp life_steal.data at @s run loot spawn ~ ~ ~ loot life_steal:i/heart
 execute if score @s life_steal.hearts >= #temp life_steal.data run return fail
 

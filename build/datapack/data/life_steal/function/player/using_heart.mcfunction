@@ -16,6 +16,7 @@ execute unless score INSTANTLY_CONSUME_HEARTS life_steal.data matches 1 run retu
 scoreboard players operation #temp life_steal.data = MAX_HEARTS life_steal.data
 execute if score USE_HALF_HEARTS life_steal.data matches 1 run scoreboard players operation #temp life_steal.data *= #2 life_steal.data
 execute if score @s life_steal.hearts >= #temp life_steal.data run tellraw @s {"text":"You are already at max health!","color":"red"}
+execute if score @s life_steal.hearts >= #temp life_steal.data at @s run playsound entity.villager.no ambient @s
 execute if score @s life_steal.hearts >= #temp life_steal.data run return fail
 
 # Give a heart and update health
