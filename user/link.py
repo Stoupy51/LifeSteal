@@ -279,7 +279,12 @@ kill @e[type=item,tag=!{ns}.temp]
 tag @e[type=item,tag={ns}.temp] remove {ns}.temp
 
 # Ban macro
+scoreboard players set #banned {ns}.data 0
 function {ns}:player/ban_macro with storage {ns}:main
+
+# If banned player is still in the world, make him spectator and send an error message (function permission issue)
+execute if score #banned {ns}.data matches 0 run gamemode spectator @s
+execute if score #banned {ns}.data matches 0 run tellraw @a [{{"text":"[LifeStealFR] ERROR: Could not ban player '","color":"red"}},{{"selector":"@s"}},{{"text":"'. Set 'function-permission-level' to 3 in server.properties!"}}]
 """)
 	write_function(f"{ns}:player/ban_macro", f"""
 # Tellraw message and ban player
@@ -289,6 +294,7 @@ $ban $(player) You reached the minimum hearts!
 # Add player name to banned list
 execute unless data storage {ns}:main banned_players run data modify storage {ns}:main banned_players set value {{}}
 $data modify storage {ns}:main banned_players.$(player) set value true
+scoreboard players set #banned {ns}.data 1
 """)
 
 
