@@ -17,6 +17,10 @@ function life_steal:player/update_health
 # If not BAN_BELOW_MIN_HEARTS configuration, stop here
 execute unless score BAN_BELOW_MIN_HEARTS life_steal.data matches 1 run return 1
 
+# If SPECTATOR_INSTEAD is enabled, move to spectator and announce
+execute if score SPECTATOR_INSTEAD life_steal.data matches 1 run gamemode spectator @s
+execute if score SPECTATOR_INSTEAD life_steal.data matches 1 run return run tellraw @a [{"selector":"@s","color":"red"},{"text":" reached minimum hearts and was moved to spectator mode!"}]
+
 # Get player username for macro
 tag @e[type=item] add life_steal.temp
 execute at @s run loot spawn ~ ~ ~ loot life_steal:player_head

@@ -30,6 +30,7 @@ execute unless score BAN_BELOW_MIN_HEARTS {ns}.data matches 0..1 run scoreboard 
 execute unless score STEAL_ON_KILL {ns}.data matches 0..1 run scoreboard players set STEAL_ON_KILL {ns}.data 1
 execute unless score INSTANTLY_CONSUME_HEARTS {ns}.data matches 0..1 run scoreboard players set INSTANTLY_CONSUME_HEARTS {ns}.data 0
 execute unless score NO_HEART_DROP {ns}.data matches 0..1 run scoreboard players set NO_HEART_DROP {ns}.data 0
+execute unless score SPECTATOR_INSTEAD {ns}.data matches 0..1 run scoreboard players set SPECTATOR_INSTEAD {ns}.data 0
 """, prepend = True)
 
 	# Add tick function
@@ -271,6 +272,10 @@ function {ns}:player/update_health
 # If not BAN_BELOW_MIN_HEARTS configuration, stop here
 execute unless score BAN_BELOW_MIN_HEARTS {ns}.data matches 1 run return 1
 
+# If SPECTATOR_INSTEAD is enabled, move to spectator and announce
+execute if score SPECTATOR_INSTEAD {ns}.data matches 1 run gamemode spectator @s
+execute if score SPECTATOR_INSTEAD {ns}.data matches 1 run return run tellraw @a [{{"selector":"@s","color":"red"}},{{"text":" reached minimum hearts and was moved to spectator mode!"}}]
+
 # Get player username for macro
 tag @e[type=item] add {ns}.temp
 execute at @s run loot spawn ~ ~ ~ loot {ns}:player_head
@@ -323,7 +328,21 @@ loot give @s[gamemode=!creative] loot {ns}:i/revive_beacon
 return fail
 """)
 	write_function(f"{ns}:player/revive", f"""
-# If player is banned, pardon him and return success
+# Check if player is online and in spectator mode
+$execute store success score #is_spectator {ns}.data if entity @a[name=$(player),gamemode=spectator]
+
+# If player is in spectator mode, revive them
+$execute if score #is_spectator {ns}.data matches 1 run gamemode survival @a[name=$(player)]
+$execute if score #is_spectator {ns}.data matches 1 run tp @a[name=$(player)] @s
+$execute if score #is_spectator {ns}.data matches 1 run tellraw @a [{{"selector":"@s","color":"green"}},{{"text":" used a revive beacon to revive '$(player)'!"}}]
+execute if score #is_spectator {ns}.data matches 1 as @a at @s run playsound ui.toast.challenge_complete ambient @s
+$execute if score #is_spectator {ns}.data matches 1 if score USE_HALF_HEARTS {ns}.data matches 0 run scoreboard players operation @a[name=$(player)] {ns}.hearts = REVIVED_HEARTS {ns}.data
+$execute if score #is_spectator {ns}.data matches 1 if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation @a[name=$(player)] {ns}.hearts = REVIVED_HEARTS {ns}.data
+$execute if score #is_spectator {ns}.data matches 1 if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation @a[name=$(player)] {ns}.hearts *= #2 {ns}.data
+$execute if score #is_spectator {ns}.data matches 1 as @a[name=$(player)] run function {ns}:player/update_health
+execute if score #is_spectator {ns}.data matches 1 run return 1
+
+# If player is banned, pardon them and return success
 $execute store success score #is_banned {ns}.data if data storage {ns}:main banned_players.$(player)
 $execute if score #is_banned {ns}.data matches 1 run pardon $(player)
 $execute if score #is_banned {ns}.data matches 1 run tellraw @a [{{"selector":"@s","color":"green"}},{{"text":" used a revive beacon to revive '$(player)'!"}}]
@@ -335,8 +354,8 @@ $execute if score #is_banned {ns}.data matches 1 run scoreboard players set $(pl
 $execute if score #is_banned {ns}.data matches 1 run data remove storage {ns}:main banned_players.$(player)
 execute if score #is_banned {ns}.data matches 1 run return 1
 
-# If player is not found, return fail
-$tellraw @s [{{"text":"Player '$(player)' not found in the banned list!","color":"red"}}]
+# If player is not found in spectator or banned list, return fail
+$tellraw @s [{{"text":"Player '$(player)' not found in the banned list or connected in spectator mode!","color":"red"}}]
 return fail
 """)
 
@@ -411,6 +430,8 @@ execute if score USE_HALF_HEARTS {ns}.data matches 1 run tellraw @s [{{"text":"-
 execute if score USE_HALF_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"- Half Hearts Mode: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set USE_HALF_HEARTS {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Hearts will be tracked in 0.5 increments\\nWarning: This will convert all players' hearts!\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
 execute if score BAN_BELOW_MIN_HEARTS {ns}.data matches 1 run tellraw @s [{{"text":"- Ban Reaching Min Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set BAN_BELOW_MIN_HEARTS {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Players won't be banned when reaching minimum hearts\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
 execute if score BAN_BELOW_MIN_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"- Ban Reaching Min Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set BAN_BELOW_MIN_HEARTS {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Players will be banned when reaching minimum hearts\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
+execute if score SPECTATOR_INSTEAD {ns}.data matches 1 run tellraw @s [{{"text":"- Spectator Instead of Ban: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set SPECTATOR_INSTEAD {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Players will be banned (if BAN_BELOW_MIN_HEARTS is enabled)\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
+execute if score SPECTATOR_INSTEAD {ns}.data matches 0 run tellraw @s [{{"text":"- Spectator Instead of Ban: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set SPECTATOR_INSTEAD {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Players will be moved to spectator mode instead of being banned\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
 execute if score STEAL_ON_KILL {ns}.data matches 1 run tellraw @s [{{"text":"- Steal On Kill: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set STEAL_ON_KILL {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Killing players won't reward hearts or remove them from victims\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
 execute if score STEAL_ON_KILL {ns}.data matches 0 run tellraw @s [{{"text":"- Steal On Kill: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set STEAL_ON_KILL {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Killing players will reward hearts and remove them from victims\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
 execute if score INSTANTLY_CONSUME_HEARTS {ns}.data matches 1 run tellraw @s [{{"text":"- Instantly Consume Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set INSTANTLY_CONSUME_HEARTS {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Hearts will need to be fully consumed (eating animation)\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
