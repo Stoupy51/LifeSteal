@@ -18,6 +18,12 @@
 
 execute if score USE_HALF_HEARTS life_steal.data matches 0 store result storage life_steal:main health int 2 run scoreboard players get @s life_steal.hearts
 execute if score USE_HALF_HEARTS life_steal.data matches 1 store result storage life_steal:main health int 1 run scoreboard players get @s life_steal.hearts
+
+# Remove 1 health point if player has last_chance tag, since they are at MIN_HEARTS + 1 (we want to keep them at MIN_HEARTS .5)
+execute if entity @s[tag=life_steal.last_chance] store result score #temp life_steal.data run data get storage life_steal:main health
+execute if entity @s[tag=life_steal.last_chance] run scoreboard players remove #temp life_steal.data 1
+execute if entity @s[tag=life_steal.last_chance] store result storage life_steal:main health int 1 run scoreboard players get #temp life_steal.data
+
 function life_steal:player/update_macro with storage life_steal:main
 execute at @s run playsound entity.player.levelup ambient @s
 

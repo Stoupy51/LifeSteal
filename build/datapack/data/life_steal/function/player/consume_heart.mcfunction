@@ -17,6 +17,9 @@ execute if score @s life_steal.hearts >= #temp life_steal.data at @s run playsou
 execute if score @s life_steal.hearts >= #temp life_steal.data at @s run loot spawn ~ ~ ~ loot life_steal:i/heart
 execute if score @s life_steal.hearts >= #temp life_steal.data run return fail
 
+# Remove last_chance tag if player has it
+tag @s remove life_steal.last_chance
+
 # Give a heart and update health
 scoreboard players add @s life_steal.hearts 1
 function life_steal:player/update_health

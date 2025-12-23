@@ -6,11 +6,15 @@
 # @within	life_steal:player/on_death
 #
 
+# Check for last chance condition (only when half hearts mode is disabled)
+scoreboard players set #lose_heart_msg life_steal.data 1
+execute if score LAST_CHANCE life_steal.data matches 1 unless score USE_HALF_HEARTS life_steal.data matches 1 unless entity @s[tag=life_steal.last_chance] run function life_steal:player/check_last_chance
+
 # Remove one heart
 scoreboard players remove @s life_steal.hearts 1
 
 # Tellraw message and update health
-function life_steal:player/lose_heart_msg
+execute if score #lose_heart_msg life_steal.data matches 1 run function life_steal:player/lose_heart_msg
 function life_steal:player/update_health
 
 # Drop a heart if player wasn't killed by another, and if NO_HEART_DROP is disabled
