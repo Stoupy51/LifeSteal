@@ -21,6 +21,7 @@ scoreboard objectives add {ns}.hearts dummy
 scoreboard players set #2 {ns}.data 2
 
 execute unless score MAX_HEARTS {ns}.data matches 1.. run scoreboard players set MAX_HEARTS {ns}.data 20
+execute unless score MAX_HEARTS_BY_CONSUMING {ns}.data matches 0.. run scoreboard players set MAX_HEARTS_BY_CONSUMING {ns}.data 20
 execute unless score MIN_HEARTS {ns}.data matches 0.. run scoreboard players set MIN_HEARTS {ns}.data 0
 execute unless score REVIVED_HEARTS {ns}.data matches 1.. run scoreboard players set REVIVED_HEARTS {ns}.data 4
 execute unless score NATURAL_DEATH_HEART_DROP {ns}.data matches 0..1 run scoreboard players set NATURAL_DEATH_HEART_DROP {ns}.data 1
@@ -229,10 +230,11 @@ execute if score #display_half {ns}.data matches 1 run tellraw @s [{{"text":"You
 # Revoke the advancement
 advancement revoke @s only {ns}:consume_heart
 
-# If already at max health, regive the heart and stop function
-scoreboard players operation #temp {ns}.data = MAX_HEARTS {ns}.data
+# If already at max health by consuming, regive the heart and stop function
+scoreboard players operation #temp {ns}.data = MAX_HEARTS_BY_CONSUMING {ns}.data
 execute if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
-execute if score @s {ns}.hearts >= #temp {ns}.data run tellraw @s {{"text":"You are already at max health!","color":"red"}}
+execute if score @s {ns}.hearts >= #temp {ns}.data if score MAX_HEARTS_BY_CONSUMING {ns}.data = MAX_HEARTS {ns}.data run tellraw @s {{"text":"You are already at max health!","color":"red"}}
+execute if score @s {ns}.hearts >= #temp {ns}.data unless score MAX_HEARTS_BY_CONSUMING {ns}.data = MAX_HEARTS {ns}.data run tellraw @s {{"text":"You are already at max health from consuming hearts! You can only gain more hearts by killing players.","color":"red"}}
 execute if score @s {ns}.hearts >= #temp {ns}.data at @s run playsound entity.villager.no ambient @s
 execute if score @s {ns}.hearts >= #temp {ns}.data at @s run loot spawn ~ ~ ~ loot {ns}:i/heart
 execute if score @s {ns}.hearts >= #temp {ns}.data run return fail
@@ -268,10 +270,11 @@ advancement revoke @s only {ns}:using_heart
 # Stop if INSTANTLY_CONSUME_HEARTS is disabled
 execute unless score INSTANTLY_CONSUME_HEARTS {ns}.data matches 1 run return fail
 
-# If already at max health, stop
-scoreboard players operation #temp {ns}.data = MAX_HEARTS {ns}.data
+# If already at max health by consuming, stop
+scoreboard players operation #temp {ns}.data = MAX_HEARTS_BY_CONSUMING {ns}.data
 execute if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
-execute if score @s {ns}.hearts >= #temp {ns}.data run tellraw @s {{"text":"You are already at max health!","color":"red"}}
+execute if score @s {ns}.hearts >= #temp {ns}.data if score MAX_HEARTS_BY_CONSUMING {ns}.data = MAX_HEARTS {ns}.data run tellraw @s {{"text":"You are already at max health!","color":"red"}}
+execute if score @s {ns}.hearts >= #temp {ns}.data unless score MAX_HEARTS_BY_CONSUMING {ns}.data = MAX_HEARTS {ns}.data run tellraw @s {{"text":"You are already at max health from consuming hearts! You can only gain more hearts by killing players.","color":"red"}}
 execute if score @s {ns}.hearts >= #temp {ns}.data at @s run playsound entity.villager.no ambient @s
 execute if score @s {ns}.hearts >= #temp {ns}.data run return fail
 
@@ -449,7 +452,8 @@ tellraw @s [{{"text":"⚠ IMPORTANT: ","color":"gold"}},{{"text":"For banning to
 
 # Numeric settings
 tellraw @s ["\\n",{NUMERIC_SETTING}]
-tellraw @s [{{"text":"- Max Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set MAX_HEARTS {ns}.data 20"}},"hover_event":{{"action":"show_text","value":{{"text":"Enter the maximum number of hearts a player can have\\nDefault: 20","color":"white"}}}}}},{{"score":{{"name":"MAX_HEARTS","objective":"{ns}.data"}},"color":"yellow"}},{{"text":" 👈","color":"gray"}}]
+tellraw @s [{{"text":"- Max Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set MAX_HEARTS {ns}.data 20"}},"hover_event":{{"action":"show_text","value":{{"text":"Enter the maximum number of hearts a player can have (absolute maximum)\nDefault: 20","color":"white"}}}}}},{{"score":{{"name":"MAX_HEARTS","objective":"{ns}.data"}},"color":"yellow"}},{{"text":" 👈","color":"gray"}}]]
+tellraw @s [{{"text":"- Max Hearts By Consuming: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set MAX_HEARTS_BY_CONSUMING {ns}.data 20"}},"hover_event":{{"action":"show_text","value":{{"text":"Enter the maximum hearts obtainable by consuming crafted hearts\nAdditional hearts can only be gained through kills\nDefault: 20","color":"white"}}}}}},{{"score":{{"name":"MAX_HEARTS_BY_CONSUMING","objective":"{ns}.data"}},"color":"yellow"}},{{"text":" 👈","color":"gray"}}]]
 tellraw @s [{{"text":"- Min Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set MIN_HEARTS {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Enter the minimum number of hearts a player can have\\nDefault: 1","color":"white"}}}}}},{{"score":{{"name":"MIN_HEARTS","objective":"{ns}.data"}},"color":"yellow"}},{{"text":" 👈","color":"gray"}}]
 tellraw @s [{{"text":"- Revived Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set REVIVED_HEARTS {ns}.data 4"}},"hover_event":{{"action":"show_text","value":{{"text":"Enter the number of hearts a player respawns with when revived\\nDefault: 4","color":"white"}}}}}},{{"score":{{"name":"REVIVED_HEARTS","objective":"{ns}.data"}},"color":"yellow"}},{{"text":" 👈","color":"gray"}}]
 

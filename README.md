@@ -40,6 +40,7 @@ This displays an interactive menu where you can click on any setting to modify i
 Default settings:
 - 🔄 Revived players respawn with 4 hearts
 - ⬆️ Maximum heart limit is set to 20 hearts
+- 💝 Maximum hearts by consuming is set to 20 hearts (if lower than maximum hearts, additional hearts only obtainable through kills)
 - ⬇️ Minimum heart limit is set to 0 hearts
 - 💀 Players lose a heart upon death (whether killed by another player or from natural causes)
 - ➗ Half hearts mode is disabled (hearts are tracked in whole numbers)
@@ -51,7 +52,8 @@ Default settings:
 - 🛑 No heart drop is disabled (hearts drop and can be stolen normally)
 
 Alternatively, settings can be customized manually using the following commands (requires operator permissions):
-- ⬆️ `scoreboard players set MAX_HEARTS life_steal.data 20` (Maximum of 20 hearts)
+- ⬆️ `scoreboard players set MAX_HEARTS life_steal.data 20` (Absolute maximum of 20 hearts)
+- 💝 `scoreboard players set MAX_HEARTS_BY_CONSUMING life_steal.data 20` (Maximum hearts obtainable by consuming crafted hearts, additional hearts can only be gained through kills (if lower than MAX_HEARTS), default is 20)
 - ⬇️ `scoreboard players set MIN_HEARTS life_steal.data 0` (Minimum number of hearts a player can have, default is 0)
 - 🔄 `scoreboard players set REVIVED_HEARTS life_steal.data 4` (Amount of hearts to respawn with when revived)
 - 💀 `scoreboard players set NATURAL_DEATH_HEART_DROP life_steal.data 1` (1 = drop a heart when dying to non player, 0 = disable that)
