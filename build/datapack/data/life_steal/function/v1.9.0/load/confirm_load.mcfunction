@@ -1,7 +1,7 @@
 
-#> life_steal:v1.8.0/load/confirm_load
+#> life_steal:v1.9.0/load/confirm_load
 #
-# @within	life_steal:v1.8.0/load/secondary
+# @within	life_steal:v1.9.0/load/secondary
 #
 
 scoreboard objectives add life_steal.kill playerKillCount
@@ -27,7 +27,7 @@ execute unless score SPECTATOR_INSTEAD life_steal.data matches 0..1 run scoreboa
 execute unless score LAST_CHANCE life_steal.data matches 0..1 run scoreboard players set LAST_CHANCE life_steal.data 0
 
 # Confirm load
-tellraw @a[tag=convention.debug] {"text":"[Loaded LifeSteal v1.8.0]","color":"green"}
+tellraw @a[tag=convention.debug] {"text":"[Loaded LifeSteal v1.9.0]","color":"green"}
 scoreboard players set #life_steal.loaded load.status 1
 
 # Items storage
