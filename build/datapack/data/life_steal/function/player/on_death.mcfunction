@@ -17,8 +17,8 @@ execute if score USE_HALF_HEARTS life_steal.data matches 1 unless score #real_mi
 execute if score @s life_steal.hearts > #real_min_hearts life_steal.data if entity @a[scores={life_steal.kill=1..}] if score STEAL_ON_KILL life_steal.data matches 1 run function life_steal:player/remove_one_heart
 execute if score @s life_steal.hearts > #real_min_hearts life_steal.data unless entity @a[scores={life_steal.kill=1..}] unless score NATURAL_DEATH_HEART_LOSE life_steal.data matches 0 run function life_steal:player/remove_one_heart
 
-# Check if fall below minimum hearts
-execute if score @s life_steal.hearts <= #real_min_hearts life_steal.data run function life_steal:player/below_min_hearts
+# Check if reached minimum hearts
+execute if score @s life_steal.hearts <= #real_min_hearts life_steal.data run function life_steal:player/reached_min_hearts
 
 # Update health
 function life_steal:player/update_health

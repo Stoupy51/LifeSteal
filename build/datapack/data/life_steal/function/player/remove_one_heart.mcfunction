@@ -17,6 +17,6 @@ scoreboard players remove @s life_steal.hearts 1
 execute if score #lose_heart_msg life_steal.data matches 1 run function life_steal:player/lose_heart_msg
 function life_steal:player/update_health
 
-# Drop a heart if player wasn't killed by another, and if NO_HEART_DROP and NATURAL_DEATH_HEART_DROP are enabled
-execute unless score NO_HEART_DROP life_steal.data matches 1 unless entity @a[scores={life_steal.kill=1..}] if score NATURAL_DEATH_HEART_DROP life_steal.data matches 1 run function life_steal:player/drop_heart_at_death
+# Drop a heart if player wasn't killed by another, and if NO_HEART_DROP_OR_STEAL and NATURAL_DEATH_HEART_DROP are enabled
+execute unless score NO_HEART_DROP_OR_STEAL life_steal.data matches 1 unless entity @a[scores={life_steal.kill=1..}] if score NATURAL_DEATH_HEART_DROP life_steal.data matches 1 run function life_steal:player/drop_heart_at_death
 

@@ -3,7 +3,7 @@
 #
 # @executed	as @a[sort=random,scores={life_steal.death=1..}]
 #
-# @within	life_steal:player/below_min_hearts with storage life_steal:main
+# @within	life_steal:player/reached_min_hearts with storage life_steal:main
 #
 # @args		player (unknown)
 #

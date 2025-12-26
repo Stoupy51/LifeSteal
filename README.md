@@ -45,7 +45,7 @@ Default settings:
 - 💀 Players lose a heart when dying from natural causes (enabled)
 - 🎁 Hearts drop at death location when dying from natural causes (enabled)
 - ➗ Half hearts mode is disabled (hearts are tracked in whole numbers)
-- 🚫 Players are banned when falling below the minimum heart limit
+- 🚫 Players are banned when reaching the minimum heart limit
 - 👻 Spectator instead of ban is disabled (players are banned, not moved to spectator mode)
 - 🍀 Last chance is disabled (when enabled, if a player at MIN+1 hearts dies, they survive with MIN+0.5 hearts; only works with half hearts mode disabled)
 - ⚔️ Steal on kill is enabled (killing players rewards hearts and removes them from victims)
@@ -60,12 +60,12 @@ Alternatively, settings can be customized manually using the following commands 
 - 💀 `scoreboard players set NATURAL_DEATH_HEART_LOSE life_steal.data 1` (1 = lose a heart when dying to non player, 0 = disable that)
 - 🎁 `scoreboard players set NATURAL_DEATH_HEART_DROP life_steal.data 1` (1 = drop a heart at death location when dying to non player, 0 = disable that)
 - ➗ `scoreboard players set USE_HALF_HEARTS life_steal.data 1` (1 = enable half hearts mode, 0 = disable - tracks hearts in 0.5 increments instead of whole numbers)
-- 🚫 `scoreboard players set BAN_BELOW_MIN_HEARTS life_steal.data 1` (1 = ban player when falling below minimum hearts, 0 = just prevent them from going lower)
+- 🚫 `scoreboard players set BAN_REACHING_MIN_HEARTS life_steal.data 1` (1 = ban player when reaching minimum hearts, 0 = just prevent them from going lower)
 - 👻 `scoreboard players set SPECTATOR_INSTEAD life_steal.data 1` (1 = move players to spectator mode instead of banning them when reaching minimum hearts, 0 = ban players normally)
 - 🍀 `scoreboard players set LAST_CHANCE life_steal.data 1` (1 = when dying at MIN+1 hearts, player survives with MIN+0.5 hearts instead of losing everything - only works when half hearts mode is disabled, 0 = players lose full hearts normally)
 - ⚔️ `scoreboard players set STEAL_ON_KILL life_steal.data 1` (1 = killing players rewards hearts and removes them from victims, 0 = disable heart stealing on kill)
 - ⚡ `scoreboard players set INSTANTLY_CONSUME_HEARTS life_steal.data 1` (1 = hearts are consumed instantly when used, 0 = require full eating animation)
-- 🛑 `scoreboard players set NO_HEART_DROP life_steal.data 1` (1 = hearts won't drop or be stolen when players die, overrides STEAL_ON_KILL by preventing all heart steal/drop on death, 0 = hearts drop and can be stolen normally)
+- 🛑 `scoreboard players set NO_HEART_DROP_OR_STEAL life_steal.data 1` (1 = hearts won't drop or be stolen when players die, overrides STEAL_ON_KILL by preventing all heart steal/drop on death, 0 = hearts drop and can be stolen normally)
 
 You can obtain the items using these commands:
 - `/function life_steal:_give_all` (gives all items from the datapack)

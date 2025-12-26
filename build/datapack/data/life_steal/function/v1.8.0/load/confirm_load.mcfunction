@@ -19,10 +19,10 @@ execute unless score NATURAL_DEATH_HEART_LOSE life_steal.data matches 0..1 run s
 execute unless score NATURAL_DEATH_HEART_DROP life_steal.data matches 0..1 run scoreboard players set NATURAL_DEATH_HEART_DROP life_steal.data 1
 execute unless score USE_HALF_HEARTS life_steal.data matches 0..1 run scoreboard players set USE_HALF_HEARTS life_steal.data 0
 execute unless score USE_HALF_HEARTS_PREV life_steal.data matches 0..1 run scoreboard players operation USE_HALF_HEARTS_PREV life_steal.data = USE_HALF_HEARTS life_steal.data
-execute unless score BAN_BELOW_MIN_HEARTS life_steal.data matches 0..1 run scoreboard players set BAN_BELOW_MIN_HEARTS life_steal.data 1
+execute unless score BAN_REACHING_MIN_HEARTS life_steal.data matches 0..1 run scoreboard players set BAN_REACHING_MIN_HEARTS life_steal.data 1
 execute unless score STEAL_ON_KILL life_steal.data matches 0..1 run scoreboard players set STEAL_ON_KILL life_steal.data 1
 execute unless score INSTANTLY_CONSUME_HEARTS life_steal.data matches 0..1 run scoreboard players set INSTANTLY_CONSUME_HEARTS life_steal.data 0
-execute unless score NO_HEART_DROP life_steal.data matches 0..1 run scoreboard players set NO_HEART_DROP life_steal.data 0
+execute unless score NO_HEART_DROP_OR_STEAL life_steal.data matches 0..1 run scoreboard players set NO_HEART_DROP_OR_STEAL life_steal.data 0
 execute unless score SPECTATOR_INSTEAD life_steal.data matches 0..1 run scoreboard players set SPECTATOR_INSTEAD life_steal.data 0
 execute unless score LAST_CHANCE life_steal.data matches 0..1 run scoreboard players set LAST_CHANCE life_steal.data 0
 
