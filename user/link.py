@@ -24,6 +24,7 @@ execute unless score MAX_HEARTS {ns}.data matches 1.. run scoreboard players set
 execute unless score MAX_HEARTS_BY_CONSUMING {ns}.data matches 0.. run scoreboard players set MAX_HEARTS_BY_CONSUMING {ns}.data 20
 execute unless score MIN_HEARTS {ns}.data matches 0.. run scoreboard players set MIN_HEARTS {ns}.data 0
 execute unless score REVIVED_HEARTS {ns}.data matches 1.. run scoreboard players set REVIVED_HEARTS {ns}.data 4
+execute unless score NATURAL_DEATH_HEART_LOSE {ns}.data matches 0..1 run scoreboard players set NATURAL_DEATH_HEART_LOSE {ns}.data 1
 execute unless score NATURAL_DEATH_HEART_DROP {ns}.data matches 0..1 run scoreboard players set NATURAL_DEATH_HEART_DROP {ns}.data 1
 execute unless score USE_HALF_HEARTS {ns}.data matches 0..1 run scoreboard players set USE_HALF_HEARTS {ns}.data 0
 execute unless score USE_HALF_HEARTS_PREV {ns}.data matches 0..1 run scoreboard players operation USE_HALF_HEARTS_PREV {ns}.data = USE_HALF_HEARTS {ns}.data
@@ -94,9 +95,9 @@ scoreboard players set @s {ns}.death 0
 execute store result score #real_min_hearts {ns}.data run scoreboard players get MIN_HEARTS {ns}.data
 execute if score USE_HALF_HEARTS {ns}.data matches 1 unless score #real_min_hearts {ns}.data matches 1 run scoreboard players operation #real_min_hearts {ns}.data *= #2 {ns}.data
 
-# If (died from a player AND STEAL_ON_KILL is enabled), or (died from natural causes and NATURAL_DEATH_HEART_DROP is 1), remove a heart (only if above minimum)
+# If (died from a player AND STEAL_ON_KILL is enabled), or (died from natural causes and NATURAL_DEATH_HEART_LOSE is 1), remove a heart (only if above minimum)
 execute if score @s {ns}.hearts > #real_min_hearts {ns}.data if entity @a[scores={{{ns}.kill=1..}}] if score STEAL_ON_KILL {ns}.data matches 1 run function {ns}:player/remove_one_heart
-execute if score @s {ns}.hearts > #real_min_hearts {ns}.data unless entity @a[scores={{{ns}.kill=1..}}] unless score NATURAL_DEATH_HEART_DROP {ns}.data matches 0 run function {ns}:player/remove_one_heart
+execute if score @s {ns}.hearts > #real_min_hearts {ns}.data unless entity @a[scores={{{ns}.kill=1..}}] unless score NATURAL_DEATH_HEART_LOSE {ns}.data matches 0 run function {ns}:player/remove_one_heart
 
 # Check if fall below minimum hearts
 execute if score @s {ns}.hearts <= #real_min_hearts {ns}.data run function {ns}:player/below_min_hearts
@@ -133,8 +134,8 @@ scoreboard players remove @s {ns}.hearts 1
 execute if score #lose_heart_msg {ns}.data matches 1 run function {ns}:player/lose_heart_msg
 function {ns}:player/update_health
 
-# Drop a heart if player wasn't killed by another, and if NO_HEART_DROP is disabled
-execute unless score NO_HEART_DROP {ns}.data matches 1 unless entity @a[scores={{{ns}.kill=1..}}] run function {ns}:player/drop_heart_at_death
+# Drop a heart if player wasn't killed by another, and if NO_HEART_DROP and NATURAL_DEATH_HEART_DROP are enabled
+execute unless score NO_HEART_DROP {ns}.data matches 1 unless entity @a[scores={{{ns}.kill=1..}}] if score NATURAL_DEATH_HEART_DROP {ns}.data matches 1 run function {ns}:player/drop_heart_at_death
 """)
 
 	# Add update_health function
@@ -459,8 +460,10 @@ tellraw @s [{{"text":"- Revived Hearts: ","color":"aqua","click_event":{{"action
 
 # Boolean settings
 tellraw @s ["\\n",{BOOLEAN_SETTING}]
-execute if score NATURAL_DEATH_HEART_DROP {ns}.data matches 1 run tellraw @s [{{"text":"- Natural Death Heart Drop: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set NATURAL_DEATH_HEART_DROP {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Players won't drop hearts when dying to non-player causes\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
-execute if score NATURAL_DEATH_HEART_DROP {ns}.data matches 0 run tellraw @s [{{"text":"- Natural Death Heart Drop: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set NATURAL_DEATH_HEART_DROP {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Players will drop hearts when dying to non-player causes\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
+execute if score NATURAL_DEATH_HEART_LOSE {ns}.data matches 1 run tellraw @s [{{"text":"- Natural Death Heart Lose: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set NATURAL_DEATH_HEART_LOSE {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Players won't lose hearts when dying to non-player causes\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
+execute if score NATURAL_DEATH_HEART_LOSE {ns}.data matches 0 run tellraw @s [{{"text":"- Natural Death Heart Lose: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set NATURAL_DEATH_HEART_LOSE {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Players will lose hearts when dying to non-player causes\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
+execute if score NATURAL_DEATH_HEART_DROP {ns}.data matches 1 run tellraw @s [{{"text":"- Natural Death Heart Drop: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set NATURAL_DEATH_HEART_DROP {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Hearts won't drop at death location when dying to non-player causes\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
+execute if score NATURAL_DEATH_HEART_DROP {ns}.data matches 0 run tellraw @s [{{"text":"- Natural Death Heart Drop: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set NATURAL_DEATH_HEART_DROP {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Hearts will drop at death location when dying to non-player causes\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
 execute if score USE_HALF_HEARTS {ns}.data matches 1 run tellraw @s [{{"text":"- Half Hearts Mode: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set USE_HALF_HEARTS {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Hearts will be tracked in whole numbers\\nWarning: This will convert all players' hearts!\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
 execute if score USE_HALF_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"- Half Hearts Mode: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set USE_HALF_HEARTS {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Hearts will be tracked in 0.5 increments\\nWarning: This will convert all players' hearts!\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
 execute if score BAN_BELOW_MIN_HEARTS {ns}.data matches 1 run tellraw @s [{{"text":"- Ban Reaching Min Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set BAN_BELOW_MIN_HEARTS {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Players won't be banned when reaching minimum hearts\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
