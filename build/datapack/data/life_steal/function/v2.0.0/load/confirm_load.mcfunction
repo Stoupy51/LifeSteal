@@ -1,7 +1,7 @@
 
-#> life_steal:v1.9.0/load/confirm_load
+#> life_steal:v2.0.0/load/confirm_load
 #
-# @within	life_steal:v1.9.0/load/secondary
+# @within	life_steal:v2.0.0/load/secondary
 #
 
 scoreboard objectives add life_steal.kill playerKillCount
@@ -32,7 +32,7 @@ data remove storage stewbeet:main universal_manual[{"name":"LifeSteal"}]
 data modify storage stewbeet:main universal_manual append value {"name":"LifeSteal","loot_table":"life_steal:i/manual","hover":[{"text": ""}, {"text": "LifeSteal Manual\\n"}, {"text": "ဠ\\n\\n\\n\\n\\n\\n", "font": "life_steal:manual", "color": "white"}, [{"text": "", "font": "minecraft:default", "color": "black"}]]}
 
 # Confirm load
-tellraw @a[tag=convention.debug] {"text":"[Loaded LifeSteal v1.9.0]","color":"green"}
+tellraw @a[tag=convention.debug] {"text":"[Loaded LifeSteal v2.0.0]","color":"green"}
 scoreboard players set #life_steal.loaded load.status 1
 
 # Items storage
