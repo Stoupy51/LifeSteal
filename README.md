@@ -83,11 +83,19 @@ If you want to manually revive a player, you can use the following command: 🔨
 - PlanetMinecraft: [https://www.planetminecraft.com/data-pack/life-steal-fr/](https://www.planetminecraft.com/data-pack/life-steal-fr/)
 
 ---
-![Promotional image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/promo_1.jpg)
-
-![Recipe for the revive beacon](https://cdn.modrinth.com/data/3Gjekf6h/images/239a2eb205facdf1a2e95b89fb7c4d612286f336.png)
-
-![Recipe for the heart](https://cdn.modrinth.com/data/3Gjekf6h/images/b95bc94d66fd745813f18bcf21410b197d6fd58e.png)
+<table>
+  <tr>
+    <td colspan="2" align="center"><img src="https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/promo_1.jpg" alt="Promotional image"></td>
+  </tr>
+  <tr>
+    <td><img src="https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/beacon_craft.jpg" alt="Beacon Recipe image"></td>
+    <td><img src="https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/heart_craft_1.jpg" alt="Heart Recipe #1 image"></td>
+  </tr>
+  <tr>
+    <td><img src="https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/heart_craft_2.jpg" alt="Heart Recipe #2 image"></td>
+    <td><img src="https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/heart_craft_3.jpg" alt="Heart Recipe #3 image"></td>
+  </tr>
+</table>
 
 ## ⭐ Star History
 
