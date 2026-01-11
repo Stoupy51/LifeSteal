@@ -1,0 +1,35 @@
+{
+	"type": "minecraft:notice",
+	"title": {
+		"text": "Category browser",
+		"underlined": true
+	},
+	"body": [
+		{
+			"type": "minecraft:plain_message",
+			"contents": [
+				{"text": "V   ","font": "life_steal:manual","color": "white"},
+				{"text": "\n   ","click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_1"},"hover_event": {"action": "show_text","value": [{"text": "Go to previous page"}," (1)"]}},
+				" ",
+				{"text": "   ","click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_3"},"hover_event": {"action": "show_text","value": [{"text": "Go to next page"}," (3)"]}},
+				{"text": "\n   ","click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_1"},"hover_event": {"action": "show_text","value": [{"text": "Go to previous page"}," (1)"]}},
+				" ",
+				{"text": "   ","click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_3"},"hover_event": {"action": "show_text","value": [{"text": "Go to next page"}," (3)"]}}
+			],
+			"width": 400
+		},
+		{
+			"type": "minecraft:plain_message",
+			"contents": [
+				{"text": "","font": "life_steal:manual","color": "white","shadow_color": [0,0,0,0]},
+				"\"အ\n\"",
+				{"text": "$耡","hover_event": {"action": "show_item","id": "command_block","components": {"damage_resistant": {"types": "#life_steal:is_explosion_or_fire"},"consumable": {},"item_model": "life_steal:heart","item_name": {"text": "Misc","color": "white"},"lore": [["",{"text": "I","color": "white","italic": false,"font": "life_steal:icons"},{"text": " LifeSteal","italic": true,"color": "blue"}]],"custom_data": {"life_steal": {"heart": true},"smithed": {"ignore": {"functionality": true,"crafting": true}}}}},"click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_3"}},
+				"#\n\"",
+				{"text": "!","hover_event": {"action": "show_item","id": "command_block","components": {"damage_resistant": {"types": "#life_steal:is_explosion_or_fire"},"consumable": {},"item_model": "life_steal:heart","item_name": {"text": "Misc","color": "white"},"lore": [["",{"text": "I","color": "white","italic": false,"font": "life_steal:icons"},{"text": " LifeSteal","italic": true,"color": "blue"}]],"custom_data": {"life_steal": {"heart": true},"smithed": {"ignore": {"functionality": true,"crafting": true}}}}},"click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_3"}},
+				"#\n",
+				"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+			],
+			"width": 140
+		}
+	]
+}

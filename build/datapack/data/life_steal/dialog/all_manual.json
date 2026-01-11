@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:dialog_list",
+	"title": [
+		"",
+		{"sprite": "life_steal:item/dialog_sprite/pack_icon","shadow_color": [0,0,0,0]},
+		" ",
+		{"text": "LifeSteal Manual","underlined": true},
+		" ",
+		{"sprite": "life_steal:item/dialog_sprite/pack_icon","shadow_color": [0,0,0,0]}
+	],
+	"dialogs": [
+		"life_steal:manual/page_1",
+		"life_steal:manual/page_2",
+		"life_steal:manual/page_3",
+		"life_steal:manual/page_4",
+		"life_steal:manual/page_5"
+	],
+	"exit_action": {
+		"label": {"translate": "gui.back"},
+		"width": 200
+	}
+}

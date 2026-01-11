@@ -3,14 +3,17 @@
 	"category": "misc",
 	"group": "revive_beacon",
 	"pattern": [
-		"TNT",
-		"NBN",
-		"TNT"
+		"ABA",
+		"CDE",
+		"AFA"
 	],
 	"key": {
-		"T": "minecraft:totem_of_undying",
-		"N": "minecraft:netherite_ingot",
-		"B": "minecraft:beacon"
+		"A": "minecraft:beacon",
+		"B": "minecraft:elytra",
+		"C": "minecraft:recovery_compass",
+		"D": "minecraft:heavy_core",
+		"E": "minecraft:conduit",
+		"F": "minecraft:skeleton_skull"
 	},
 	"result": {
 		"id": "minecraft:command_block",

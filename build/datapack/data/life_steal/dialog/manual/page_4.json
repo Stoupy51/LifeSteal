@@ -1,0 +1,88 @@
+{
+	"type": "minecraft:notice",
+	"title": [
+		"",
+		{
+			"sprite": "life_steal:item/dialog_sprite/heart",
+			"shadow_color": [
+				0,
+				0,
+				0,
+				0
+			]
+		},
+		" ",
+		{
+			"text": "Heart",
+			"underlined": true
+		},
+		" ",
+		{
+			"sprite": "life_steal:item/dialog_sprite/heart",
+			"shadow_color": [
+				0,
+				0,
+				0,
+				0
+			]
+		}
+	],
+	"body": [
+		{
+			"type": "minecraft:plain_message",
+			"contents": [
+				{"text": "V   ","font": "life_steal:manual","color": "white"},
+				{"text": "\n   ","click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_3"},"hover_event": {"action": "show_text","value": [{"text": "Go to previous page"}," (3)"]}},
+				" ",
+				{"text": "   ","click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_5"},"hover_event": {"action": "show_text","value": [{"text": "Go to next page"}," (5)"]}},
+				{"text": "\n   ","click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_3"},"hover_event": {"action": "show_text","value": [{"text": "Go to previous page"}," (3)"]}},
+				" ",
+				{"text": "   ","click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_5"},"hover_event": {"action": "show_text","value": [{"text": "Go to next page"}," (5)"]}}
+			],
+			"width": 400
+		},
+		{
+			"type": "minecraft:plain_message",
+			"contents": [
+				{"text": "","font": "life_steal:manual","color": "white","shadow_color": [0,0,0,0]},
+				"\"$6\n\"",
+				{"text": "$耦","hover_event": {"action": "show_item","id": "minecraft:nautilus_shell","components": {}}},
+				{"text": "$耧","hover_event": {"action": "show_item","id": "minecraft:netherite_ingot","components": {}}},
+				{"text": "$耦","hover_event": {"action": "show_item","id": "minecraft:nautilus_shell","components": {}}},
+				"  \n\"",
+				{"text": "U$","hover_event": {"action": "show_item","id": "minecraft:nautilus_shell","components": {}}},
+				{"text": "U$","hover_event": {"action": "show_item","id": "minecraft:netherite_ingot","components": {}}},
+				{"text": "U$","hover_event": {"action": "show_item","id": "minecraft:nautilus_shell","components": {}}},
+				"  \n\"",
+				{"text": "$耧","hover_event": {"action": "show_item","id": "minecraft:netherite_ingot","components": {}}},
+				{"text": "$耨","hover_event": {"action": "show_item","id": "minecraft:ominous_trial_key","components": {}}},
+				{"text": "$耧","hover_event": {"action": "show_item","id": "minecraft:netherite_ingot","components": {}}},
+				"\"\"",
+				{"text": "$$耡","hover_event": {"action": "show_item","id": "command_block","components": {"damage_resistant": {"types": "#life_steal:is_explosion_or_fire"},"consumable": {},"item_model": "life_steal:heart","item_name": {"text": "Heart"},"lore": [["",{"text": "I","color": "white","italic": false,"font": "life_steal:icons"},{"text": " LifeSteal","italic": true,"color": "blue"}]],"custom_data": {"life_steal": {"heart": true},"smithed": {"ignore": {"functionality": true,"crafting": true}}}}}},
+				"#$\n\"",
+				{"text": "U$","hover_event": {"action": "show_item","id": "minecraft:netherite_ingot","components": {}}},
+				{"text": "U$","hover_event": {"action": "show_item","id": "minecraft:ominous_trial_key","components": {}}},
+				{"text": "U$","hover_event": {"action": "show_item","id": "minecraft:netherite_ingot","components": {}}},
+				"\"\"",
+				{"text": "U$","hover_event": {"action": "show_item","id": "command_block","components": {"damage_resistant": {"types": "#life_steal:is_explosion_or_fire"},"consumable": {},"item_model": "life_steal:heart","item_name": {"text": "Heart"},"lore": [["",{"text": "I","color": "white","italic": false,"font": "life_steal:icons"},{"text": " LifeSteal","italic": true,"color": "blue"}]],"custom_data": {"life_steal": {"heart": true},"smithed": {"ignore": {"functionality": true,"crafting": true}}}}}},
+				"#$\n\"",
+				{"text": "$耦","hover_event": {"action": "show_item","id": "minecraft:nautilus_shell","components": {}}},
+				{"text": "$耧","hover_event": {"action": "show_item","id": "minecraft:netherite_ingot","components": {}}},
+				{"text": "$耦","hover_event": {"action": "show_item","id": "minecraft:nautilus_shell","components": {}}},
+				"  \n\"",
+				{"text": "U$","hover_event": {"action": "show_item","id": "minecraft:nautilus_shell","components": {}}},
+				{"text": "U$","hover_event": {"action": "show_item","id": "minecraft:netherite_ingot","components": {}}},
+				{"text": "U$","hover_event": {"action": "show_item","id": "minecraft:nautilus_shell","components": {}}},
+				"  \n\n",
+				{"text": "2##","hover_event": {"action": "show_text","value": [{"text": ""},[{"text": "","font": "life_steal:manual","color": "white"},"\"F\n","\"",{"text": "$耦"},{"text": "$耧"},{"text": "$耦"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\n","\"",{"text": "$耧"},{"text": "$耨"},{"text": "$耧"},"\"\"",{"text": "$$耡"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\"\"",{"text": "U$"},"\n","\"",{"text": "$耦"},{"text": "$耧"},{"text": "$耦"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\n"],{"text": "\n- x4 ","color": "gray"},{"text": "Nautilus Shell","color": "gray"},{"text": "\n- x4 ","color": "gray"},{"text": "Netherite Ingot","color": "gray"},{"text": "\n- x1 ","color": "gray"},{"text": "Ominous Trial Key","color": "gray"}]}},
+				{"text": "2##","hover_event": {"action": "show_text","value": [{"text": ""},[{"text": "","font": "life_steal:manual","color": "white"},"\"F\n","\"",{"text": "$耦"},{"text": "$耧"},{"text": "$耦"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\n","\"",{"text": "$耧"},{"text": "$耰"},{"text": "$耧"},"\"\"",{"text": "$$耡"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\"\"",{"text": "U$"},"\n","\"",{"text": "$耦"},{"text": "$耧"},{"text": "$耦"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\n"],{"text": "\n- x4 ","color": "gray"},{"text": "Nautilus Shell","color": "gray"},{"text": "\n- x4 ","color": "gray"},{"text": "Netherite Ingot","color": "gray"},{"text": "\n- x1 ","color": "gray"},{"text": "Dragon Head","color": "gray"}]}},
+				{"text": "2\n","hover_event": {"action": "show_text","value": [{"text": ""},[{"text": "","font": "life_steal:manual","color": "white"},"\"F\n","\"",{"text": "$耦"},{"text": "$耧"},{"text": "$耦"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\n","\"",{"text": "$耧"},{"text": "$耴"},{"text": "$耧"},"\"\"",{"text": "$$耡"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\"\"",{"text": "U$"},"\n","\"",{"text": "$耦"},{"text": "$耧"},{"text": "$耦"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\n"],{"text": "\n- x4 ","color": "gray"},{"text": "Nautilus Shell","color": "gray"},{"text": "\n- x4 ","color": "gray"},{"text": "Netherite Ingot","color": "gray"},{"text": "\n- x1 ","color": "gray"},{"text": "Wither Skeleton Skull","color": "gray"}]}},
+				{"text": "0##","hover_event": {"action": "show_text","value": [{"text": ""},[{"text": "","font": "life_steal:manual","color": "white"},"\"F\n","\"",{"text": "$耦"},{"text": "$耧"},{"text": "$耦"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\n","\"",{"text": "$耧"},{"text": "$耨"},{"text": "$耧"},"\"\"",{"text": "$$耡"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\"\"",{"text": "U$"},"\n","\"",{"text": "$耦"},{"text": "$耧"},{"text": "$耦"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\n"],{"text": "\n- x4 ","color": "gray"},{"text": "Nautilus Shell","color": "gray"},{"text": "\n- x4 ","color": "gray"},{"text": "Netherite Ingot","color": "gray"},{"text": "\n- x1 ","color": "gray"},{"text": "Ominous Trial Key","color": "gray"}]}},
+				{"text": "0##","hover_event": {"action": "show_text","value": [{"text": ""},[{"text": "","font": "life_steal:manual","color": "white"},"\"F\n","\"",{"text": "$耦"},{"text": "$耧"},{"text": "$耦"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\n","\"",{"text": "$耧"},{"text": "$耰"},{"text": "$耧"},"\"\"",{"text": "$$耡"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\"\"",{"text": "U$"},"\n","\"",{"text": "$耦"},{"text": "$耧"},{"text": "$耦"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\n"],{"text": "\n- x4 ","color": "gray"},{"text": "Nautilus Shell","color": "gray"},{"text": "\n- x4 ","color": "gray"},{"text": "Netherite Ingot","color": "gray"},{"text": "\n- x1 ","color": "gray"},{"text": "Dragon Head","color": "gray"}]}},
+				{"text": "0","hover_event": {"action": "show_text","value": [{"text": ""},[{"text": "","font": "life_steal:manual","color": "white"},"\"F\n","\"",{"text": "$耦"},{"text": "$耧"},{"text": "$耦"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\n","\"",{"text": "$耧"},{"text": "$耴"},{"text": "$耧"},"\"\"",{"text": "$$耡"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\"\"",{"text": "U$"},"\n","\"",{"text": "$耦"},{"text": "$耧"},{"text": "$耦"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\n"],{"text": "\n- x4 ","color": "gray"},{"text": "Nautilus Shell","color": "gray"},{"text": "\n- x4 ","color": "gray"},{"text": "Netherite Ingot","color": "gray"},{"text": "\n- x1 ","color": "gray"},{"text": "Wither Skeleton Skull","color": "gray"}]}},
+				"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+			],
+			"width": 140
+		}
+	]
+}

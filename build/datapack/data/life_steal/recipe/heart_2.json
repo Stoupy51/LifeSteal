@@ -1,0 +1,56 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"category": "misc",
+	"group": "heart",
+	"pattern": [
+		"SNS",
+		"NCN",
+		"SNS"
+	],
+	"key": {
+		"S": "minecraft:nautilus_shell",
+		"N": "minecraft:netherite_ingot",
+		"C": "minecraft:dragon_head"
+	},
+	"result": {
+		"id": "minecraft:command_block",
+		"count": 1,
+		"components": {
+			"minecraft:damage_resistant": {
+				"types": "#life_steal:is_explosion_or_fire"
+			},
+			"minecraft:consumable": {},
+			"minecraft:item_model": "life_steal:heart",
+			"minecraft:item_name": {
+				"text": "Heart"
+			},
+			"minecraft:lore": [
+				[
+					"",
+					{
+						"text": "I",
+						"color": "white",
+						"italic": false,
+						"font": "life_steal:icons"
+					},
+					{
+						"text": " LifeSteal",
+						"italic": true,
+						"color": "blue"
+					}
+				]
+			],
+			"minecraft:custom_data": {
+				"life_steal": {
+					"heart": true
+				},
+				"smithed": {
+					"ignore": {
+						"functionality": true,
+						"crafting": true
+					}
+				}
+			}
+		}
+	}
+}

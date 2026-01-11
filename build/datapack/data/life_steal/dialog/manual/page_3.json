@@ -1,0 +1,37 @@
+{
+	"type": "minecraft:notice",
+	"title": {
+		"text": "Misc",
+		"underlined": true
+	},
+	"body": [
+		{
+			"type": "minecraft:plain_message",
+			"contents": [
+				{"text": "V   ","font": "life_steal:manual","color": "white"},
+				{"text": "\n   ","click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_2"},"hover_event": {"action": "show_text","value": [{"text": "Go to previous page"}," (2)"]}},
+				" ",
+				{"text": "   ","click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_4"},"hover_event": {"action": "show_text","value": [{"text": "Go to next page"}," (4)"]}},
+				{"text": "\n   ","click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_2"},"hover_event": {"action": "show_text","value": [{"text": "Go to previous page"}," (2)"]}},
+				" ",
+				{"text": "   ","click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_4"},"hover_event": {"action": "show_text","value": [{"text": "Go to next page"}," (4)"]}}
+			],
+			"width": 400
+		},
+		{
+			"type": "minecraft:plain_message",
+			"contents": [
+				{"text": "","font": "life_steal:manual","color": "white","shadow_color": [0,0,0,0]},
+				"\"ဣ\n\"",
+				{"text": "$耡","hover_event": {"action": "show_item","id": "command_block","components": {"damage_resistant": {"types": "#life_steal:is_explosion_or_fire"},"consumable": {},"item_model": "life_steal:heart","item_name": {"text": "Heart"},"lore": [["",{"text": "I","color": "white","italic": false,"font": "life_steal:icons"},{"text": " LifeSteal","italic": true,"color": "blue"}]],"custom_data": {"life_steal": {"heart": true},"smithed": {"ignore": {"functionality": true,"crafting": true}}}}},"click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_4"}},
+				{"text": "$耣","hover_event": {"action": "show_item","id": "command_block","components": {"consumable": {},"lore": [{"text": "Rename the item to the username","italic": false,"color": "gray"},{"text": "of the player you want to revive.","italic": false,"color": "gray"},["",{"text": "I","color": "white","italic": false,"font": "life_steal:icons"},{"text": " LifeSteal","italic": true,"color": "blue"}]],"item_model": "life_steal:revive_beacon","item_name": {"text": "Revive Beacon"},"custom_data": {"life_steal": {"revive_beacon": true},"smithed": {"ignore": {"functionality": true,"crafting": true}}}}},"click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_5"}},
+				"#\n\"",
+				{"text": "!","hover_event": {"action": "show_item","id": "command_block","components": {"damage_resistant": {"types": "#life_steal:is_explosion_or_fire"},"consumable": {},"item_model": "life_steal:heart","item_name": {"text": "Heart"},"lore": [["",{"text": "I","color": "white","italic": false,"font": "life_steal:icons"},{"text": " LifeSteal","italic": true,"color": "blue"}]],"custom_data": {"life_steal": {"heart": true},"smithed": {"ignore": {"functionality": true,"crafting": true}}}}},"click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_4"}},
+				{"text": "!","hover_event": {"action": "show_item","id": "command_block","components": {"consumable": {},"lore": [{"text": "Rename the item to the username","italic": false,"color": "gray"},{"text": "of the player you want to revive.","italic": false,"color": "gray"},["",{"text": "I","color": "white","italic": false,"font": "life_steal:icons"},{"text": " LifeSteal","italic": true,"color": "blue"}]],"item_model": "life_steal:revive_beacon","item_name": {"text": "Revive Beacon"},"custom_data": {"life_steal": {"revive_beacon": true},"smithed": {"ignore": {"functionality": true,"crafting": true}}}}},"click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_5"}},
+				"#\n",
+				"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+			],
+			"width": 140
+		}
+	]
+}

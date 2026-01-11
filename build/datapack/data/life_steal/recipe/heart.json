@@ -3,14 +3,14 @@
 	"category": "misc",
 	"group": "heart",
 	"pattern": [
-		"NDN",
-		"DTD",
-		"NDN"
+		"SNS",
+		"NCN",
+		"SNS"
 	],
 	"key": {
+		"S": "minecraft:nautilus_shell",
 		"N": "minecraft:netherite_ingot",
-		"D": "minecraft:diamond_block",
-		"T": "minecraft:totem_of_undying"
+		"C": "minecraft:ominous_trial_key"
 	},
 	"result": {
 		"id": "minecraft:command_block",

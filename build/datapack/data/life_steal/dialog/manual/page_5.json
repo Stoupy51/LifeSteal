@@ -1,0 +1,83 @@
+{
+	"type": "minecraft:notice",
+	"title": [
+		"",
+		{
+			"sprite": "life_steal:item/dialog_sprite/revive_beacon",
+			"shadow_color": [
+				0,
+				0,
+				0,
+				0
+			]
+		},
+		" ",
+		{
+			"text": "Revive Beacon",
+			"underlined": true
+		},
+		" ",
+		{
+			"sprite": "life_steal:item/dialog_sprite/revive_beacon",
+			"shadow_color": [
+				0,
+				0,
+				0,
+				0
+			]
+		}
+	],
+	"body": [
+		{
+			"type": "minecraft:plain_message",
+			"contents": [
+				{"text": "V   ","font": "life_steal:manual","color": "white"},
+				{"text": "\n   ","click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_4"},"hover_event": {"action": "show_text","value": [{"text": "Go to previous page"}," (4)"]}},
+				" ",
+				{"text": "   ","click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_5"},"hover_event": {"action": "show_text","value": [{"text": "Go to next page"}," (5)"]}},
+				{"text": "\n   ","click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_4"},"hover_event": {"action": "show_text","value": [{"text": "Go to previous page"}," (4)"]}},
+				" ",
+				{"text": "   ","click_event": {"action": "show_dialog","dialog": "life_steal:manual/page_5"},"hover_event": {"action": "show_text","value": [{"text": "Go to next page"}," (5)"]}}
+			],
+			"width": 400
+		},
+		{
+			"type": "minecraft:plain_message",
+			"contents": [
+				{"text": "","font": "life_steal:manual","color": "white","shadow_color": [0,0,0,0]},
+				"\"$6\n\"",
+				{"text": "$耶","hover_event": {"action": "show_item","id": "minecraft:beacon","components": {}}},
+				{"text": "$耷","hover_event": {"action": "show_item","id": "minecraft:elytra","components": {}}},
+				{"text": "$耶","hover_event": {"action": "show_item","id": "minecraft:beacon","components": {}}},
+				"  \n\"",
+				{"text": "U$","hover_event": {"action": "show_item","id": "minecraft:beacon","components": {}}},
+				{"text": "U$","hover_event": {"action": "show_item","id": "minecraft:elytra","components": {}}},
+				{"text": "U$","hover_event": {"action": "show_item","id": "minecraft:beacon","components": {}}},
+				"  \n\"",
+				{"text": "$耸","hover_event": {"action": "show_item","id": "minecraft:recovery_compass","components": {}}},
+				{"text": "$耹","hover_event": {"action": "show_item","id": "minecraft:heavy_core","components": {}}},
+				{"text": "$耺","hover_event": {"action": "show_item","id": "minecraft:conduit","components": {}}},
+				"\"\"",
+				{"text": "$$耣","hover_event": {"action": "show_item","id": "command_block","components": {"consumable": {},"lore": [{"text": "Rename the item to the username","italic": false,"color": "gray"},{"text": "of the player you want to revive.","italic": false,"color": "gray"},["",{"text": "I","color": "white","italic": false,"font": "life_steal:icons"},{"text": " LifeSteal","italic": true,"color": "blue"}]],"item_model": "life_steal:revive_beacon","item_name": {"text": "Revive Beacon"},"custom_data": {"life_steal": {"revive_beacon": true},"smithed": {"ignore": {"functionality": true,"crafting": true}}}}}},
+				"#$\n\"",
+				{"text": "U$","hover_event": {"action": "show_item","id": "minecraft:recovery_compass","components": {}}},
+				{"text": "U$","hover_event": {"action": "show_item","id": "minecraft:heavy_core","components": {}}},
+				{"text": "U$","hover_event": {"action": "show_item","id": "minecraft:conduit","components": {}}},
+				"\"\"",
+				{"text": "U$","hover_event": {"action": "show_item","id": "command_block","components": {"consumable": {},"lore": [{"text": "Rename the item to the username","italic": false,"color": "gray"},{"text": "of the player you want to revive.","italic": false,"color": "gray"},["",{"text": "I","color": "white","italic": false,"font": "life_steal:icons"},{"text": " LifeSteal","italic": true,"color": "blue"}]],"item_model": "life_steal:revive_beacon","item_name": {"text": "Revive Beacon"},"custom_data": {"life_steal": {"revive_beacon": true},"smithed": {"ignore": {"functionality": true,"crafting": true}}}}}},
+				"#$\n\"",
+				{"text": "$耶","hover_event": {"action": "show_item","id": "minecraft:beacon","components": {}}},
+				{"text": "$耻","hover_event": {"action": "show_item","id": "minecraft:skeleton_skull","components": {}}},
+				{"text": "$耶","hover_event": {"action": "show_item","id": "minecraft:beacon","components": {}}},
+				"  \n\"",
+				{"text": "U$","hover_event": {"action": "show_item","id": "minecraft:beacon","components": {}}},
+				{"text": "U$","hover_event": {"action": "show_item","id": "minecraft:skeleton_skull","components": {}}},
+				{"text": "U$","hover_event": {"action": "show_item","id": "minecraft:beacon","components": {}}},
+				"  \n\n",
+				{"text": "2\n0","hover_event": {"action": "show_text","value": [{"text": ""},[{"text": "","font": "life_steal:manual","color": "white"},"\"F\n","\"",{"text": "$耶"},{"text": "$耷"},{"text": "$耶"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\n","\"",{"text": "$耸"},{"text": "$耹"},{"text": "$耺"},"\"\"",{"text": "$$耣"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\"\"",{"text": "U$"},"\n","\"",{"text": "$耶"},{"text": "$耻"},{"text": "$耶"},"\n","\"",{"text": "U$"},{"text": "U$"},{"text": "U$"},"\n"],{"text": "\n- x4 ","color": "gray"},{"text": "Beacon","color": "gray"},{"text": "\n- x1 ","color": "gray"},{"text": "Elytra","color": "gray"},{"text": "\n- x1 ","color": "gray"},{"text": "Recovery Compass","color": "gray"},{"text": "\n- x1 ","color": "gray"},{"text": "Heavy Core","color": "gray"},{"text": "\n- x1 ","color": "gray"},{"text": "Conduit","color": "gray"},{"text": "\n- x1 ","color": "gray"},{"text": "Skeleton Skull","color": "gray"}]}},
+				"\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"
+			],
+			"width": 140
+		}
+	]
+}
