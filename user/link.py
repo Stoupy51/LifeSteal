@@ -1,483 +1,56 @@
 
-# ruff: noqa: E501
 # Imports
-import json
+from beet import Context
 
-from beet import Advancement, Context, LootTable
-from stewbeet import JsonDict, create_gradient_text, set_json_encoder, write_function, write_load_file, write_tick_file
+from user.config import setup_config_functions
+from user.config_display import setup_config_display
+from user.initialization import setup_load_file, setup_tick_file
+from user.player_ban import setup_reached_min_hearts
+from user.player_core import setup_check_last_chance, setup_player_on_death, setup_player_on_kill, setup_player_tick, setup_remove_one_heart
+from user.player_health import setup_update_health
+from user.player_hearts import setup_consume_heart_functions, setup_drop_heart_functions, setup_withdraw_functions
+from user.player_revive import setup_player_head_loot_table, setup_revive_beacon
+from user.ui_messages import setup_consume_heart_messages, setup_gain_heart_messages, setup_lose_heart_messages, setup_withdraw_messages
 
 
 # Main function is run just before making finalyzing the build process (zip, headers, lang, ...)
 def beet_default(ctx: Context):
-	ns: str = ctx.project_id
 
-	# Add scoreboard objectives
-	write_load_file(f"""
-scoreboard objectives add {ns}.kill playerKillCount
-scoreboard objectives add {ns}.death deathCount
-scoreboard objectives add {ns}.withdraw trigger
-scoreboard objectives add {ns}.hearts dummy
-
-scoreboard players set #2 {ns}.data 2
-
-execute unless score MAX_HEARTS {ns}.data matches 1.. run scoreboard players set MAX_HEARTS {ns}.data 20
-execute unless score MAX_HEARTS_BY_CONSUMING {ns}.data matches 0.. run scoreboard players set MAX_HEARTS_BY_CONSUMING {ns}.data 20
-execute unless score MIN_HEARTS {ns}.data matches 0.. run scoreboard players set MIN_HEARTS {ns}.data 0
-execute unless score REVIVED_HEARTS {ns}.data matches 1.. run scoreboard players set REVIVED_HEARTS {ns}.data 4
-execute unless score NATURAL_DEATH_HEART_LOSE {ns}.data matches 0..1 run scoreboard players set NATURAL_DEATH_HEART_LOSE {ns}.data 1
-execute unless score NATURAL_DEATH_HEART_DROP {ns}.data matches 0..1 run scoreboard players set NATURAL_DEATH_HEART_DROP {ns}.data 1
-execute unless score USE_HALF_HEARTS {ns}.data matches 0..1 run scoreboard players set USE_HALF_HEARTS {ns}.data 0
-execute unless score USE_HALF_HEARTS_PREV {ns}.data matches 0..1 run scoreboard players operation USE_HALF_HEARTS_PREV {ns}.data = USE_HALF_HEARTS {ns}.data
-execute unless score BAN_REACHING_MIN_HEARTS {ns}.data matches 0..1 run scoreboard players set BAN_REACHING_MIN_HEARTS {ns}.data 1
-execute unless score STEAL_ON_KILL {ns}.data matches 0..1 run scoreboard players set STEAL_ON_KILL {ns}.data 1
-execute unless score INSTANTLY_CONSUME_HEARTS {ns}.data matches 0..1 run scoreboard players set INSTANTLY_CONSUME_HEARTS {ns}.data 0
-execute unless score NO_HEART_DROP_OR_STEAL {ns}.data matches 0..1 run scoreboard players set NO_HEART_DROP_OR_STEAL {ns}.data 0
-execute unless score SPECTATOR_INSTEAD {ns}.data matches 0..1 run scoreboard players set SPECTATOR_INSTEAD {ns}.data 0
-execute unless score LAST_CHANCE {ns}.data matches 0..1 run scoreboard players set LAST_CHANCE {ns}.data 0
-""", prepend = True)
-
-	# Add tick function
-	write_tick_file(f"""
-# Check for USE_HALF_HEARTS configuration change
-execute unless score USE_HALF_HEARTS {ns}.data = USE_HALF_HEARTS_PREV {ns}.data run function {ns}:config/half_hearts_changed
-
-execute as @a[sort=random,scores={{{ns}.death=1..}}] run function {ns}:player/tick
-execute as @a[sort=random] run function {ns}:player/tick
-""")
-
-	# Add player function
-	write_function(f"{ns}:player/tick", f"""
-# Setup hearts objective if not set and get all recipes
-execute unless score @s {ns}.hearts matches 0.. run function {ns}:utils/get_all_recipes
-execute unless score @s {ns}.hearts matches 0.. if score USE_HALF_HEARTS {ns}.data matches 0 store result score @s {ns}.hearts run attribute @s minecraft:max_health base get 0.5
-execute unless score @s {ns}.hearts matches 0.. if score USE_HALF_HEARTS {ns}.data matches 1 store result score @s {ns}.hearts run attribute @s minecraft:max_health base get 1.0
-
-# If data = 1, player is revived so update health
-execute if score @s {ns}.data matches 1 run function {ns}:player/update_health
-execute if score @s {ns}.data matches 1 run scoreboard players set @s {ns}.data 0
-
-# Withdraw command trigger
-scoreboard players enable @s {ns}.withdraw
-execute unless score @s {ns}.withdraw matches 0 run function {ns}:player/withdraw
-
-# If killed player, add a heart
-execute if score @s {ns}.kill matches 1.. run function {ns}:player/on_kill
-
-# On any death, run on_death function
-execute if score @s {ns}.death matches 1.. run function {ns}:player/on_death
-""")
-	write_function(f"{ns}:player/on_kill", f"""
-# If STEAL_ON_KILL is disabled, or NO_HEART_DROP_OR_STEAL is enabled, do nothing
-execute unless score STEAL_ON_KILL {ns}.data matches 1 run return run scoreboard players set @s {ns}.kill 0
-execute if score NO_HEART_DROP_OR_STEAL {ns}.data matches 1 run return run scoreboard players set @s {ns}.kill 0
-
-# Compute max hearts
-scoreboard players operation #temp {ns}.data = MAX_HEARTS {ns}.data
-execute if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
-
-# If at max hearts, send message
-execute if score @s {ns}.hearts >= #temp {ns}.data run tellraw @s [{{"text":"You stole a heart from a player, but you are already at max health!","color":"red"}}]
-
-# Else, add a heart (or half heart) and remove last_chance tag
-execute if score @s {ns}.hearts < #temp {ns}.data run tag @s remove {ns}.last_chance
-execute if score @s {ns}.hearts < #temp {ns}.data run scoreboard players operation @s {ns}.hearts += @s {ns}.kill
-execute if score @s {ns}.hearts < #temp {ns}.data run function {ns}:player/gain_heart_msg
-
-# Update health and reset kill score
-function {ns}:player/update_health
-scoreboard players set @s {ns}.kill 0
-""")
-	write_function(f"{ns}:player/on_death", f"""
-# Reset death score
-scoreboard players set @s {ns}.death 0
-
-# Calculate minimum hearts threshold
-execute store result score #real_min_hearts {ns}.data run scoreboard players get MIN_HEARTS {ns}.data
-execute if score USE_HALF_HEARTS {ns}.data matches 1 unless score #real_min_hearts {ns}.data matches 1 run scoreboard players operation #real_min_hearts {ns}.data *= #2 {ns}.data
-
-# If (died from a player AND STEAL_ON_KILL is enabled), or (died from natural causes and NATURAL_DEATH_HEART_LOSE is 1), remove a heart (only if above minimum)
-execute if score @s {ns}.hearts > #real_min_hearts {ns}.data if entity @a[scores={{{ns}.kill=1..}}] if score STEAL_ON_KILL {ns}.data matches 1 run function {ns}:player/remove_one_heart
-execute if score @s {ns}.hearts > #real_min_hearts {ns}.data unless entity @a[scores={{{ns}.kill=1..}}] unless score NATURAL_DEATH_HEART_LOSE {ns}.data matches 0 run function {ns}:player/remove_one_heart
-
-# Check if reached minimum hearts
-execute if score @s {ns}.hearts <= #real_min_hearts {ns}.data run function {ns}:player/reached_min_hearts
-
-# Update health
-function {ns}:player/update_health
-""")
-
-	# Add check_last_chance function
-	write_function(f"{ns}:player/check_last_chance", f"""
-# Calculate if player is at MIN_HEARTS + 1
-scoreboard players operation #check_hearts {ns}.data = MIN_HEARTS {ns}.data
-scoreboard players add #check_hearts {ns}.data 1
-
-# If player is at MIN_HEARTS + 1, give them last chance tag
-execute if score @s {ns}.hearts = #check_hearts {ns}.data run tag @s add {ns}.last_chance
-execute if score @s {ns}.hearts = #check_hearts {ns}.data run tellraw @s [{{"text":"⚠ Last Chance! You now have ","color":"gold"}},{{"score":{{"name":"MIN_HEARTS","objective":"{ns}.data"}},"color":"red"}},{{"text":".5 hearts!","color":"red"}}]
-execute if score @s {ns}.hearts = #check_hearts {ns}.data run scoreboard players set #lose_heart_msg {ns}.data 0
-
-# Add 1 heart back (to prevent going below MIN_HEARTS)
-execute if score @s {ns}.hearts = #check_hearts {ns}.data run scoreboard players add @s {ns}.hearts 1
-""")
-
-	# Add remove_one_heart function
-	write_function(f"{ns}:player/remove_one_heart", f"""
-# Check for last chance condition (only when half hearts mode is disabled)
-scoreboard players set #lose_heart_msg {ns}.data 1
-execute if score LAST_CHANCE {ns}.data matches 1 unless score USE_HALF_HEARTS {ns}.data matches 1 unless entity @s[tag={ns}.last_chance] run function {ns}:player/check_last_chance
-
-# Remove one heart
-scoreboard players remove @s {ns}.hearts 1
-
-# Tellraw message and update health
-execute if score #lose_heart_msg {ns}.data matches 1 run function {ns}:player/lose_heart_msg
-function {ns}:player/update_health
-
-# Drop a heart if player wasn't killed by another, and if NO_HEART_DROP_OR_STEAL and NATURAL_DEATH_HEART_DROP are enabled
-execute unless score NO_HEART_DROP_OR_STEAL {ns}.data matches 1 unless entity @a[scores={{{ns}.kill=1..}}] if score NATURAL_DEATH_HEART_DROP {ns}.data matches 1 run function {ns}:player/drop_heart_at_death
-""")
-
-	# Add update_health function
-	write_function(f"{ns}:player/update_health", f"""
-execute if score USE_HALF_HEARTS {ns}.data matches 0 store result storage {ns}:main health int 2 run scoreboard players get @s {ns}.hearts
-execute if score USE_HALF_HEARTS {ns}.data matches 1 store result storage {ns}:main health int 1 run scoreboard players get @s {ns}.hearts
-
-# Remove 1 health point if player has last_chance tag, since they are at MIN_HEARTS + 1 (we want to keep them at MIN_HEARTS .5)
-execute if entity @s[tag={ns}.last_chance] store result score #temp {ns}.data run data get storage {ns}:main health
-execute if entity @s[tag={ns}.last_chance] run scoreboard players remove #temp {ns}.data 1
-execute if entity @s[tag={ns}.last_chance] store result storage {ns}:main health int 1 run scoreboard players get #temp {ns}.data
-
-function {ns}:player/update_macro with storage {ns}:main
-execute at @s run playsound entity.player.levelup ambient @s
-""")
-	write_function(f"{ns}:player/update_macro", "$attribute @s max_health base set $(health)")
-
-	# Add helper functions for displaying hearts
-	write_function(f"{ns}:player/gain_heart_msg", f"""
-execute if score USE_HALF_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"You stole a heart from a player, you now have ","color":"gray"}},{{"score":{{"name":"@s","objective":"{ns}.hearts"}}, "color":"red"}},{{"text":" hearts!"}}]
-execute if score USE_HALF_HEARTS {ns}.data matches 1 run function {ns}:player/gain_heart_msg_half
-""")
-	write_function(f"{ns}:player/gain_heart_msg_half", f"""
-scoreboard players operation #display_whole {ns}.data = @s {ns}.hearts
-scoreboard players operation #display_whole {ns}.data /= #2 {ns}.data
-scoreboard players operation #display_half {ns}.data = @s {ns}.hearts
-scoreboard players operation #display_half {ns}.data %= #2 {ns}.data
-execute if score #display_half {ns}.data matches 0 run tellraw @s [{{"text":"You stole a heart from a player, you now have ","color":"gray"}},{{"score":{{"name":"#display_whole","objective":"{ns}.data"}}, "color":"red"}},{{"text":".0","color":"red"}},{{"text":" hearts!"}}]
-execute if score #display_half {ns}.data matches 1 run tellraw @s [{{"text":"You stole a heart from a player, you now have ","color":"gray"}},{{"score":{{"name":"#display_whole","objective":"{ns}.data"}}, "color":"red"}},{{"text":".5","color":"red"}},{{"text":" hearts!"}}]
-""")
-	write_function(f"{ns}:player/lose_heart_msg", f"""
-execute if score USE_HALF_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"You lost a heart, you now have ","color":"gray"}},{{"score":{{"name":"@s","objective":"{ns}.hearts"}}, "color":"red"}},{{"text":" hearts!"}}]
-execute if score USE_HALF_HEARTS {ns}.data matches 1 run function {ns}:player/lose_heart_msg_half
-""")
-	write_function(f"{ns}:player/lose_heart_msg_half", f"""
-scoreboard players operation #display_whole {ns}.data = @s {ns}.hearts
-scoreboard players operation #display_whole {ns}.data /= #2 {ns}.data
-scoreboard players operation #display_half {ns}.data = @s {ns}.hearts
-scoreboard players operation #display_half {ns}.data %= #2 {ns}.data
-execute if score #display_half {ns}.data matches 0 run tellraw @s [{{"text":"You lost a heart, you now have ","color":"gray"}},{{"score":{{"name":"#display_whole","objective":"{ns}.data"}}, "color":"red"}},{{"text":".0","color":"red"}},{{"text":" hearts!"}}]
-execute if score #display_half {ns}.data matches 1 run tellraw @s [{{"text":"You lost a heart, you now have ","color":"gray"}},{{"score":{{"name":"#display_whole","objective":"{ns}.data"}}, "color":"red"}},{{"text":".5","color":"red"}},{{"text":" hearts!"}}]
-""")
-
-	# Add withdraw function
-	write_function(f"{ns}:player/withdraw", f"""
-# Reset withdraw trigger
-scoreboard players set @s {ns}.withdraw 0
-
-# Check if player has more than minimum hearts (add 1 if banning is enabled to prevent withdrawing at min+1)
-scoreboard players operation #temp {ns}.data = MIN_HEARTS {ns}.data
-execute if score USE_HALF_HEARTS {ns}.data matches 1 unless score #temp {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
-execute if score BAN_REACHING_MIN_HEARTS {ns}.data matches 1 run scoreboard players add #temp {ns}.data 2
-execute unless score BAN_REACHING_MIN_HEARTS {ns}.data matches 1 run scoreboard players add #temp {ns}.data 1
-
-# Stop function if not enough hearts
-execute if score @s {ns}.hearts < #temp {ns}.data run tellraw @s {{"text":"You don't have enough hearts to withdraw!","color":"red"}}
-execute if score @s {ns}.hearts < #temp {ns}.data run return fail
-
-# Give heart, decrease score, and update health
-loot give @s[gamemode=!creative] loot {ns}:i/heart
-scoreboard players remove @s {ns}.hearts 1
-function {ns}:player/update_health
-
-# Tellraw message
-function {ns}:player/withdraw_msg
-""")
-	write_function(f"{ns}:player/withdraw_msg", f"""
-execute if score USE_HALF_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"You withdrew a heart, you now have ","color":"gray"}},{{"score":{{"name":"@s","objective":"{ns}.hearts"}}, "color":"red"}},{{"text":" hearts!"}}]
-execute if score USE_HALF_HEARTS {ns}.data matches 1 run function {ns}:player/withdraw_msg_half
-""")
-	write_function(f"{ns}:player/withdraw_msg_half", f"""
-scoreboard players operation #display_whole {ns}.data = @s {ns}.hearts
-scoreboard players operation #display_whole {ns}.data /= #2 {ns}.data
-scoreboard players operation #display_half {ns}.data = @s {ns}.hearts
-scoreboard players operation #display_half {ns}.data %= #2 {ns}.data
-execute if score #display_half {ns}.data matches 0 run tellraw @s [{{"text":"You withdrew a heart, you now have ","color":"gray"}},{{"score":{{"name":"#display_whole","objective":"{ns}.data"}}, "color":"red"}},{{"text":".0","color":"red"}},{{"text":" hearts!"}}]
-execute if score #display_half {ns}.data matches 1 run tellraw @s [{{"text":"You withdrew a heart, you now have ","color":"gray"}},{{"score":{{"name":"#display_whole","objective":"{ns}.data"}}, "color":"red"}},{{"text":".5","color":"red"}},{{"text":" hearts!"}}]
-""")
-
-	## Advancement when eating a heart
-	# JSON advancement for consuming
-	json_content: JsonDict = {"criteria":{"requirement":{"trigger":"minecraft:consume_item","conditions":{"item":{"predicates":{"minecraft:custom_data":f"{{\"{ns}\":{{\"heart\":true}}}}"}}}}}}
-	json_content["rewards"] = {"function": f"{ns}:player/consume_heart"}
-	ctx.data[ns].advancements["consume_heart"] = set_json_encoder(Advancement(json_content), max_level=-1)
-
-	# JSON advancement for using (instant consume)
-	json_content: JsonDict = {"criteria":{"requirement":{"trigger":"minecraft:using_item","conditions":{"item":{"predicates":{"minecraft:custom_data":f"{{\"{ns}\":{{\"heart\":true}}}}"}}}}}}
-	json_content["rewards"] = {"function": f"{ns}:player/using_heart"}
-	ctx.data[ns].advancements["using_heart"] = set_json_encoder(Advancement(json_content), max_level=-1)
-
-	# Function
-	write_function(f"{ns}:player/consume_heart", f"""
-# Revoke the advancement
-advancement revoke @s only {ns}:consume_heart
-
-# If already at max health by consuming, regive the heart and stop function
-scoreboard players operation #temp {ns}.data = MAX_HEARTS_BY_CONSUMING {ns}.data
-execute if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
-execute if score @s {ns}.hearts >= #temp {ns}.data if score MAX_HEARTS_BY_CONSUMING {ns}.data = MAX_HEARTS {ns}.data run tellraw @s {{"text":"You are already at max health!","color":"red"}}
-execute if score @s {ns}.hearts >= #temp {ns}.data unless score MAX_HEARTS_BY_CONSUMING {ns}.data = MAX_HEARTS {ns}.data run tellraw @s {{"text":"You are already at max health from consuming hearts! You can only gain more hearts by killing players.","color":"red"}}
-execute if score @s {ns}.hearts >= #temp {ns}.data at @s run playsound entity.villager.no ambient @s
-execute if score @s {ns}.hearts >= #temp {ns}.data at @s run loot spawn ~ ~ ~ loot {ns}:i/heart
-execute if score @s {ns}.hearts >= #temp {ns}.data run return fail
-
-# Remove last_chance tag if player has it
-tag @s remove {ns}.last_chance
-
-# Give a heart and update health
-scoreboard players add @s {ns}.hearts 1
-function {ns}:player/update_health
-
-# Tellraw message
-function {ns}:player/consume_heart_msg
-""")
-	write_function(f"{ns}:player/consume_heart_msg", f"""
-execute if score USE_HALF_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"You ate a heart, you now have ","color":"gray"}},{{"score":{{"name":"@s","objective":"{ns}.hearts"}}, "color":"red"}},{{"text":" hearts!"}}]
-execute if score USE_HALF_HEARTS {ns}.data matches 1 run function {ns}:player/consume_heart_msg_half
-""")
-	write_function(f"{ns}:player/consume_heart_msg_half", f"""
-scoreboard players operation #display_whole {ns}.data = @s {ns}.hearts
-scoreboard players operation #display_whole {ns}.data /= #2 {ns}.data
-scoreboard players operation #display_half {ns}.data = @s {ns}.hearts
-scoreboard players operation #display_half {ns}.data %= #2 {ns}.data
-execute if score #display_half {ns}.data matches 0 run tellraw @s [{{"text":"You ate a heart, you now have ","color":"gray"}},{{"score":{{"name":"#display_whole","objective":"{ns}.data"}}, "color":"red"}},{{"text":".0","color":"red"}},{{"text":" hearts!"}}]
-execute if score #display_half {ns}.data matches 1 run tellraw @s [{{"text":"You ate a heart, you now have ","color":"gray"}},{{"score":{{"name":"#display_whole","objective":"{ns}.data"}}, "color":"red"}},{{"text":".5","color":"red"}},{{"text":" hearts!"}}]
-""")
-
-	# Function for using heart (instant consume)
-	write_function(f"{ns}:player/using_heart", f"""
-# Revoke the advancement
-advancement revoke @s only {ns}:using_heart
-
-# Stop if INSTANTLY_CONSUME_HEARTS is disabled
-execute unless score INSTANTLY_CONSUME_HEARTS {ns}.data matches 1 run return fail
-
-# If already at max health by consuming, stop
-scoreboard players operation #temp {ns}.data = MAX_HEARTS_BY_CONSUMING {ns}.data
-execute if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation #temp {ns}.data *= #2 {ns}.data
-execute if score @s {ns}.hearts >= #temp {ns}.data if score MAX_HEARTS_BY_CONSUMING {ns}.data = MAX_HEARTS {ns}.data run tellraw @s {{"text":"You are already at max health!","color":"red"}}
-execute if score @s {ns}.hearts >= #temp {ns}.data unless score MAX_HEARTS_BY_CONSUMING {ns}.data = MAX_HEARTS {ns}.data run tellraw @s {{"text":"You are already at max health from consuming hearts! You can only gain more hearts by killing players.","color":"red"}}
-execute if score @s {ns}.hearts >= #temp {ns}.data at @s run playsound entity.villager.no ambient @s
-execute if score @s {ns}.hearts >= #temp {ns}.data run return fail
-
-# Give a heart and update health
-scoreboard players add @s {ns}.hearts 1
-function {ns}:player/update_health
-
-# Clear one heart
-clear @s *[custom_data~{{{ns}:{{"heart":true}}}}] 1
-
-# Tellraw message
-function {ns}:player/consume_heart_msg
-""")
-
-	# Get player head loot table
-	json_content: JsonDict = {"pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"minecraft:player_head","functions":[{"function":"minecraft:fill_player_head","entity":"this"}]}]}]}
-	ctx.data[ns].loot_tables["player_head"] = set_json_encoder(LootTable(json_content), max_level=-1)
-
-	# Function death (when reaching minimum hearts)
-	write_function(f"{ns}:player/reached_min_hearts", f"""
-# If died from a player but not BAN_REACHING_MIN_HEARTS configuration, do not reward the killer
-execute unless score BAN_REACHING_MIN_HEARTS {ns}.data matches 1 run scoreboard players remove @a[scores={{{ns}.kill=1..}}] {ns}.kill 1
-
-# Make sure player does not have less than minimum hearts
-execute if score @s {ns}.hearts < #real_min_hearts {ns}.data run scoreboard players operation @s {ns}.hearts = #real_min_hearts {ns}.data
-execute if score @s {ns}.hearts matches ..0 run scoreboard players set @s {ns}.hearts 1
-function {ns}:player/update_health
-
-# If not BAN_REACHING_MIN_HEARTS configuration, stop here
-execute unless score BAN_REACHING_MIN_HEARTS {ns}.data matches 1 run return 1
-
-# If SPECTATOR_INSTEAD is enabled, move to spectator and announce
-execute if score SPECTATOR_INSTEAD {ns}.data matches 1 run gamemode spectator @s
-execute if score SPECTATOR_INSTEAD {ns}.data matches 1 run return run tellraw @a [{{"selector":"@s","color":"red"}},{{"text":" reached minimum hearts and was moved to spectator mode!"}}]
-
-# Get player username for macro
-tag @e[type=item] add {ns}.temp
-execute at @s run loot spawn ~ ~ ~ loot {ns}:player_head
-data modify storage {ns}:main player set from entity @e[type=item,tag=!{ns}.temp,limit=1] Item.components."minecraft:profile".name
-kill @e[type=item,tag=!{ns}.temp]
-tag @e[type=item,tag={ns}.temp] remove {ns}.temp
-
-# Ban macro
-scoreboard players set #banned {ns}.data 0
-function {ns}:player/ban_macro with storage {ns}:main
-
-# If banned player is still in the world, make him spectator and send an error message (function permission issue)
-execute if score #banned {ns}.data matches 0 run gamemode spectator @s
-execute if score #banned {ns}.data matches 0 run tellraw @a [{{"text":"[LifeStealFR] ERROR: Could not ban player '","color":"red"}},{{"selector":"@s"}},{{"text":"'. Set 'function-permission-level' to 3 in server.properties!"}}]
-""")
-	write_function(f"{ns}:player/ban_macro", f"""
-# Tellraw message and ban player
-$tellraw @a {{"text":"Player '$(player)' just got banned for reaching minimum hearts!","color":"red"}}
-$ban $(player) You reached the minimum hearts!
-
-# Add player name to banned list
-execute unless data storage {ns}:main banned_players run data modify storage {ns}:main banned_players set value {{}}
-$data modify storage {ns}:main banned_players.$(player) set value true
-scoreboard players set #banned {ns}.data 1
-""")
-
-
-	## Revive beacon
-	# JSON advancement
-	json_content: JsonDict = {"criteria":{"requirement":{"trigger":"minecraft:consume_item","conditions":{"item":{"predicates":{"minecraft:custom_data":f"{{\"{ns}\":{{\"revive_beacon\":true}}}}"}}}}}}
-	json_content["rewards"] = {"function": f"{ns}:player/consume_beacon"}
-	ctx.data[ns].advancements["consume_beacon"] = set_json_encoder(Advancement(json_content), max_level=-1)
-
-	# Function
-	write_function(f"{ns}:player/consume_beacon", f"""
-# Revoke the advancement
-advancement revoke @s only {ns}:consume_beacon
-
-# Get username from beacon name
-data remove storage {ns}:main player
-execute if data entity @s SelectedItem.components."minecraft:custom_data".life_steal.revive_beacon run data modify storage {ns}:main player set string entity @s SelectedItem.components."minecraft:custom_name"
-execute unless data storage {ns}:main player if data entity @s equipment.offhand.components."minecraft:custom_data".life_steal.revive_beacon run data modify storage {ns}:main player set string entity @s equipment.offhand.components."minecraft:custom_name"
-
-# Try to revive
-execute store success score #success {ns}.data run function {ns}:player/revive with storage {ns}:main
-execute if score #success {ns}.data matches 1 run return 1
-
-# If not success, regive the beacon and stop function
-loot give @s[gamemode=!creative] loot {ns}:i/revive_beacon
-return fail
-""")
-	write_function(f"{ns}:player/revive", f"""
-# Check if player is online and in spectator mode
-$execute store success score #is_spectator {ns}.data if entity @a[name=$(player),gamemode=spectator]
-
-# If player is in spectator mode, revive them
-$execute if score #is_spectator {ns}.data matches 1 run gamemode survival @a[name=$(player)]
-$execute if score #is_spectator {ns}.data matches 1 run tp @a[name=$(player)] @s
-$execute if score #is_spectator {ns}.data matches 1 run tellraw @a [{{"selector":"@s","color":"green"}},{{"text":" used a revive beacon to revive '$(player)'!"}}]
-execute if score #is_spectator {ns}.data matches 1 as @a at @s run playsound ui.toast.challenge_complete ambient @s
-$execute if score #is_spectator {ns}.data matches 1 if score USE_HALF_HEARTS {ns}.data matches 0 run scoreboard players operation @a[name=$(player)] {ns}.hearts = REVIVED_HEARTS {ns}.data
-$execute if score #is_spectator {ns}.data matches 1 if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation @a[name=$(player)] {ns}.hearts = REVIVED_HEARTS {ns}.data
-$execute if score #is_spectator {ns}.data matches 1 if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation @a[name=$(player)] {ns}.hearts *= #2 {ns}.data
-$execute if score #is_spectator {ns}.data matches 1 as @a[name=$(player)] run function {ns}:player/update_health
-execute if score #is_spectator {ns}.data matches 1 run return 1
-
-# If player is banned, pardon them and return success
-$execute store success score #is_banned {ns}.data if data storage {ns}:main banned_players.$(player)
-$execute if score #is_banned {ns}.data matches 1 run pardon $(player)
-$execute if score #is_banned {ns}.data matches 1 run tellraw @a [{{"selector":"@s","color":"green"}},{{"text":" used a revive beacon to revive '$(player)'!"}}]
-execute if score #is_banned {ns}.data matches 1 as @a at @s run playsound ui.toast.challenge_complete ambient @s
-$execute if score #is_banned {ns}.data matches 1 if score USE_HALF_HEARTS {ns}.data matches 0 run scoreboard players operation $(player) {ns}.hearts = REVIVED_HEARTS {ns}.data
-$execute if score #is_banned {ns}.data matches 1 if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation $(player) {ns}.hearts = REVIVED_HEARTS {ns}.data
-$execute if score #is_banned {ns}.data matches 1 if score USE_HALF_HEARTS {ns}.data matches 1 run scoreboard players operation $(player) {ns}.hearts *= #2 {ns}.data
-$execute if score #is_banned {ns}.data matches 1 run scoreboard players set $(player) {ns}.data 1
-$execute if score #is_banned {ns}.data matches 1 run data remove storage {ns}:main banned_players.$(player)
-execute if score #is_banned {ns}.data matches 1 run return 1
-
-# If player is not found in spectator or banned list, return fail
-$tellraw @s [{{"text":"Player '$(player)' not found in the banned list or connected in spectator mode!","color":"red"}}]
-return fail
-""")
-
-	# Drop heart at death function
-	write_function(f"{ns}:player/drop_heart_at_death", f"""
-# Copy in a storage the arguments for the macro
-data modify storage {ns}:main death_pos set value {{dimension:"minecraft:overworld",x:0,y:0,z:0}}
-data modify storage {ns}:main death_pos.dimension set from entity @s LastDeathLocation.dimension
-data modify storage {ns}:main death_pos.x set from entity @s LastDeathLocation.pos[0]
-data modify storage {ns}:main death_pos.y set from entity @s LastDeathLocation.pos[1]
-data modify storage {ns}:main death_pos.z set from entity @s LastDeathLocation.pos[2]
-
-# Drop the heart
-function {ns}:player/drop_heart_macro with storage {ns}:main death_pos
-""")
-	write_function(f"{ns}:player/drop_heart_macro", f"""
-$execute in $(dimension) run loot spawn $(x) $(y) $(z) loot {ns}:i/heart
-""")
-
-	# Configuration change detection
-	write_function(f"{ns}:config/half_hearts_changed", f"""
-# Convert hearts for all players based on new configuration
-execute if score USE_HALF_HEARTS {ns}.data matches 1 if score USE_HALF_HEARTS_PREV {ns}.data matches 0 run function {ns}:config/convert_to_half_hearts
-execute if score USE_HALF_HEARTS {ns}.data matches 0 if score USE_HALF_HEARTS_PREV {ns}.data matches 1 run function {ns}:config/convert_to_full_hearts
-
-# Update previous value
-scoreboard players operation USE_HALF_HEARTS_PREV {ns}.data = USE_HALF_HEARTS {ns}.data
-""")
-
-	write_function(f"{ns}:config/convert_to_half_hearts", f"""
-# Convert all players from full hearts to half hearts (multiply by 2)
-execute as @a run scoreboard players operation @s {ns}.hearts *= #2 {ns}.data
-execute as @a run function {ns}:player/update_health
-
-# Notify all players
-tellraw @a [{{"text":"[Life Steal] Configuration changed to half hearts mode! All hearts score have been doubled.","color":"green"}}]
-execute as @a at @s run playsound entity.experience_orb.pickup ambient @s
-""")
-
-	write_function(f"{ns}:config/convert_to_full_hearts", f"""
-# Convert all players from half hearts to full hearts (divide by 2)
-execute as @a run scoreboard players operation @s {ns}.hearts /= #2 {ns}.data
-execute as @a run function {ns}:player/update_health
-
-# Notify all players
-tellraw @a [{{"text":"[Life Steal] Configuration changed to full hearts mode! All hearts score have been halved.","color":"yellow"}}]
-execute as @a at @s run playsound entity.experience_orb.pickup ambient @s
-""")
-
-	# Interactive configuration display function
-	LIFE_STEAL_TEXT: str = json.dumps(create_gradient_text(f"[Life Steal Configuration v{ctx.project_version}]", "#FF0000", "#FF7300"))
-	NUMERIC_SETTING: str = json.dumps(create_gradient_text("Numeric Settings:", "#68D4D4", "#009696"))
-	BOOLEAN_SETTING: str = json.dumps(create_gradient_text("Toggle Settings (1 = enabled, 0 = disabled):", "#68D4D4", "#009696"))
-	write_function(f"{ns}:_config", f"""
-# Display configuration header
-tellraw @s {LIFE_STEAL_TEXT}
-
-# Display important warning about server setup
-tellraw @s [{{"text":"⚠ IMPORTANT: ","color":"gold"}},{{"text":"For banning to work on servers, set ","color":"yellow"}},{{"text":"function-permission-level=3","color":"red"}},{{"text":" in server.properties!","color":"yellow"}}]
-
-# Numeric settings
-tellraw @s ["\\n",{NUMERIC_SETTING}]
-tellraw @s [{{"text":"- Max Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set MAX_HEARTS {ns}.data 20"}},"hover_event":{{"action":"show_text","value":{{"text":"Enter the maximum number of hearts a player can have (absolute maximum)\\nDefault: 20","color":"white"}}}}}},{{"score":{{"name":"MAX_HEARTS","objective":"{ns}.data"}},"color":"yellow"}},{{"text":" 👈","color":"gray"}}]
-tellraw @s [{{"text":"- Max Hearts By Consuming: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set MAX_HEARTS_BY_CONSUMING {ns}.data 20"}},"hover_event":{{"action":"show_text","value":{{"text":"Enter the maximum hearts obtainable by consuming crafted hearts\\nAdditional hearts can only be gained through kills\\nDefault: 20","color":"white"}}}}}},{{"score":{{"name":"MAX_HEARTS_BY_CONSUMING","objective":"{ns}.data"}},"color":"yellow"}},{{"text":" 👈","color":"gray"}}]
-tellraw @s [{{"text":"- Min Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set MIN_HEARTS {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Enter the minimum number of hearts a player can have\\nDefault: 1","color":"white"}}}}}},{{"score":{{"name":"MIN_HEARTS","objective":"{ns}.data"}},"color":"yellow"}},{{"text":" 👈","color":"gray"}}]
-tellraw @s [{{"text":"- Revived Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set REVIVED_HEARTS {ns}.data 4"}},"hover_event":{{"action":"show_text","value":{{"text":"Enter the number of hearts a player respawns with when revived\\nDefault: 4","color":"white"}}}}}},{{"score":{{"name":"REVIVED_HEARTS","objective":"{ns}.data"}},"color":"yellow"}},{{"text":" 👈","color":"gray"}}]
-
-# Boolean settings
-tellraw @s ["\\n",{BOOLEAN_SETTING}]
-execute if score NATURAL_DEATH_HEART_LOSE {ns}.data matches 1 run tellraw @s [{{"text":"- Natural Death Heart Lose: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set NATURAL_DEATH_HEART_LOSE {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Players won't lose hearts when dying to non-player causes\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
-execute if score NATURAL_DEATH_HEART_LOSE {ns}.data matches 0 run tellraw @s [{{"text":"- Natural Death Heart Lose: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set NATURAL_DEATH_HEART_LOSE {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Players will lose hearts when dying to non-player causes\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
-execute if score NATURAL_DEATH_HEART_DROP {ns}.data matches 1 run tellraw @s [{{"text":"- Natural Death Heart Drop: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set NATURAL_DEATH_HEART_DROP {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Hearts won't drop at death location when dying to non-player causes\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
-execute if score NATURAL_DEATH_HEART_DROP {ns}.data matches 0 run tellraw @s [{{"text":"- Natural Death Heart Drop: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set NATURAL_DEATH_HEART_DROP {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Hearts will drop at death location when dying to non-player causes\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
-execute if score USE_HALF_HEARTS {ns}.data matches 1 run tellraw @s [{{"text":"- Half Hearts Mode: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set USE_HALF_HEARTS {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Hearts will be tracked in whole numbers\\nWarning: This will convert all players' hearts!\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
-execute if score USE_HALF_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"- Half Hearts Mode: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set USE_HALF_HEARTS {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Hearts will be tracked in 0.5 increments\\nWarning: This will convert all players' hearts!\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
-execute if score BAN_REACHING_MIN_HEARTS {ns}.data matches 1 run tellraw @s [{{"text":"- Ban Reaching Min Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set BAN_REACHING_MIN_HEARTS {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Players won't be banned when reaching minimum hearts\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
-execute if score BAN_REACHING_MIN_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"- Ban Reaching Min Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set BAN_REACHING_MIN_HEARTS {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Players will be banned when reaching minimum hearts\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
-execute if score SPECTATOR_INSTEAD {ns}.data matches 1 run tellraw @s [{{"text":"- Spectator Instead of Ban: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set SPECTATOR_INSTEAD {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Players will be banned (if BAN_REACHING_MIN_HEARTS is enabled)\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
-execute if score SPECTATOR_INSTEAD {ns}.data matches 0 run tellraw @s [{{"text":"- Spectator Instead of Ban: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set SPECTATOR_INSTEAD {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Players will be moved to spectator mode instead of being banned\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
-execute if score LAST_CHANCE {ns}.data matches 1 run tellraw @s [{{"text":"- Last Chance (Half Heart): ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set LAST_CHANCE {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Players will lose a full heart normally\\nOnly works when half hearts mode is disabled\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
-execute if score LAST_CHANCE {ns}.data matches 0 run tellraw @s [{{"text":"- Last Chance (Half Heart): ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set LAST_CHANCE {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - When dying at MIN+1 hearts, player survives with MIN+0.5 hearts\\nOnly works when half hearts mode is disabled\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
-execute if score STEAL_ON_KILL {ns}.data matches 1 run tellraw @s [{{"text":"- Steal On Kill: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set STEAL_ON_KILL {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Killing players won't reward hearts or remove them from victims\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
-execute if score STEAL_ON_KILL {ns}.data matches 0 run tellraw @s [{{"text":"- Steal On Kill: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set STEAL_ON_KILL {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Killing players will reward hearts and remove them from victims\\nDefault: Enabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
-execute if score INSTANTLY_CONSUME_HEARTS {ns}.data matches 1 run tellraw @s [{{"text":"- Instantly Consume Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set INSTANTLY_CONSUME_HEARTS {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Hearts will need to be fully consumed (eating animation)\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
-execute if score INSTANTLY_CONSUME_HEARTS {ns}.data matches 0 run tellraw @s [{{"text":"- Instantly Consume Hearts: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set INSTANTLY_CONSUME_HEARTS {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Hearts will be consumed instantly when used\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
-execute if score NO_HEART_DROP_OR_STEAL {ns}.data matches 1 run tellraw @s [{{"text":"- No Heart Drop: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set NO_HEART_DROP_OR_STEAL {ns}.data 0"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to disable - Hearts will drop/be stolen normally on death\\nOverrides STEAL_ON_KILL by preventing all heart steal/drop on death\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Enabled","color":"green"}},{{"text":" 👈","color":"gray"}}]
-execute if score NO_HEART_DROP_OR_STEAL {ns}.data matches 0 run tellraw @s [{{"text":"- No Heart Drop: ","color":"aqua","click_event":{{"action":"suggest_command","command":"/scoreboard players set NO_HEART_DROP_OR_STEAL {ns}.data 1"}},"hover_event":{{"action":"show_text","value":{{"text":"Click to enable - Hearts won't drop or be stolen when players die\\nOverrides STEAL_ON_KILL by preventing all heart steal/drop on death\\nDefault: Disabled","color":"white"}}}}}},{{"text":"Disabled","color":"red"}},{{"text":" 👈","color":"gray"}}]
-""")
-	pass
+	# Setup initialization files (load.mcfunction and tick.mcfunction)
+	setup_load_file(ctx)
+	setup_tick_file(ctx)
+
+	# Setup core player functions
+	setup_player_tick(ctx)
+	setup_player_on_kill(ctx)
+	setup_player_on_death(ctx)
+	setup_remove_one_heart(ctx)
+	setup_check_last_chance(ctx)
+
+	# Setup health management
+	setup_update_health(ctx)
+
+	# Setup heart management (consuming, withdrawing, dropping)
+	setup_consume_heart_functions(ctx)
+	setup_withdraw_functions(ctx)
+	setup_drop_heart_functions(ctx)
+
+	# Setup revive beacon functionality
+	setup_revive_beacon(ctx)
+	setup_player_head_loot_table(ctx)
+
+	# Setup ban/min hearts handling
+	setup_reached_min_hearts(ctx)
+
+	# Setup configuration change handlers
+	setup_config_functions(ctx)
+
+	# Setup UI message functions
+	setup_gain_heart_messages(ctx)
+	setup_lose_heart_messages(ctx)
+	setup_consume_heart_messages(ctx)
+	setup_withdraw_messages(ctx)
+
+	# Setup configuration display
+	setup_config_display(ctx)
 
