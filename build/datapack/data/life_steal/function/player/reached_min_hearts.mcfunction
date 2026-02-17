@@ -17,16 +17,18 @@ function life_steal:player/update_health
 # If not BAN_REACHING_MIN_HEARTS configuration, stop here
 execute unless score BAN_REACHING_MIN_HEARTS life_steal.data matches 1 run return 1
 
-# If SPECTATOR_INSTEAD is enabled, move to spectator and announce
-execute if score SPECTATOR_INSTEAD life_steal.data matches 1 run gamemode spectator @s
-execute if score SPECTATOR_INSTEAD life_steal.data matches 1 run return run tellraw @a [{"selector":"@s","color":"red"},{"text":" reached minimum hearts and was moved to spectator mode!"}]
-
 # Get player username for macro
 tag @e[type=item] add life_steal.temp
 execute at @s run loot spawn ~ ~ ~ loot life_steal:player_head
 data modify storage life_steal:main player set from entity @e[type=item,tag=!life_steal.temp,limit=1] Item.components."minecraft:profile".name
 kill @e[type=item,tag=!life_steal.temp]
 tag @e[type=item,tag=life_steal.temp] remove life_steal.temp
+
+# If SPECTATOR_INSTEAD is enabled, move to spectator, add to banned list, and announce
+execute if score SPECTATOR_INSTEAD life_steal.data matches 1 run gamemode spectator @s
+execute if score SPECTATOR_INSTEAD life_steal.data matches 1 unless data storage life_steal:main banned_players run data modify storage life_steal:main banned_players set value {}
+execute if score SPECTATOR_INSTEAD life_steal.data matches 1 run function life_steal:player/add_to_banned_list with storage life_steal:main
+execute if score SPECTATOR_INSTEAD life_steal.data matches 1 run return run tellraw @a [{"selector":"@s","color":"red"},{"text":" reached minimum hearts and was moved to spectator mode!"}]
 
 # Ban macro
 scoreboard players set #banned life_steal.data 0

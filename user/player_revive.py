@@ -51,7 +51,7 @@ execute if score #is_spectator {ns}.data matches 1 run return 1
 
 # If player is banned, pardon them and return success
 $execute store success score #is_banned {ns}.data if data storage {ns}:main banned_players.$(player)
-$execute if score #is_banned {ns}.data matches 1 run pardon $(player)
+execute if score #is_banned {ns}.data matches 1 run function {ns}:player/pardon_player with storage {ns}:main
 $execute if score #is_banned {ns}.data matches 1 run tellraw @a [{{"selector":"@s","color":"green"}},{{"text":" used a revive beacon to revive '$(player)'!"}}]
 execute if score #is_banned {ns}.data matches 1 as @a at @s run playsound ui.toast.challenge_complete ambient @s
 $execute if score #is_banned {ns}.data matches 1 if score USE_HALF_HEARTS {ns}.data matches 0 run scoreboard players operation $(player) {ns}.hearts = REVIVED_HEARTS {ns}.data
@@ -65,6 +65,9 @@ execute if score #is_banned {ns}.data matches 1 run return 1
 $tellraw @s [{{"text":"Player '$(player)' not found in the banned list or connected in spectator mode!","color":"red"}}]
 return fail
 """)
+
+	# Separate function for pardon command (isolated to prevent crashes if permission denied)
+	write_function(f"{ns}:player/pardon_player", "$return run pardon $(player)")
 
 
 # Setup loot table for getting player heads

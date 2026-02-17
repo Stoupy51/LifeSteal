@@ -21,16 +21,18 @@ function {ns}:player/update_health
 # If not BAN_REACHING_MIN_HEARTS configuration, stop here
 execute unless score BAN_REACHING_MIN_HEARTS {ns}.data matches 1 run return 1
 
-# If SPECTATOR_INSTEAD is enabled, move to spectator and announce
-execute if score SPECTATOR_INSTEAD {ns}.data matches 1 run gamemode spectator @s
-execute if score SPECTATOR_INSTEAD {ns}.data matches 1 run return run tellraw @a [{{"selector":"@s","color":"red"}},{{"text":" reached minimum hearts and was moved to spectator mode!"}}]
-
 # Get player username for macro
 tag @e[type=item] add {ns}.temp
 execute at @s run loot spawn ~ ~ ~ loot {ns}:player_head
 data modify storage {ns}:main player set from entity @e[type=item,tag=!{ns}.temp,limit=1] Item.components."minecraft:profile".name
 kill @e[type=item,tag=!{ns}.temp]
 tag @e[type=item,tag={ns}.temp] remove {ns}.temp
+
+# If SPECTATOR_INSTEAD is enabled, move to spectator, add to banned list, and announce
+execute if score SPECTATOR_INSTEAD {ns}.data matches 1 run gamemode spectator @s
+execute if score SPECTATOR_INSTEAD {ns}.data matches 1 unless data storage {ns}:main banned_players run data modify storage {ns}:main banned_players set value {{}}
+execute if score SPECTATOR_INSTEAD {ns}.data matches 1 run function {ns}:player/add_to_banned_list with storage {ns}:main
+execute if score SPECTATOR_INSTEAD {ns}.data matches 1 run return run tellraw @a [{{"selector":"@s","color":"red"}},{{"text":" reached minimum hearts and was moved to spectator mode!"}}]
 
 # Ban macro
 scoreboard players set #banned {ns}.data 0
@@ -42,13 +44,21 @@ execute if score #banned {ns}.data matches 0 run tellraw @a [{{"text":"[LifeStea
 """)
 
 	write_function(f"{ns}:player/ban_macro", f"""
-# Tellraw message and ban player
+# Tellraw message
 $tellraw @a {{"text":"Player '$(player)' just got banned for reaching minimum hearts!","color":"red"}}
-$ban $(player) You reached the minimum hearts!
+
+# Ban player (isolated to prevent crashes if permission denied)
+execute store success score #banned {ns}.data run function {ns}:player/ban_player with storage {ns}:main
 
 # Add player name to banned list
 execute unless data storage {ns}:main banned_players run data modify storage {ns}:main banned_players set value {{}}
-$data modify storage {ns}:main banned_players.$(player) set value true
+function {ns}:player/add_to_banned_list with storage {ns}:main
 scoreboard players set #banned {ns}.data 1
 """)
+
+	# Separate function for ban command (isolated to prevent crashes if permission denied)
+	write_function(f"{ns}:player/ban_player", "$return run ban $(player) You reached the minimum hearts!")
+
+	# Helper function to add player to banned list
+	write_function(f"{ns}:player/add_to_banned_list",f"$data modify storage {ns}:main banned_players.$(player) set value true")
 

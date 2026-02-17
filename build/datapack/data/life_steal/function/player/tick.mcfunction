@@ -12,7 +12,8 @@ execute unless score @s life_steal.hearts matches 0.. run function life_steal:ut
 execute unless score @s life_steal.hearts matches 0.. if score USE_HALF_HEARTS life_steal.data matches 0 store result score @s life_steal.hearts run attribute @s minecraft:max_health base get 0.5
 execute unless score @s life_steal.hearts matches 0.. if score USE_HALF_HEARTS life_steal.data matches 1 store result score @s life_steal.hearts run attribute @s minecraft:max_health base get 1.0
 
-# If data = 1, player is revived so update health
+# If data = 1, player is revived so update health and set gamemode
+execute if score @s life_steal.data matches 1 run gamemode survival @s[gamemode=spectator]
 execute if score @s life_steal.data matches 1 run function life_steal:player/update_health
 execute if score @s life_steal.data matches 1 run scoreboard players set @s life_steal.data 0
 

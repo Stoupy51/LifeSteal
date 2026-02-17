@@ -8,12 +8,14 @@
 # @args		player (unknown)
 #
 
-# Tellraw message and ban player
+# Tellraw message
 $tellraw @a {"text":"Player '$(player)' just got banned for reaching minimum hearts!","color":"red"}
-$ban $(player) You reached the minimum hearts!
+
+# Ban player (isolated to prevent crashes if permission denied)
+execute store success score #banned life_steal.data run function life_steal:player/ban_player with storage life_steal:main
 
 # Add player name to banned list
 execute unless data storage life_steal:main banned_players run data modify storage life_steal:main banned_players set value {}
-$data modify storage life_steal:main banned_players.$(player) set value true
+function life_steal:player/add_to_banned_list with storage life_steal:main
 scoreboard players set #banned life_steal.data 1
 
