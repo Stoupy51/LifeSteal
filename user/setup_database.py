@@ -66,9 +66,6 @@ def beet_default(ctx: Context):
 			"parent":"minecraft:block/beacon",
 			"textures":{
 				"beacon":f"{ns}:item/inner_beacon",
-				"particle":"minecraft:block/glass",
-				"glass":"minecraft:block/glass",
-				"obsidian":"minecraft:block/obsidian"
 			},
 		},
 		components={

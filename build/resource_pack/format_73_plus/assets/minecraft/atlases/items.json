@@ -1,6 +1,3 @@
 {
-	"sources": [
-		{"type": "minecraft:single","resource": "minecraft:block/glass","sprite": "life_steal:atlas/glass"},
-		{"type": "minecraft:single","resource": "minecraft:block/obsidian","sprite": "life_steal:atlas/obsidian"}
-	]
+	"sources": []
 }
