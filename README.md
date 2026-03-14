@@ -28,6 +28,8 @@ function-permission-level=3
 **Without this setting, the ban feature will not work!** This is the most common issue users encounter.<br>
 After making this change, restart your server for it to take effect.
 
+If you want to <u>modify the recipes</u>, please read this GitHub issue: https://github.com/Stoupy51/LifeSteal/issues/9
+
 ## ⚙️ Configuration
 Players can withdraw hearts by typing `/trigger life_steal.withdraw`.
 
