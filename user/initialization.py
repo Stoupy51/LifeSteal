@@ -1,7 +1,7 @@
 
 # Imports
 from beet import Context
-from stewbeet import write_load_file, write_tick_file
+from stewbeet import write_load_file, write_tick_file, write_versioned_function
 
 
 # Setup the load.mcfunction file with scoreboard objectives and default values
@@ -28,6 +28,7 @@ execute unless score BAN_REACHING_MIN_HEARTS {ns}.data matches 0..1 run scoreboa
 execute unless score STEAL_ON_KILL {ns}.data matches 0..1 run scoreboard players set STEAL_ON_KILL {ns}.data 1
 execute unless score INSTANTLY_CONSUME_HEARTS {ns}.data matches 0..1 run scoreboard players set INSTANTLY_CONSUME_HEARTS {ns}.data 0
 execute unless score NO_HEART_DROP_OR_STEAL {ns}.data matches 0..1 run scoreboard players set NO_HEART_DROP_OR_STEAL {ns}.data 0
+execute unless score HEARTS_NEVER_DESPAWN {ns}.data matches 0..1 run scoreboard players set HEARTS_NEVER_DESPAWN {ns}.data 1
 execute unless score SPECTATOR_INSTEAD {ns}.data matches 0..1 run scoreboard players set SPECTATOR_INSTEAD {ns}.data 0
 execute unless score LAST_CHANCE {ns}.data matches 0..1 run scoreboard players set LAST_CHANCE {ns}.data 0
 """, prepend = True)
@@ -41,7 +42,13 @@ def setup_tick_file(ctx: Context) -> None:
 # Check for USE_HALF_HEARTS configuration change
 execute unless score USE_HALF_HEARTS {ns}.data = USE_HALF_HEARTS_PREV {ns}.data run function {ns}:config/half_hearts_changed
 
+# Run player tick function for players that have died to handle death logic, then run it for all players to handle other logic.
 execute as @a[sort=random,scores={{{ns}.death=1..}}] run function {ns}:player/tick
 execute as @a[sort=random] run function {ns}:player/tick
+""")
+
+	write_versioned_function("second_5", f"""
+# Keep dropped LifeSteal items from despawning when enabled.
+execute if score HEARTS_NEVER_DESPAWN {ns}.data matches 1 as @e[type=item,nbt={{Item:{{components:{{"minecraft:custom_data":{{{ns}:{{}}}}}}}}}}] run data modify entity @s Age set value 0s
 """)
 

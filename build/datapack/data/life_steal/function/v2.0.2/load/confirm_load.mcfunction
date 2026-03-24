@@ -23,6 +23,7 @@ execute unless score BAN_REACHING_MIN_HEARTS life_steal.data matches 0..1 run sc
 execute unless score STEAL_ON_KILL life_steal.data matches 0..1 run scoreboard players set STEAL_ON_KILL life_steal.data 1
 execute unless score INSTANTLY_CONSUME_HEARTS life_steal.data matches 0..1 run scoreboard players set INSTANTLY_CONSUME_HEARTS life_steal.data 0
 execute unless score NO_HEART_DROP_OR_STEAL life_steal.data matches 0..1 run scoreboard players set NO_HEART_DROP_OR_STEAL life_steal.data 0
+execute unless score HEARTS_NEVER_DESPAWN life_steal.data matches 0..1 run scoreboard players set HEARTS_NEVER_DESPAWN life_steal.data 1
 execute unless score SPECTATOR_INSTEAD life_steal.data matches 0..1 run scoreboard players set SPECTATOR_INSTEAD life_steal.data 0
 execute unless score LAST_CHANCE life_steal.data matches 0..1 run scoreboard players set LAST_CHANCE life_steal.data 0
 

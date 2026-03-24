@@ -53,6 +53,7 @@ Default settings:
 - ⚔️ Steal on kill is enabled (killing players rewards hearts and removes them from victims)
 - ⚡ Instantly consume hearts is disabled (hearts require full eating animation)
 - 🛑 No heart drop is disabled (hearts drop and can be stolen normally)
+- ♾️ Hearts never despawn is enabled (dropped heart items keep their age reset to prevent despawn)
 
 Alternatively, settings can be customized manually using the following commands (requires operator permissions):
 - ⬆️ `scoreboard players set MAX_HEARTS life_steal.data 20` (Absolute maximum of 20 hearts)
@@ -68,6 +69,7 @@ Alternatively, settings can be customized manually using the following commands 
 - ⚔️ `scoreboard players set STEAL_ON_KILL life_steal.data 1` (1 = killing players rewards hearts and removes them from victims, 0 = disable heart stealing on kill)
 - ⚡ `scoreboard players set INSTANTLY_CONSUME_HEARTS life_steal.data 1` (1 = hearts are consumed instantly when used, 0 = require full eating animation)
 - 🛑 `scoreboard players set NO_HEART_DROP_OR_STEAL life_steal.data 1` (1 = hearts won't drop or be stolen when players die, overrides STEAL_ON_KILL by preventing all heart steal/drop on death, 0 = hearts drop and can be stolen normally)
+- ♾️ `scoreboard players set HEARTS_NEVER_DESPAWN life_steal.data 1` (1 = dropped heart items never despawn by constantly resetting their age, 0 = dropped heart items despawn naturally)
 
 You can obtain the items using these commands:
 - `/function life_steal:_give_all` (gives all items from the datapack)
