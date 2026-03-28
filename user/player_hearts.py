@@ -91,7 +91,9 @@ execute if score @s {ns}.hearts < #temp {ns}.data run tellraw @s {{"text":"You d
 execute if score @s {ns}.hearts < #temp {ns}.data run return fail
 
 # Give heart, decrease score, and update health
-loot give @s[gamemode=!creative] loot {ns}:i/heart
+execute at @s[gamemode=!creative] run loot spawn ~ ~ ~ loot {ns}:i/heart
+execute at @s[gamemode=!creative] run data modify entity @n[type=item,distance=..1,nbt={{Age:0s}}] Owner set from entity @s UUID
+execute at @s[gamemode=!creative] run data modify entity @n[type=item,distance=..1,nbt={{Age:0s}}] PickupDelay set value 0s
 scoreboard players remove @s {ns}.hearts 1
 function {ns}:player/update_health
 
