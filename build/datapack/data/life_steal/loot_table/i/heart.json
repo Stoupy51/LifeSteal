@@ -30,6 +30,8 @@
 										"heart": true
 									},
 									"smithed": {
+										"id": "life_steal:heart",
+										"origin": "life_steal",
 										"ignore": {"functionality": true,"crafting": true}
 									}
 								}

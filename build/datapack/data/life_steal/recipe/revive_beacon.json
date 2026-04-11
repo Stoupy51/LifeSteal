@@ -55,6 +55,8 @@
 					"revive_beacon": true
 				},
 				"smithed": {
+					"id": "life_steal:revive_beacon",
+					"origin": "life_steal",
 					"ignore": {
 						"functionality": true,
 						"crafting": true
