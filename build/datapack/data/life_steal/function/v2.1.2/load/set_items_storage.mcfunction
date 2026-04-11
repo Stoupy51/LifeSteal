@@ -1,7 +1,7 @@
 
-#> life_steal:v2.1.1/load/set_items_storage
+#> life_steal:v2.1.2/load/set_items_storage
 #
-# @within	life_steal:v2.1.1/load/confirm_load
+# @within	life_steal:v2.1.2/load/confirm_load
 #
 
 # Items storage

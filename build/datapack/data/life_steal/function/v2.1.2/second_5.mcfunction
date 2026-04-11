@@ -1,7 +1,7 @@
 
-#> life_steal:v2.1.1/second_5
+#> life_steal:v2.1.2/second_5
 #
-# @within	life_steal:v2.1.1/tick
+# @within	life_steal:v2.1.2/tick
 #
 
 # Reset timer
