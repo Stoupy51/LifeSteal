@@ -1,5 +1,6 @@
 {
 	"pools": [
+		{"rolls": 1,"entries": [{"type": "minecraft:loot_table","value": "life_steal:i/crafted_heart"}]},
 		{"rolls": 1,"entries": [{"type": "minecraft:loot_table","value": "life_steal:i/heart"}]},
 		{"rolls": 1,"entries": [{"type": "minecraft:loot_table","value": "life_steal:i/revive_beacon"}]}
 	]

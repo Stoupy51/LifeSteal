@@ -21,7 +21,7 @@ def beet_default(ctx: Context):
 
 	# Define custom items
 	Item(
-		id="heart",
+		id="crafted_heart",
 		manual_category="misc",
 		recipes=[
 			CraftingShapedRecipe(
@@ -39,6 +39,15 @@ def beet_default(ctx: Context):
 				"minecraft:wither_skeleton_skull"
 			]
 		],
+		components={
+			"damage_resistant": {"types":f"#{ns}:is_explosion_or_fire"},
+			"consumable": {},
+		},
+	)
+
+	Item(
+		id="heart",
+		manual_category="misc",
 		components={
 			"damage_resistant": {"types":f"#{ns}:is_explosion_or_fire"},
 			"consumable": {},

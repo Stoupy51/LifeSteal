@@ -1,7 +1,7 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"category": "misc",
-	"group": "heart",
+	"group": "crafted_heart",
 	"pattern": [
 		"SNS",
 		"NCN",
@@ -20,9 +20,9 @@
 				"types": "#life_steal:is_explosion_or_fire"
 			},
 			"minecraft:consumable": {},
-			"minecraft:item_model": "life_steal:heart",
+			"minecraft:item_model": "life_steal:crafted_heart",
 			"minecraft:item_name": {
-				"text": "Heart"
+				"text": "Crafted Heart"
 			},
 			"minecraft:lore": [
 				[
@@ -42,10 +42,10 @@
 			],
 			"minecraft:custom_data": {
 				"life_steal": {
-					"heart": true
+					"crafted_heart": true
 				},
 				"smithed": {
-					"id": "life_steal:heart",
+					"id": "life_steal:crafted_heart",
 					"origin": "life_steal",
 					"ignore": {
 						"functionality": true,

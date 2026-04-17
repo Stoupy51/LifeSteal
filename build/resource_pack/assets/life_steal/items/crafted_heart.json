@@ -1,0 +1,6 @@
+{
+	"model": {
+		"type": "minecraft:model",
+		"model": "life_steal:item/crafted_heart"
+	}
+}

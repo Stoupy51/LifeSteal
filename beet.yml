@@ -27,7 +27,6 @@ resource_pack:
 pipeline:
     - "stewbeet.plugins.initialize"
     - "user.setup_database" # User code
-    - "stewbeet.plugins.verify_definitions"
     - "stewbeet.plugins.resource_pack.sounds"
     - "stewbeet.plugins.resource_pack.item_models"
     - "stewbeet.plugins.resource_pack.check_power_of_2"

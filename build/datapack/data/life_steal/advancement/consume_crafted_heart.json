@@ -1,0 +1,17 @@
+{
+	"criteria": {
+		"requirement": {
+			"trigger": "minecraft:consume_item",
+			"conditions": {
+				"item": {
+					"predicates": {
+						"minecraft:custom_data": "{\"life_steal\":{\"crafted_heart\":true}}"
+					}
+				}
+			}
+		}
+	},
+	"rewards": {
+		"function": "life_steal:player/consume_crafted_heart"
+	}
+}

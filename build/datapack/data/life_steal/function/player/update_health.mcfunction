@@ -9,6 +9,8 @@
 #			life_steal:player/remove_one_heart
 #			life_steal:player/consume_heart
 #			life_steal:player/using_heart
+#			life_steal:player/consume_crafted_heart
+#			life_steal:player/using_crafted_heart
 #			life_steal:player/withdraw
 #			life_steal:player/revive
 #			life_steal:player/reached_min_hearts

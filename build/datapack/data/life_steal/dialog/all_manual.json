@@ -13,7 +13,8 @@
 		"life_steal:manual/page_2",
 		"life_steal:manual/page_3",
 		"life_steal:manual/page_4",
-		"life_steal:manual/page_5"
+		"life_steal:manual/page_5",
+		"life_steal:manual/page_6"
 	],
 	"exit_action": {
 		"label": {"translate": "gui.back"},
