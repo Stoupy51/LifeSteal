@@ -87,29 +87,12 @@ If you want to manually revive a player, you can use the following command: 🔨
 - PlanetMinecraft: [https://www.planetminecraft.com/data-pack/life-steal-fr/](https://www.planetminecraft.com/data-pack/life-steal-fr/)
 
 ---
-<table>
-  <tr>
-    <td colspan="2" align="center"><img src="https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/promo_1.jpg" alt="Promotional image"></td>
-  </tr>
-  <tr>
-    <td><img src="https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/beacon_craft.jpg" alt="Beacon Recipe image"></td>
-    <td><img src="https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/heart_craft_1.jpg" alt="Heart Recipe #1 image"></td>
-  </tr>
-  <tr>
-    <td><img src="https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/heart_craft_2.jpg" alt="Heart Recipe #2 image"></td>
-    <td><img src="https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/heart_craft_3.jpg" alt="Heart Recipe #3 image"></td>
-  </tr>
-</table>
+| ![Promotional image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/promo_1.jpg)           |                                                                                                                         |
+| ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| ![Beacon Recipe image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/beacon_craft.jpg)    | ![Heart Recipe #1 image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/heart_craft_1.jpg) |
+| ![Heart Recipe #2 image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/heart_craft_2.jpg) | ![Heart Recipe #3 image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/heart_craft_3.jpg) |
 
 ## ⭐ Star History
 
-<html>
-  <a href="https://star-history.com/#Stoupy51/LifeSteal&Date">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=Stoupy51/LifeSteal&type=Date&theme=dark" />
-      <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=Stoupy51/LifeSteal&type=Date" />
-      <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=Stoupy51/LifeSteal&type=Date" />
-    </picture>
-  </a>
-</html>
+[![Star History Chart](https://api.star-history.com/chart?repos=Stoupy51/LifeSteal&type=date&legend=top-left)](https://www.star-history.com/?repos=Stoupy51%2FLifeSteal&type=date&legend=top-left)
 
