@@ -27,11 +27,6 @@ execute unless score HEARTS_NEVER_DESPAWN life_steal.data matches 0..1 run score
 execute unless score SPECTATOR_INSTEAD life_steal.data matches 0..1 run scoreboard players set SPECTATOR_INSTEAD life_steal.data 0
 execute unless score LAST_CHANCE life_steal.data matches 0..1 run scoreboard players set LAST_CHANCE life_steal.data 0
 
-# Register the manual to the universal manual
-execute unless data storage stewbeet:main universal_manual run data modify storage stewbeet:main universal_manual set value []
-data remove storage stewbeet:main universal_manual[{"name":"LifeSteal"}]
-data modify storage stewbeet:main universal_manual append value {"name":"LifeSteal","loot_table":"life_steal:i/manual","hover":[{"text": ""}, {"text": "LifeSteal Manual\\n"}, {"text": "ဠ\\n\\n\\n\\n\\n\\n", "font": "life_steal:manual", "color": "white"}, [{"text": "", "font": "minecraft:default", "color": "black"}]]}
-
 # Confirm load
 tellraw @a[tag=convention.debug] {"text":"[Loaded LifeSteal v2.2.0]","color":"green"}
 scoreboard players set #life_steal.loaded load.status 1
