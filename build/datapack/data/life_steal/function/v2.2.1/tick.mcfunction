@@ -1,12 +1,12 @@
 
-#> life_steal:v2.2.0/tick
+#> life_steal:v2.2.1/tick
 #
-# @within	life_steal:v2.2.0/load/tick_verification
+# @within	life_steal:v2.2.1/load/tick_verification
 #
 
 # Timers
 scoreboard players add #second_5 life_steal.data 1
-execute if score #second_5 life_steal.data matches 90.. run function life_steal:v2.2.0/second_5
+execute if score #second_5 life_steal.data matches 90.. run function life_steal:v2.2.1/second_5
 
 # Check for USE_HALF_HEARTS configuration change
 execute unless score USE_HALF_HEARTS life_steal.data = USE_HALF_HEARTS_PREV life_steal.data run function life_steal:config/half_hearts_changed
