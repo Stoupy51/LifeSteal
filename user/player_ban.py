@@ -24,7 +24,7 @@ execute unless score BAN_REACHING_MIN_HEARTS {ns}.data matches 1 run return 1
 # Get player username for macro
 tag @e[type=item] add {ns}.temp
 execute at @s run loot spawn ~ ~ ~ loot {ns}:player_head
-data modify storage {ns}:main player set from entity @e[type=item,tag=!{ns}.temp,limit=1] Item.components."minecraft:profile".name
+data modify storage {ns}:main player set from entity @n[type=item,tag=!{ns}.temp] Item.components."minecraft:profile".name
 kill @e[type=item,tag=!{ns}.temp]
 tag @e[type=item,tag={ns}.temp] remove {ns}.temp
 
