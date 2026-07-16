@@ -87,7 +87,9 @@ If you want to manually revive a player, you can use the following command: 🔨
 - PlanetMinecraft: [https://www.planetminecraft.com/data-pack/life-steal-fr/](https://www.planetminecraft.com/data-pack/life-steal-fr/)
 
 ---
-| ![Promotional image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/promo_1.jpg)           |                                                                                                                         |
+![Promotional image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/promo_1.jpg)
+
+| Beacon Recipe image | Heart Recipe image |
 | ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| ![Beacon Recipe image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/beacon_craft.jpg)    | ![Heart Recipe #1 image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/heart_craft.jpg) |
+| ![Beacon Recipe image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/beacon_craft.jpg)    | ![Heart Recipe image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/heart_craft.jpg) |
 
