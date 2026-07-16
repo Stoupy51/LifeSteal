@@ -10,34 +10,20 @@
 advancement revoke @s only life_steal:unlock_recipes
 
 ## For each ingredient in inventory, unlock the recipes
-# minecraft:nautilus_shell
+# minecraft:trial_key
 scoreboard players set #success life_steal.data 0
-execute store success score #success life_steal.data if items entity @s container.* minecraft:nautilus_shell
-execute if score #success life_steal.data matches 1 run recipe give @s life_steal:crafted_heart
-execute if score #success life_steal.data matches 1 run recipe give @s life_steal:crafted_heart_2
-execute if score #success life_steal.data matches 1 run recipe give @s life_steal:crafted_heart_3
-
-# minecraft:netherite_ingot
-scoreboard players set #success life_steal.data 0
-execute store success score #success life_steal.data if items entity @s container.* minecraft:netherite_ingot
-execute if score #success life_steal.data matches 1 run recipe give @s life_steal:crafted_heart
-execute if score #success life_steal.data matches 1 run recipe give @s life_steal:crafted_heart_2
-execute if score #success life_steal.data matches 1 run recipe give @s life_steal:crafted_heart_3
-
-# minecraft:ominous_trial_key
-scoreboard players set #success life_steal.data 0
-execute store success score #success life_steal.data if items entity @s container.* minecraft:ominous_trial_key
+execute store success score #success life_steal.data if items entity @s container.* minecraft:trial_key
 execute if score #success life_steal.data matches 1 run recipe give @s life_steal:crafted_heart
 
-# minecraft:dragon_head
+# minecraft:ghast_tear
 scoreboard players set #success life_steal.data 0
-execute store success score #success life_steal.data if items entity @s container.* minecraft:dragon_head
-execute if score #success life_steal.data matches 1 run recipe give @s life_steal:crafted_heart_2
+execute store success score #success life_steal.data if items entity @s container.* minecraft:ghast_tear
+execute if score #success life_steal.data matches 1 run recipe give @s life_steal:crafted_heart
 
-# minecraft:wither_skeleton_skull
+# minecraft:ender_eye
 scoreboard players set #success life_steal.data 0
-execute store success score #success life_steal.data if items entity @s container.* minecraft:wither_skeleton_skull
-execute if score #success life_steal.data matches 1 run recipe give @s life_steal:crafted_heart_3
+execute store success score #success life_steal.data if items entity @s container.* minecraft:ender_eye
+execute if score #success life_steal.data matches 1 run recipe give @s life_steal:crafted_heart
 
 # minecraft:beacon
 scoreboard players set #success life_steal.data 0
@@ -71,7 +57,5 @@ execute if score #success life_steal.data matches 1 run recipe give @s life_stea
 
 ## Add result items
 execute if items entity @s container.* *[custom_data~{"life_steal": {"crafted_heart":true} }] run recipe give @s life_steal:crafted_heart
-execute if items entity @s container.* *[custom_data~{"life_steal": {"crafted_heart":true} }] run recipe give @s life_steal:crafted_heart_2
-execute if items entity @s container.* *[custom_data~{"life_steal": {"crafted_heart":true} }] run recipe give @s life_steal:crafted_heart_3
 execute if items entity @s container.* *[custom_data~{"life_steal": {"revive_beacon":true} }] run recipe give @s life_steal:revive_beacon
 

@@ -3,14 +3,14 @@
 	"category": "misc",
 	"group": "crafted_heart",
 	"pattern": [
-		"SNS",
-		"NCN",
-		"SNS"
+		"KGK",
+		"GEG",
+		"KGK"
 	],
 	"key": {
-		"S": "minecraft:nautilus_shell",
-		"N": "minecraft:netherite_ingot",
-		"C": "minecraft:ominous_trial_key"
+		"K": "minecraft:trial_key",
+		"G": "minecraft:ghast_tear",
+		"E": "minecraft:ender_eye"
 	},
 	"result": {
 		"id": "minecraft:command_block",

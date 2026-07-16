@@ -89,10 +89,5 @@ If you want to manually revive a player, you can use the following command: 🔨
 ---
 | ![Promotional image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/promo_1.jpg)           |                                                                                                                         |
 | ----------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| ![Beacon Recipe image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/beacon_craft.jpg)    | ![Heart Recipe #1 image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/heart_craft_1.jpg) |
-| ![Heart Recipe #2 image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/heart_craft_2.jpg) | ![Heart Recipe #3 image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/heart_craft_3.jpg) |
-
-## ⭐ Star History
-
-[![Star History Chart](https://api.star-history.com/chart?repos=Stoupy51/LifeSteal&type=date&legend=top-left)](https://www.star-history.com/?repos=Stoupy51%2FLifeSteal&type=date&legend=top-left)
+| ![Beacon Recipe image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/beacon_craft.jpg)    | ![Heart Recipe #1 image](https://raw.githubusercontent.com/Stoupy51/LifeSteal/refs/heads/main/assets/heart_craft.jpg) |
 

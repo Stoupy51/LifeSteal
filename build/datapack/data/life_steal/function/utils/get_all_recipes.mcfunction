@@ -8,7 +8,5 @@
 
 # Get all recipes
 recipe give @s life_steal:crafted_heart
-recipe give @s life_steal:crafted_heart_2
-recipe give @s life_steal:crafted_heart_3
 recipe give @s life_steal:revive_beacon
 

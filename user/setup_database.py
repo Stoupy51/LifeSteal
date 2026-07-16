@@ -26,18 +26,18 @@ def beet_default(ctx: Context):
 		recipes=[
 			CraftingShapedRecipe(
 				category="misc",
-				shape=["SNS","NCN","SNS"],
+				shape=["KGK","GEG","KGK"],
 				ingredients={
-					"S":Ingr("minecraft:nautilus_shell"),
-					"N":Ingr("minecraft:netherite_ingot"),
-					"C":Ingr(center)
+					"K":Ingr("minecraft:trial_key"),
+					"G":Ingr("minecraft:ghast_tear"),
+					"E":Ingr("minecraft:ender_eye")
 				},
 			)
-			for center in [
-				"minecraft:ominous_trial_key",
-				"minecraft:dragon_head",
-				"minecraft:wither_skeleton_skull"
-			]
+			# for center in [
+			# 	"minecraft:ominous_trial_key",
+			# 	"minecraft:dragon_head",
+			# 	"minecraft:wither_skeleton_skull"
+			# ]
 		],
 		components={
 			"damage_resistant": {"types":f"#{ns}:is_explosion_or_fire"},
