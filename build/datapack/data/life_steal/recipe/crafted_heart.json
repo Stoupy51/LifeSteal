@@ -13,7 +13,7 @@
 		"E": "minecraft:ender_eye"
 	},
 	"result": {
-		"id": "minecraft:command_block",
+		"id": "minecraft:recovery_compass",
 		"count": 1,
 		"components": {
 			"minecraft:damage_resistant": {
@@ -28,15 +28,16 @@
 				[
 					"",
 					{
-						"text": "I",
+						"text": "ꀁ",
 						"color": "white",
 						"italic": false,
-						"font": "life_steal:icons"
+						"font": "life_steal:tooltip"
 					},
 					{
-						"text": " LifeSteal",
-						"italic": true,
-						"color": "blue"
+						"text": "뀁LifeSteal",
+						"italic": false,
+						"color": "white",
+						"font": "life_steal:tooltip"
 					}
 				]
 			],

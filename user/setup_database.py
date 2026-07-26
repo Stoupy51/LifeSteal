@@ -84,7 +84,8 @@ def beet_default(ctx: Context):
 			"consumable": {},
 			"lore":[
 				{"text":"Rename the item to the username","italic":False,"color":"gray"},
-				{"text":"of the player you want to revive.","italic":False,"color":"gray"}
+				{"text":"of the player you want to revive.","italic":False,"color":"gray"},
+				{"text":"Then, consume it to revive the player.","italic":False,"color":"gray"}
 			],
 		},
 	)

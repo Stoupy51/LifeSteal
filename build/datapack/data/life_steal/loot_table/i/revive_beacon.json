@@ -5,7 +5,7 @@
 			"entries": [
 				{
 					"type": "minecraft:item",
-					"name": "minecraft:command_block",
+					"name": "minecraft:recovery_compass",
 					"functions": [
 						{
 							"function": "minecraft:set_components",
@@ -22,10 +22,15 @@
 										"italic": false,
 										"color": "gray"
 									},
+									{
+										"text": "Then, consume it to revive the player.",
+										"italic": false,
+										"color": "gray"
+									},
 									[
 										"",
-										{"text": "I","color": "white","italic": false,"font": "life_steal:icons"},
-										{"text": " LifeSteal","italic": true,"color": "blue"}
+										{"text": "ꀁ","color": "white","italic": false,"font": "life_steal:tooltip"},
+										{"text": "뀁LifeSteal","italic": false,"color": "white","font": "life_steal:tooltip"}
 									]
 								],
 								"minecraft:item_model": "life_steal:revive_beacon",

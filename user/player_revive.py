@@ -21,8 +21,8 @@ advancement revoke @s only {ns}:consume_beacon
 
 # Get username from beacon name
 data remove storage {ns}:main player
-execute if data entity @s SelectedItem.components."minecraft:custom_data".life_steal.revive_beacon run data modify storage {ns}:main player set string entity @s SelectedItem.components."minecraft:custom_name"
-execute unless data storage {ns}:main player if data entity @s equipment.offhand.components."minecraft:custom_data".life_steal.revive_beacon run data modify storage {ns}:main player set string entity @s equipment.offhand.components."minecraft:custom_name"
+execute if data entity @s SelectedItem.components."minecraft:custom_data".{ns}.revive_beacon run data modify storage {ns}:main player set string entity @s SelectedItem.components."minecraft:custom_name"
+execute unless data storage {ns}:main player if data entity @s equipment.offhand.components."minecraft:custom_data".{ns}.revive_beacon run data modify storage {ns}:main player set string entity @s equipment.offhand.components."minecraft:custom_name"
 
 # Try to revive
 execute store success score #success {ns}.data run function {ns}:player/revive with storage {ns}:main

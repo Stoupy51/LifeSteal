@@ -53,7 +53,9 @@ meta:
         # Directory containing all project textures
         textures_folder: "assets/textures"
         # Directory containing all custom sounds
-        sounds_folder: "assets/sounds"
+        sounds:
+            folder: "assets/sounds"
+            exclude_patterns: []
         # Path where definitions debug information will be dumped
         definitions_debug: "definitions_debug.json"
         # Optional list of destination paths where generated files will be copied
