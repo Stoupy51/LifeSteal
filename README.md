@@ -82,6 +82,19 @@ If you want to manually revive a player, you can use the following command: 🔨
 `function life_steal:player/revive {player:"Stoupy51"}`<br>
 (replace `Stoupy51` with the player name you want to revive)
 
+## 🩺 Debugging: "I can't revive a banned player!"
+
+Run these as an operator, they tell you exactly where the problem is (⚠️ names are **case sensitive**):
+```
+/function life_steal:_debug                             (can the datapack ban/unban? who did it remove?)
+/function life_steal:_debug/player {player:"Stoupy51"}  (state of one player + clickable fix)
+```
+
+Most common causes:
+- ❌ `/ban and /pardon: NOT AVAILABLE` → set `function-permission-level=3` in `server.properties` and restart, or enable the "Spectator Instead of Ban" option (those commands don't exist in singleplayer/LAN).
+- ❌ `Banned by LifeSteal: NO` → the ban comes from somewhere else (manual `/ban`, plugin, misspelled name, renamed account). Use `/pardon Stoupy51` then `/function life_steal:player/force_revive {player:"Stoupy51"}` which unbans and restores hearts whatever the state.
+- ❌ The revive beacon must be renamed to the **exact** username in an anvil.
+
 ## 📥 Download links:
 - Modrinth: [https://modrinth.com/datapack/lifestealfr/](https://modrinth.com/datapack/lifestealfr/)
 - PlanetMinecraft: [https://www.planetminecraft.com/data-pack/life-steal-fr/](https://www.planetminecraft.com/data-pack/life-steal-fr/)

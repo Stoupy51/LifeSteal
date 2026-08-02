@@ -13,6 +13,7 @@
 #			life_steal:player/using_crafted_heart
 #			life_steal:player/withdraw
 #			life_steal:player/revive
+#			life_steal:player/force_revive
 #			life_steal:player/reached_min_hearts
 #			life_steal:config/convert_to_half_hearts [ as @a ]
 #			life_steal:config/convert_to_full_hearts [ as @a ]

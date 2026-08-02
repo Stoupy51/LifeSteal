@@ -7,6 +7,7 @@ from user.config_display import setup_config_display
 from user.initialization import setup_load_file, setup_tick_file
 from user.player_ban import setup_reached_min_hearts
 from user.player_core import setup_check_last_chance, setup_player_on_death, setup_player_on_kill, setup_player_tick, setup_remove_one_heart
+from user.player_debug import setup_debug_functions
 from user.player_health import setup_update_health
 from user.player_hearts import setup_consume_heart_functions, setup_drop_heart_functions, setup_withdraw_functions
 from user.player_revive import setup_player_head_loot_table, setup_revive_beacon
@@ -53,4 +54,7 @@ def beet_default(ctx: Context):
 
 	# Setup configuration display
 	setup_config_display(ctx)
+
+	# Setup debugging functions
+	setup_debug_functions(ctx)
 

@@ -3,9 +3,10 @@
 #
 # @executed	as the player & at current position
 #
-# @within	life_steal:player/revive with storage life_steal:main
+# @within	life_steal:player/revive {player:"$(player)"}
+#			life_steal:player/force_revive {player:"$(player)"}
 #
-# @args		player (unknown)
+# @args		player (string)
 #
 
 $return run pardon $(player)

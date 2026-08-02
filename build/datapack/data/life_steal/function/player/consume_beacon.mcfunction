@@ -14,6 +14,11 @@ data remove storage life_steal:main player
 execute if data entity @s SelectedItem.components."minecraft:custom_data".life_steal.revive_beacon run data modify storage life_steal:main player set string entity @s SelectedItem.components."minecraft:custom_name"
 execute unless data storage life_steal:main player if data entity @s equipment.offhand.components."minecraft:custom_data".life_steal.revive_beacon run data modify storage life_steal:main player set string entity @s equipment.offhand.components."minecraft:custom_name"
 
+# If the beacon was never renamed, give it back and explain how to use it
+execute unless data storage life_steal:main player run loot give @s[gamemode=!creative] loot life_steal:i/revive_beacon
+execute unless data storage life_steal:main player run tellraw @s [{"text":"[LifeStealFR] This revive beacon has no name! Rename it in an anvil to the exact username of the player you want to revive.","color":"red"}]
+execute unless data storage life_steal:main player run return fail
+
 # Try to revive
 execute store success score #success life_steal.data run function life_steal:player/revive with storage life_steal:main
 execute if score #success life_steal.data matches 1 run return 1
