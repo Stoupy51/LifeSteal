@@ -15,10 +15,11 @@ execute unless score @s {ns}.hearts matches 0.. run function {ns}:utils/get_all_
 execute unless score @s {ns}.hearts matches 0.. if score USE_HALF_HEARTS {ns}.data matches 0 store result score @s {ns}.hearts run attribute @s minecraft:max_health base get 0.5
 execute unless score @s {ns}.hearts matches 0.. if score USE_HALF_HEARTS {ns}.data matches 1 store result score @s {ns}.hearts run attribute @s minecraft:max_health base get 1.0
 
-# If data = 1, player is revived so update health and set gamemode
+# If data = 1, player is revived so set gamemode. If data = 2, their hearts were set while they were disconnected
 execute if score @s {ns}.data matches 1 run gamemode survival @s[gamemode=spectator]
-execute if score @s {ns}.data matches 1 run function {ns}:player/update_health
-execute if score @s {ns}.data matches 1 run scoreboard players set @s {ns}.data 0
+execute if score @s {ns}.data matches 2 run tag @s remove {ns}.last_chance
+execute if score @s {ns}.data matches 1.. run function {ns}:player/update_health
+execute if score @s {ns}.data matches 1.. run scoreboard players set @s {ns}.data 0
 
 # Withdraw command trigger
 scoreboard players enable @s {ns}.withdraw

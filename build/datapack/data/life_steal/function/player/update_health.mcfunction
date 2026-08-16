@@ -7,6 +7,7 @@
 #			life_steal:player/on_kill
 #			life_steal:player/on_death
 #			life_steal:player/remove_one_heart
+#			life_steal:player/refresh_health
 #			life_steal:player/consume_heart
 #			life_steal:player/using_heart
 #			life_steal:player/consume_crafted_heart

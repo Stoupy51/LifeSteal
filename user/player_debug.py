@@ -66,5 +66,6 @@ execute if score #dbg_hearts {ns}.data matches 0 run tellraw @s [{{"text":"- Hea
 # Display what to do next
 $execute if score #dbg_recorded {ns}.data matches 1 run tellraw @s [{{"text":"👉 ","color":"gray"}},{{"text":"[Click here]","color":"aqua","click_event":{{"action":"suggest_command","command":"/function {ns}:player/revive {{player:\\"$(player)\\"}}"}}}},{{"text":" to revive them right now.","color":"gray"}}]
 $execute if score #dbg_recorded {ns}.data matches 0 run tellraw @s [{{"text":"👉 LifeSteal did not ban this player. If they still cannot join, the ban comes from somewhere else (manual /ban, plugin, or a lost world storage): ","color":"gray"}},{{"text":"[click here]","color":"aqua","click_event":{{"action":"suggest_command","command":"/function {ns}:player/force_revive {{player:\\"$(player)\\"}}"}}}},{{"text":" to unban them and give them back ","color":"gray"}},{{"score":{{"name":"REVIVED_HEARTS","objective":"{ns}.data"}},"color":"yellow"}},{{"text":" hearts anyway.","color":"gray"}}]
+$tellraw @s [{{"text":"👉 ","color":"gray"}},{{"text":"[Click here]","color":"aqua","click_event":{{"action":"suggest_command","command":"/function {ns}:player/set_hearts {{player:\\"$(player)\\",hearts:10}}"}}}},{{"text":" to set their hearts amount (works while they are disconnected).","color":"gray"}}]
 """)
 

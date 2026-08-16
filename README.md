@@ -82,6 +82,21 @@ If you want to manually revive a player, you can use the following command: 🔨
 `function life_steal:player/revive {player:"Stoupy51"}`<br>
 (replace `Stoupy51` with the player name you want to revive)
 
+### ❤️ Setting a player's hearts
+
+`function life_steal:player/set_hearts {player:"Stoupy51",hearts:10}`
+
+Sets the hearts amount of any player and updates their health bar right away.
+**It also works on disconnected players**: the new amount is stored and their health bar is fixed on their next login.
+
+- The amount is a whole number of hearts. In half hearts mode it is doubled internally, exactly like the `REVIVED_HEARTS` setting.
+- It is clamped between the configured `MIN_HEARTS` (never below 1 heart score) and `MAX_HEARTS`, and a message tells you when that happened.
+- It does **not** unban a player: use the revive function for that.
+
+If you changed the `life_steal.hearts` score by hand instead (for example with `/scoreboard players set Stoupy51 life_steal.hearts 7`, the only way to set half hearts), refresh the health bar with:<br>
+`function life_steal:player/refresh_health {player:"Stoupy51"}`<br>
+(updates their health bar now if they are connected, on their next login otherwise)
+
 ## 🩺 Debugging: "I can't revive a banned player!"
 
 Run these as an operator, they tell you exactly where the problem is (⚠️ names are **case sensitive**):

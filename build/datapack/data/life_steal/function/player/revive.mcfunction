@@ -3,7 +3,8 @@
 #
 # @executed	as the player & at current position
 #
-# @within	life_steal:player/consume_beacon with storage life_steal:main
+# @within	string in life_steal:player/set_hearts {player:\"$(player)\"}
+#			life_steal:player/consume_beacon with storage life_steal:main
 #			string in life_steal:_debug/player {player:\"$(player)\"}
 #
 # @args		player (string)
