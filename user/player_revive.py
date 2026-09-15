@@ -108,6 +108,6 @@ execute if score #is_pardoned {ns}.data matches 0 run tellraw @s [{{"text":"⚠ 
 def setup_player_head_loot_table(ctx: Context) -> None:
 	ns: str = ctx.project_id
 
-	json_content: JsonDict = {"pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"minecraft:player_head","functions":[{"function":"minecraft:fill_player_head","entity":"this"}]}]}]}
+	json_content: JsonDict = {"pools":[{"rolls":1,"entries":[{"type":"minecraft:item","name":"minecraft:player_head","modifier":[{"type":"minecraft:fill_player_head","entity":"this"}]}]}]}
 	ctx.data[ns].loot_tables["player_head"] = set_json_encoder(LootTable(json_content), max_level=-1)
 

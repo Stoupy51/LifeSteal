@@ -1,12 +1,11 @@
 {
 	"pack": {
-		"pack_format": 55,
+		"pack_format": 97,
 		"description": "LifeSteal [2.5.1] by Stoupy51",
-		"supported_formats": [
-			55,
-			9999
+		"min_format": [
+			97,
+			1
 		],
-		"min_format": 55,
 		"max_format": [
 			9999,
 			0
