@@ -1,7 +1,7 @@
 
 #> life_steal:_config
 #
-# @within	???
+# @within	(public)
 #
 
 # Display configuration header

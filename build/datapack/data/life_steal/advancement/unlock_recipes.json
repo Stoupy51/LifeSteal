@@ -1,9 +1,65 @@
 {
 	"criteria": {
-		"requirement": {
-			"trigger": "minecraft:inventory_changed"
+		"0": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"items": [
+							"minecraft:beacon",
+							"minecraft:conduit",
+							"minecraft:elytra",
+							"minecraft:ender_eye",
+							"minecraft:ghast_tear",
+							"minecraft:heavy_core",
+							"minecraft:recovery_compass",
+							"minecraft:skeleton_skull",
+							"minecraft:trial_key"
+						]
+					}
+				]
+			}
+		},
+		"1": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"predicates": {
+							"minecraft:custom_data": {
+								"life_steal": {
+									"crafted_heart": true
+								}
+							}
+						}
+					}
+				]
+			}
+		},
+		"2": {
+			"trigger": "minecraft:inventory_changed",
+			"conditions": {
+				"items": [
+					{
+						"predicates": {
+							"minecraft:custom_data": {
+								"life_steal": {
+									"revive_beacon": true
+								}
+							}
+						}
+					}
+				]
+			}
 		}
 	},
+	"requirements": [
+		[
+			"0",
+			"1",
+			"2"
+		]
+	],
 	"rewards": {
 		"function": "life_steal:advancements/unlock_recipes"
 	}
